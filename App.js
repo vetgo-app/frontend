@@ -8,6 +8,7 @@ import AgendaScreen from "./screens/AgendaScreen";
 import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import TakeRdvScreen from "./screens/TakeRdvScreen"
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -45,6 +46,7 @@ export default function App() {
         <Tab.Screen name="Animal" component={AnimalScreen} />
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="TakeRdv" component={TakeRdvScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -57,4 +59,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  
 });
