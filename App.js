@@ -8,6 +8,7 @@ import AgendaScreen from "./screens/AgendaScreen";
 import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AgendaProScreen from "./screens/AgendaProScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -30,6 +31,8 @@ export default function App() {
               iconName = "info-circle";
             } else if (route.name === "Profile") {
               iconName = "user";
+            } else if (route.name === "AgendaPro") {
+              iconName = "star"
             }
             return (
               <FontAwesome name={iconName} size={size} color={color} solid />
@@ -45,6 +48,7 @@ export default function App() {
         <Tab.Screen name="Animal" component={AnimalScreen} />
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
