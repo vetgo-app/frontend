@@ -9,6 +9,7 @@ import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AgendaProScreen from "./screens/AgendaProScreen";
+import HealthJournal from "./screens/HealthJournal";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -27,6 +28,8 @@ export default function App() {
               iconName = "calendar";
             } else if (route.name === "Animal") {
               iconName = "paw";
+            } else if (route.name === "HealthCard") {
+              iconName = "thumbs-up";
             } else if (route.name === "Faq") {
               iconName = "info-circle";
             } else if (route.name === "Profile") {
@@ -46,6 +49,7 @@ export default function App() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Agenda" component={AgendaScreen} />
         <Tab.Screen name="Animal" component={AnimalScreen} />
+        <Tab.Screen name="HealthCard" component={HealthJournal} />
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
