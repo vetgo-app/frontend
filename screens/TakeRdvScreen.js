@@ -1,71 +1,110 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, FlatList, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Image, FlatList, TouchableOpacity, CheckBox } from 'react-native'
+import React, { useState, useMemo } from 'react';
+import RadioGroup from 'react-native-radio-buttons-group';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-import { Picker } from '@react-native-picker/picker';
 
 const data = [
-    { value: "🐈", label: "🐈 un Gato" },
-    { value: "🦮", label: "🦮 un Perro" },
-    { value: "🐍", label: "🐍 una serpiente" },
-    { value: "1", label: "🐍 una serpiente" },
-    { value: "2", label: "🐍 una serpiente" },
-    { value: "3", label: "🐍 una serpiente" },
-    { value: "4", label: "🐍 una serpiente" },
-    { value: "5", label: "🐍 una serpiente" },
+    { value: "Soins préventifs", label: "Soins préventifs" },
+    { value: "Maladies et urgences", label: "Maladies et urgences" },
+    { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
 ]
 
 export default function TakeRdvScreen() {
     const [selectedReason, setSelectedReason] = useState(null);
     const [isSelectedReason, setIsSelectedReason] = useState(false)
+    const [isFirstRdv, setIsFirstRdv] = useState()
+    const [isMyAnimal, setIsMyAnimal] = useState()
+
+    console.log('isFirstRdv', isFirstRdv);
+    console.log('isMyAnimal', isMyAnimal);
 
     const handlePressReason = (value) => {
         setSelectedReason(value);
+        setIsSelectedReason(!isSelectedReason)
         console.log('value', value)
     }
 
-    const handleShowReasons = () => {
-        setIsSelectedReason(!isSelectedReason)
-    }
+
+    const RadioButtons = useMemo(() => ([
+        {
+            id: true, // acts as primary key, should be unique and non-empty string
+            label: 'Oui',
+            value: 'Oui'
+        },
+        {
+            id: false,
+            label: 'Non',
+            value: 'Non'
+        }
+    ]), []);
+
 
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.pageTitle}>Prise de rendez-vous</Text>
-            <View style={styles.proContainer}>
-                <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
-                <View style={styles.proInfo}>
-                    <Text style={styles.text}>Isabelle Artas</Text>
-                    <Text style={styles.text}>Vétérinaire</Text>
+            <View style={styles.headerContainer}>
+                <FontAwesome name="arrow-left" size={15} color="#1472AE" style={{ color: '#1472AE', marginLeft: 30 }} />
+                {/* //-------------------------------------------------TITRE DE LA PAGE */}
+                <Text style={styles.pageTitle}>Votre rendez-vous</Text>
+                <Text style={{ fontSize: 20, frontWeight: 'bold', color: '#1472AE', marginRight: 30 }}>1/2</Text>
+            </View>
+            {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
+            <View style={styles.bodyContainer}>
+                <View style={styles.proContainer}>
+                    <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
+                    <View style={styles.proInfo}>
+                        <Text style={styles.text}>Isabelle Artas</Text>
+                        <Text style={styles.text}>Vétérinaire</Text>
+                    </View>
                 </View>
+                <Text style={styles.selectReason} >Selectionner un motif</Text>
+                <View style={styles.reasons}>
+                    <FlatList horizontal={true}
+                        style={{
+                            borderWidth: 1,
+                            borderColor: 'lightgray',
+                            padding: (5, 20),
+                            borderRadius: 15,
+                        }}
+                        keyExtractor={(item) => item.value}
+                        data={data}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={() => handlePressReason(item.value)}
+                                style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: '#F0F0F0', borderRadius: 10 }}
+                            >
+                                <Text>{item.label}</Text>
+                            </TouchableOpacity>
+                        )}
+                        ItemSeparatorComponent={() => (
+                            <View style={styles.separator} />
+                        )}
+                    />
+                </View>
+                <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
+                <View style={styles.checkboxContainer}>
+                    <RadioGroup
+                        radioButtons={RadioButtons}
+                        onPress={setIsFirstRdv}
+                        selectedId={isFirstRdv}
+                        layout='row'
+                        containerStyle={{ width: '50%', justifyContent: 'space-between', marginTop: 20, marginBottom: 20, borderWidth: 1, borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                    />
+                </View>
+                <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
+                <View style={styles.checkboxContainer}>
+                    <RadioGroup
+                        radioButtons={RadioButtons}
+                        onPress={setIsMyAnimal}
+                        selectedId={isMyAnimal}
+                        layout='row'
+                        containerStyle={{ width: '50%', justifyContent: 'space-between', marginTop: 20, marginBottom: 30, borderWidth: 1, borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                    />
+                </View>
+                <TouchableOpacity style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.button} onPress={handleShowReasons}><Text style={{ fontWeight: 700 }}>Selectionner un motif</Text></TouchableOpacity>
-            {/* {isSelectedReason && ( */}
-            <View style={styles.reasons}>
-                <FlatList
-                    style={{
-                        borderWidth: 2,
-                        borderColor: 'grey',
-                        padding: (5, 20),
-                        borderRadius: 15,
-                    }}
-                    keyExtractor={(item) => item.value}
-                    data={data}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={() => handlePressReason(item.value)}
-                            style={{ paddingVertical: 10, paddingLeft: 10, backgroundColor: '#F0F0F0', marginBottom: 10, borderRadius: 10 }}
-                        >
-                            <Text>{item.label}</Text>
-                        </TouchableOpacity>
-                    )}
-                    ItemSeparatorComponent={() => (
-                        <View style={styles.separator} />
-                    )}
-                />
-            </View>
-
-            <Text style={{ fontWeight: 700 }}>Premier rendez-vous ?</Text>
         </SafeAreaView>
     )
 }
@@ -75,15 +114,40 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: '',
+    },
+
+    headerContainer: {
+        width: '100%',
+        height: '13%',
+        backgroundColor: '#ffff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#1472AE',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+
+    pageTitle: {
+        fontWeight: 800,
+        fontSize: 26,
+        color: '#1472AE',
+        marginLeft: 30,
     },
     pageTitle: {
         fontWeight: 800,
         fontSize: 26,
         color: '#1472AE',
-        marginTop: 15,
-        marginBottom: 30,
+        marginLeft: 30,
     },
+
+    bodyContainer: {
+        height: '87%',
+        width: '100%',
+        backgroundColor: '#ffff',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+    },
+
     proContainer: {
         padding: 15,
         width: '80%',
@@ -113,23 +177,32 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
 
-    button: {
+    selectReason: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '60%',
-        height: 40,
-        marginTop: 30,
-        backgroundColor: '#C2E7F7',
-        borderRadius: 10,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        width: '80%',
+        fontWeight: 700,
         marginBottom: 20,
     },
 
     reasons: {
-        padding: 10,
-        height: 150,
-        marginTop: 20,
-        marginBottom: 20,
+        // padding: 10,
+        height: 80,
+        // marginTop: 20,
+        marginBottom: 30,
         width: '80%',
     },
+
+    takeRdvButton: {
+        width: '80%',
+        height: 50,
+        backgroundColor: '#0D2C56',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
 })
