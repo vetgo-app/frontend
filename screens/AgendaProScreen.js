@@ -4,9 +4,9 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 export default function agendaPro() {
-    const calendar = <FontAwesome name={"calendar"} size={40}  style={styles.calendarIcon} />;
+    const calendar = <FontAwesome name={"calendar"} size={40} style={styles.calendarIcon} />;
 
-    return(
+    return (
         <View style={styles.mainDiv} >
             <View style={styles.header}>
                 <View style={styles.topHeader}>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         height: "70%",
         flexDirection: 'row',
     },
-    profilPicture:{
+    profilPicture: {
         height: "100%",
         width: "40%",
         justifyContent: 'flex-end',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         width: 130,
         borderRadius: 100,
     },
-    agenda:{
+    agenda: {
         height: "100%",
         width: "60%",
     },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         color: "#0D2C56",
         marginLeft: 20
     },
-    profilDate:{
+    profilDate: {
         backgroundColor: 'lightgray',
         padding: "7",
         borderRadius: "6%",
@@ -169,13 +169,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center'
     },
-    anmialInfo:{
+    anmialInfo: {
         marginLeft: 15
     },
-    reasonConsultation:{
+    reasonConsultation: {
         marginLeft: 15
     },
-    profesionnalName:{
+    profesionnalName: {
         marginLeft: 15
     },
 });
