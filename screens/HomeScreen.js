@@ -13,7 +13,7 @@ export default function HomeScreen() {
   const [openProfession, setOpenProfession] = useState(false);
   const [selectedProfession, setSelectedProfession] = useState(null);
   const [professionItems, setProfessionItems] = useState([
-    { label: 'Vétérinaire', value: 'veterinaire'},
+    { label: 'Vétérinaire', value: 'veterinaire' },
     { label: 'Ostéopathe', value: 'osteopathe' },
     { label: 'Toiletteur', value: 'toiletteur' },
     { label: 'Educateur', value: 'educateur' },
@@ -43,11 +43,11 @@ export default function HomeScreen() {
   ]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <View style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Header */}
       <View style={styles.logoEmergency}>
-          <TouchableOpacity onPress={() => navigation.navigate('Urgences')}>
-          <FontAwesome name="ambulance" size={50} color="#FA3034" style={{transform: [{scaleX:-1}], }} />
+        <TouchableOpacity onPress={() => navigation.navigate('Urgences')}>
+          <FontAwesome name="ambulance" size={50} color="#FA3034" style={{ transform: [{ scaleX: -1 }], }} />
         </TouchableOpacity>
       </View>
       <View style={styles.header}>
@@ -55,72 +55,95 @@ export default function HomeScreen() {
       </View>
 
       {/* Profession */}
+
       <View>
-        <View style={{width: 50, height: 50, position: "absolute", zIndex: 3001, justifyContent: "center", alignItems :"center", marginLeft: 10}}>
-          <FontAwesome name="user-md" size={30} color="#1472AE"/>
+        <View style={{ width: 50, height: 50, position: "absolute", zIndex: 3001, justifyContent: "center", alignItems: "center", marginLeft: 10 }}>
+          <FontAwesome name="user-md" size={30} color="#1472AE" />
         </View>
         <DropDownPicker
           open={openProfession}
           value={selectedProfession}
           items={professionItems}
-          setOpen={setOpenProfession}
+          setOpen={() => {
+            setOpenProfession(!openProfession)
+            setOpenAnimal(false)
+            setOpenLieu(false)
+          }}
           setValue={setSelectedProfession}
           setItems={setProfessionItems}
           placeholder="Profession"
           textStyle={styles.dropdownText}
           style={styles.dropdown}
           dropDownContainerStyle={styles.dropdownContainer}
+          listItemContainerStyle={{
+            borderBottomWidth: 1,
+            borderBlockColor: "#1472AE"
+          }}
           zIndex={3000}
           zIndexInverse={1000}
         />
       </View>
-      
+
 
       {/* Animaux */}
       <View>
-        <View style={{width: 50, height: 50, position: "absolute", zIndex: 2001, justifyContent: "center", alignItems :"center", marginLeft: 10}}>
-          <FontAwesome name="paw" size={30} color="#1472AE"/>
+        <View style={{ width: 50, height: 50, position: "absolute", zIndex: 2001, justifyContent: "center", alignItems: "center", marginLeft: 10 }}>
+          <FontAwesome name="paw" size={30} color="#1472AE" />
         </View>
         <DropDownPicker
-        open={openAnimal}
-        value={selectedAnimal}
-        items={animalItems}
-        setOpen={setOpenAnimal}
-        setValue={setSelectedAnimal}
-        setItems={setAnimalItems}
-        placeholder="Animaux"
-        textStyle={styles.dropdownText}
-        style={styles.dropdown}
-        dropDownContainerStyle={styles.dropdownContainer}
-        zIndex={2000}
-        zIndexInverse={2000}
-      />
+          open={openAnimal}
+          value={selectedAnimal}
+          items={animalItems}
+          setOpen={() => {
+            setOpenProfession(false)
+            setOpenAnimal(!openAnimal)
+            setOpenLieu(false)
+          }} setValue={setSelectedAnimal}
+          setItems={setAnimalItems}
+          placeholder="Animaux"
+          textStyle={styles.dropdownText}
+          style={styles.dropdown}
+          dropDownContainerStyle={styles.dropdownContainer}
+          listItemContainerStyle={{
+            borderBottomWidth: 1,
+            borderBlockColor: "#1472AE"
+          }}
+          zIndex={2000}
+          zIndexInverse={2000}
+        />
       </View>
-      
 
- 
+
+
       {/* Lieu */}
       <View>
-        <View style={{width: 50, height: 50, position: "absolute", zIndex: 1001, justifyContent: "center", alignItems :"center", marginLeft: 10}}>
-          <FontAwesome name="map-marker" size={30} color="#1472AE"/>
+        <View style={{ width: 50, height: 50, position: "absolute", zIndex: 1001, justifyContent: "center", alignItems: "center", marginLeft: 10 }}>
+          <FontAwesome name="map-marker" size={30} color="#1472AE" />
         </View>
 
-         <DropDownPicker
-            open={openLieu}
-            value={selectedLieu}
-            items={lieuItems}
-            setOpen={setOpenLieu}
-            setValue={setSelectedLieu}
-            setItems={setLieuItems}
-            placeholder="Lieu"
-            textStyle={styles.dropdownText}
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-            zIndex={1000}
-            zIndexInverse={3000}
-          />
+        <DropDownPicker
+          open={openLieu}
+          value={selectedLieu}
+          items={lieuItems}
+          setOpen={() => {
+            setOpenProfession(false)
+            setOpenAnimal(false)
+            setOpenLieu(!openLieu)
+          }} setValue={setSelectedLieu}
+          setItems={setLieuItems}
+          placeholder="Lieu"
+          textStyle={styles.dropdownText}
+          style={styles.dropdown}
+          dropDownContainerStyle={styles.dropdownContainer}
+          listItemContainerStyle={{
+            borderBottomWidth: 1,
+            borderBlockColor: "#1472AE"
+          }}
+          zIndex={1000}
+          zIndexInverse={3000}
+        />
       </View>
-     
+
 
       {/* Bouton Rechercher */}
       <TouchableOpacity
@@ -134,7 +157,7 @@ export default function HomeScreen() {
       <TouchableOpacity onPress={() => navigation.navigate("Professionnel")}>
         <Text style={styles.proLink}>Professionnel ?</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -144,14 +167,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#C2E7F7',
     flexGrow: 1,
     paddingTop: 60,
-    alignItems:'center',
+    alignItems: 'center',
   },
 
-  
+
   logoImage: {
     width: 250,
     height: 200,
-    paddingTop: 50,  
+    paddingTop: 50,
     alignItems: 'center',
   },
 
@@ -163,20 +186,20 @@ const styles = StyleSheet.create({
     height: 55,
     width: '85%',
     alignItems: 'center',
-    
+
   },
 
-dropdownText: {
+  dropdownText: {
     fontSize: 18,
-    color: '#000',
     textAlign: 'center',
   },
 
 
   dropdownContainer: {
     borderColor: '#1472AE',
-    width : '85%',
-    alignItems:'center',
+    width: '85%',
+    height: 200,
+
   },
 
   searchButton: {
