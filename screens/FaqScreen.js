@@ -1,10 +1,15 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { useEffect } from 'react';
 
 export default function FaqScreen() {
   const questionFAQ = "Mon animal s'est fait mordre"
 
-  
+  useEffect(() => {
+    fetch("http://localhost:3000/faq")
+  }, []);
+
+
   return (
     <View style={styles.mainDiv}>
       <View style={styles.header}>
@@ -14,7 +19,7 @@ export default function FaqScreen() {
         <View style={styles.questionsContainer}>
           <View style={styles.cardContainer}>
             <Text style={styles.cardContainerTxt}>
-                {questionFAQ}
+              {questionFAQ}
             </Text>
           </View>
         </View>
