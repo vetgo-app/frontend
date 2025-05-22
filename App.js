@@ -15,9 +15,8 @@ import AgendaScreen from "./screens/AgendaScreen";
 import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import UrgencesScreen from "./screens/UrgencesScreen";
-import RechercherListeScreen from "./screens/RechercherListeScreen";
-import ProfessionnelLoginScreen from "./screens/ProfessionnelLoginScreen";
+import ProfileProScreen from "./screens/ProfileProScreen";
+import UrgenceScreen from "./screens/UrgenceScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -54,6 +53,8 @@ function MainTabs() {
         <Tab.Screen name="Animal" component={AnimalScreen} />
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
+        <Tab.Screen name="urgence" component={UrgenceScreen} />
       </Tab.Navigator>
   );
 }
