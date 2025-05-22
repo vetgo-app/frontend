@@ -1,5 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, Image, Span } from "react-native";
-import React from "react";
+import { ScrollView, StyleSheet, Text, View, Image } from "react-native";
 
 export default function UrgenceScreen() {
   const date = ["heure1", "heure2", "heure3"];
@@ -39,7 +38,7 @@ export default function UrgenceScreen() {
             {/* affichage du tableau pour les heures de rdv, info dispo dans le tableau date , a supprimer apres fetch bdd */}
             <Text>{aff}</Text>
           </View>
-          <View style={styles.dispo}>
+          <View style={styles.dispoLink}>
             <Text>Voir plus de disponiblité</Text>
           </View>
         </View>
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#1472AE",
     width: "80%",
     alignItems: "center",
@@ -83,6 +82,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#0D2C56",
     width: "100%",
     height: "40%",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
   },
 
   image: {
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
 
   dispo: {
     width: "100%",
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderColor: "#1472AE",
     flexDirection: "row",
     justifyContent: "center",
@@ -135,5 +136,11 @@ const styles = StyleSheet.create({
     backgroundColor: "grey",
     borderRadius: 10,
     borderWidth: 2,
+  },
+  dispoLink: {
+    width: "100%",
+    height: "10%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
