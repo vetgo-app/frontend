@@ -1,7 +1,18 @@
 import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function RechercherListeScreen() {
-  const date = ["heure1", "heure2", "heure3"];
+  const date = [
+    "heure1",
+    "heure2",
+    "heure3",
+    "heure1",
+    "heure2",
+    "heure3",
+    "heure1",
+    "heure2",
+    "heure3",
+  ];
   const aff = date.map((e, i) => (
     <View key={i} style={styles.tabHeure}>
       <Text>{e}</Text>
@@ -15,8 +26,9 @@ export default function RechercherListeScreen() {
           <Text style={styles.filtreText}>A domicile</Text>
           <Text style={styles.filtreText}>Visio</Text>
         </View>
-        <View>
+        <View style={styles.searchMap}>
           <Text style={styles.map}>Voir sur la carte</Text>
+          <FontAwesome name="map-marker" size={30} color="#1472AE" />
         </View>
         <View style={styles.card}>
           <View style={styles.coordonnees}>
@@ -37,10 +49,10 @@ export default function RechercherListeScreen() {
           </View>
           <View style={styles.date}>
             {/* affichage du tableau pour les heures de rdv, info dispo dans le tableau date , a supprimer apres fetch bdd */}
-            <Text>{aff}</Text>
+            {aff}
           </View>
           <View style={styles.dispoLink}>
-            <Text>Voir plus de disponiblité</Text>
+            <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
           </View>
         </View>
       </View>
@@ -51,7 +63,7 @@ export default function RechercherListeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 100,
+    marginTop: 20,
   },
 
   filtre: {
@@ -61,7 +73,15 @@ const styles = StyleSheet.create({
   },
 
   filtreText: {
-    color: "blue",
+    color: "#1472AE",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  searchMap: {
+    alignItems: "center",
+    flexDirection: "row",
+    margin: 20,
   },
 
   map: {
@@ -127,7 +147,6 @@ const styles = StyleSheet.create({
 
   date: {
     // gestion des mini card pour les jours et heures
-    backgroundColor: "f0f0f0",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -135,17 +154,26 @@ const styles = StyleSheet.create({
     width: "100%",
     borderBottomWidth: 1,
     borderColor: "#1472AE",
+    padding: 10,
+    gap: 10,
+    flexWrap: "wrap",
   },
 
   tabHeure: {
-    backgroundColor: "grey",
+    backgroundColor: "lightgrey",
     borderRadius: 10,
     borderWidth: 2,
+    padding: 5,
   },
+
   dispoLink: {
     width: "100%",
     height: "10%",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  dispoLinkText: {
+    color: "#1472AE",
   },
 });
