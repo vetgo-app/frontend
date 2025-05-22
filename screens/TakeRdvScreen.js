@@ -50,61 +50,61 @@ export default function TakeRdvScreen() {
                 <Text style={{ fontSize: 20, frontWeight: 'bold', color: '#1472AE', marginRight: 30 }}>1/2</Text>
             </View>
             {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
-            <View style={styles.bodyContainer}>
-                <View style={styles.proContainer}>
-                    <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
-                    <View style={styles.proInfo}>
-                        <Text style={styles.text}>Isabelle Artas</Text>
-                        <Text style={styles.text}>Vétérinaire</Text>
+                <View style={styles.bodyContainer}>
+                    <View style={styles.proContainer}>
+                        <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
+                        <View style={styles.proInfo}>
+                            <Text style={styles.text}>Isabelle Artas</Text>
+                            <Text style={styles.text}>Vétérinaire</Text>
+                        </View>
                     </View>
+                    <Text style={styles.selectReason} >Selectionner un motif</Text>
+                    <View style={styles.reasons}>
+                        <FlatList horizontal={true}
+                            style={{
+                                borderWidth: 1,
+                                borderColor: 'lightgray',
+                                padding: (5, 15),
+                                borderRadius: 15,
+                            }}
+                            keyExtractor={(item) => item.value}
+                            data={data}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    onPress={() => handlePressReason(item.value)}
+                                    style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: (selectedReason === item.value) ? '#C2E7F7' : '#F0F0F0', borderRadius: 10 }}
+                                >
+                                    <Text>{item.label}</Text>
+                                </TouchableOpacity>
+                            )}
+                            ItemSeparatorComponent={() => (
+                                <View style={styles.separator} />
+                            )}
+                        />
+                    </View>
+                    <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
+                    <View style={styles.checkboxContainer}>
+                        <RadioGroup
+                            radioButtons={RadioButtons}
+                            onPress={setIsFirstRdv}
+                            selectedId={isFirstRdv}
+                            layout='row'
+                            containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                        />
+                    </View>
+                    <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
+                    <View style={styles.checkboxContainer}>
+                        <RadioGroup
+                            radioButtons={RadioButtons}
+                            onPress={setIsMyAnimal}
+                            selectedId={isMyAnimal}
+                            layout='row'
+                            containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
                 </View>
-                <Text style={styles.selectReason} >Selectionner un motif</Text>
-                <View style={styles.reasons}>
-                    <FlatList horizontal={true}
-                        style={{
-                            borderWidth: 1,
-                            borderColor: 'lightgray',
-                            padding: (5, 15),
-                            borderRadius: 15,
-                        }}
-                        keyExtractor={(item) => item.value}
-                        data={data}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                activeOpacity={0.8}
-                                onPress={() => handlePressReason(item.value)}
-                                style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: '#F0F0F0', borderRadius: 10 }}
-                            >
-                                <Text>{item.label}</Text>
-                            </TouchableOpacity>
-                        )}
-                        ItemSeparatorComponent={() => (
-                            <View style={styles.separator} />
-                        )}
-                    />
-                </View>
-                <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
-                <View style={styles.checkboxContainer}>
-                    <RadioGroup
-                        radioButtons={RadioButtons}
-                        onPress={setIsFirstRdv}
-                        selectedId={isFirstRdv}
-                        layout='row'
-                        containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
-                    />
-                </View>
-                <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
-                <View style={styles.checkboxContainer}>
-                    <RadioGroup
-                        radioButtons={RadioButtons}
-                        onPress={setIsMyAnimal}
-                        selectedId={isMyAnimal}
-                        layout='row'
-                        containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
-                    />
-                </View>
-                <TouchableOpacity style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
-            </View>
         </SafeAreaView>
     )
 }
