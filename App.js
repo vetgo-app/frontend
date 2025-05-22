@@ -1,8 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
+//imports des écrans
 import HomeScreen from "./screens/HomeScreen";
 import AgendaScreen from "./screens/AgendaScreen";
 import AnimalScreen from "./screens/AnimalScreen";
@@ -10,14 +13,17 @@ import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AgendaProScreen from "./screens/AgendaProScreen";
 import HealthJournal from "./screens/HealthJournal";
+import ProfileProScreen from "./screens/ProfileProScreen";
+import EmergencyScreen from './screens/EmergencyScreen';
+import RechercherListeScreen from './screens/RechercherListeScreen';
+import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen';
+import UrgenceScreen from "./screens/UrgenceScreen";
 
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+function MainTabs() {
   return (
-    <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
@@ -52,9 +58,9 @@ export default function App() {
         <Tab.Screen name="HealthCard" component={HealthJournal} />
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
         <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }
 
@@ -66,3 +72,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+
+//navigation principale:
+
+export default function App() {
+  return (
+    <NavigationContainer>
+
+      <Stack.Navigator>
+
+        <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+        <Stack.Screen name="Urgences" component={EmergencyScreen} />
+        <Stack.Screen name="Recherche" component={RechercherListeScreen} />
+        <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} /> 
+
+         <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
+
+      </Stack.Navigator>
+
+    </NavigationContainer>
+  )
+}
+
+
+
