@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacity, Modal } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
-import { CameraView, CameraType, Camera } from "expo-camera";
+import { CameraView, Camera } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
