@@ -3,6 +3,8 @@ import React from 'react'
 
 export default function FaqScreen() {
   const questionFAQ = "Mon animal s'est fait mordre"
+
+  
   return (
     <View style={styles.mainDiv}>
       <View style={styles.header}>
