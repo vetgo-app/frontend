@@ -19,7 +19,6 @@ export default function ProfileProScreen() {
   const [isSelectedJ, setSelectionJ] = useState(false);
   const [isSelectedV, setSelectionV] = useState(false);
   const [isSelectedS, setSelectionS] = useState(false);
-  const [isSelectedD, setSelectionD] = useState(false);
 
   const [isSelectedDom, setSelectionDom] = useState(false);
   const [isSelectedVisio, setSelectionVisio] = useState(false);
@@ -28,7 +27,7 @@ export default function ProfileProScreen() {
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [price, setPrice] = useState("");
@@ -49,19 +48,33 @@ export default function ProfileProScreen() {
       body: JSON.stringify({
         specialization,
         occupation,
-        address,
         price,
+        address: {
+          street,
+          city,
+          zipCode,
+        },
+        isSelectedL,
+        isSelectedM,
+        isSelectedMe,
+        isSelectedJ,
+        isSelectedV,
+        isSelectedS,
+        isSelectedDom,
+        isSelectedVisio,
+        isSelectedUrgence,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
+        setStreet(""), setCity(""), alert(data.message);
         console.log("message :", data);
       });
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <View>
         <View style={styles.title}>
           <Image
             style={styles.image}
@@ -105,8 +118,8 @@ export default function ProfileProScreen() {
           <TextInput
             style={styles.textInput}
             placeholder="Adresse"
-            onChangeText={(value) => setAddress(value)}
-            value={address}
+            onChangeText={(value) => setStreet(value)}
+            value={street}
           />
           <TextInput
             style={styles.textInput}
@@ -196,9 +209,11 @@ export default function ProfileProScreen() {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
-        <Text>Valider les modifications</Text>
-      </TouchableOpacity>
+      <View style={styles.viewButton}>
+        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+          <Text style={styles.buttonText}>Valider les modifications</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -212,8 +227,10 @@ const styles = StyleSheet.create({
 
   title: {
     flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "center",
     marginTop: 100,
+    marginBottom: 20,
   },
 
   image: {
@@ -227,6 +244,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+
+  email: {
+    alignItems: "center",
   },
 
   emailText: {
@@ -272,17 +293,25 @@ const styles = StyleSheet.create({
   },
 
   optionText: {
-    marginLeft: 50,
+    width: "80%",
+    marginLeft: 35,
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: "start",
     marginTop: 10,
     marginBottom: 10,
     fontWeight: "bold",
   },
 
+  option: {
+    alignItems: "center",
+  },
+
   optionBox: {
-    backgroundColor: "red",
-    width:'80%',
+    width: "80%",
     flexDirection: "row",
-    alignItems:'center',
+    justifyContent: "space-around",
+    alignItems: "center",
     height: 40,
   },
 
@@ -290,9 +319,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 
+  viewButton: {
+    marginTop: 10,
+    alignItems: "center",
+    padding: 10,
+  },
+
   button: {
     alignItems: "center",
-    backgroundColor: "#DDDDDD",
+    backgroundColor: "#0d2c56",
     padding: 10,
+    color: "white",
+    width: "80%",
+    borderRadius: 10,
+  },
+
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
