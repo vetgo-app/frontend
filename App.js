@@ -13,7 +13,8 @@ import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ProfileProScreen from "./screens/ProfileProScreen";
 import UrgenceScreen from "./screens/UrgenceScreen";
-
+import RechercherListeScreen from './screens/RechercherListeScreen'
+import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,7 +81,7 @@ export default function App() {
 
        
 
-        <Stack.Screen name="Urgences" component={UrgencesScreen} />
+        <Stack.Screen name="Urgences" component={UrgenceScreen} />
         <Stack.Screen name="Recherche" component={RechercherListeScreen} />
         <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} /> 
       </Stack.Navigator>

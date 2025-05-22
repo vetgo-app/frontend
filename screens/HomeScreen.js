@@ -47,7 +47,7 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.logoEmergency}>
           <TouchableOpacity onPress={() => navigation.navigate('Urgences')}>
-          <FontAwesome name="ambulance" size={50} color="#FA3034" style={{transform: [{scaleX:-1}], }} /> //orientation inversée horizontale
+          <FontAwesome name="ambulance" size={50} color="#FA3034" style={{transform: [{scaleX:-1}], }} />
         </TouchableOpacity>
       </View>
       <View style={styles.header}>
