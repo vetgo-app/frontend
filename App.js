@@ -10,9 +10,10 @@ import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import TakeRdvScreen from "./screens/TakeRdvScreen"
 import RdvConfirmationScreen from "./screens/RdvConfirmationScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import ConnectionScreen from "./screens/ConnectionScreen";
+import SignInScreen from "./screens/SignInScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +32,9 @@ export default function App() {
             //   iconName = "paw";
             // } else if (route.name === "Faq") {
             //   iconName = "info-circle";
-            } else if (route.name === "Connection") {
+            } else if (route.name === "SignUp") {
+              iconName = "user";
+            } else if (route.name === "SignIn") {
               iconName = "user";
             } else if (route.name === "TakeRdv") {
               iconName = "plus-circle";
@@ -47,10 +50,11 @@ export default function App() {
           headerShown: false,
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Agenda" component={AgendaScreen} />
+        {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
+        {/* <Tab.Screen name="Agenda" component={AgendaScreen} /> */}
         {/* <Tab.Screen name="Animal" component={AnimalScreen} /> */}
-        <Tab.Screen name="Connection" component={ConnectionScreen} />
+        <Tab.Screen name="SignIn" component={SignInScreen} />
+        <Tab.Screen name="SignUp" component={SignUpScreen} />
         {/* <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} /> */}
         <Tab.Screen name="TakeRdv" component={TakeRdvScreen} />

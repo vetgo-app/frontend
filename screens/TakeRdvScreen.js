@@ -64,7 +64,7 @@ export default function TakeRdvScreen() {
                         style={{
                             borderWidth: 1,
                             borderColor: 'lightgray',
-                            padding: (5, 20),
+                            padding: (5, 15),
                             borderRadius: 15,
                         }}
                         keyExtractor={(item) => item.value}
@@ -90,7 +90,7 @@ export default function TakeRdvScreen() {
                         onPress={setIsFirstRdv}
                         selectedId={isFirstRdv}
                         layout='row'
-                        containerStyle={{ width: '50%', justifyContent: 'space-between', marginTop: 20, marginBottom: 20, borderWidth: 1, borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                        containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
                     />
                 </View>
                 <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
@@ -100,7 +100,7 @@ export default function TakeRdvScreen() {
                         onPress={setIsMyAnimal}
                         selectedId={isMyAnimal}
                         layout='row'
-                        containerStyle={{ width: '50%', justifyContent: 'space-between', marginTop: 20, marginBottom: 30, borderWidth: 1, borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                        containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
                     />
                 </View>
                 <TouchableOpacity style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginBottom: 30,
+        marginBottom: 20,
     },
     image: {
         width: '30%',
@@ -179,21 +179,17 @@ const styles = StyleSheet.create({
 
     selectReason: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
         textAlign: 'center',
-        textAlignVertical: 'center',
         width: '80%',
         fontWeight: 700,
-        marginBottom: 20,
     },
 
     reasons: {
         // padding: 10,
-        height: 80,
+        height: 60,
         // marginTop: 20,
-        marginBottom: 30,
-        width: '80%',
+        marginBottom: 20,
+        width: '70%',
     },
 
     takeRdvButton: {

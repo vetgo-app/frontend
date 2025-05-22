@@ -10,7 +10,7 @@ const data = [
     { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
 ]
 
-export default function TakeRdvScreen() {
+export default function RdvConfirmationScreen() {
 
     const [confirmed, setConfirmed] = useState(false);
 
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'space-evenly',
+
     },
 
     recapContainer: {
