@@ -12,9 +12,10 @@ import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ProfileProScreen from "./screens/ProfileProScreen";
+import EmergencyScreen from './screens/EmergencyScreen';
+import RechercherListeScreen from './screens/RechercherListeScreen';
+import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen';
 import UrgenceScreen from "./screens/UrgenceScreen";
-import RechercherListeScreen from './screens/RechercherListeScreen'
-import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,7 +52,6 @@ function MainTabs() {
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
-        <Tab.Screen name="urgence" component={UrgenceScreen} />
       </Tab.Navigator>
   );
 }
@@ -74,19 +74,18 @@ export default function App() {
 
       <Stack.Navigator>
 
-       
-
         <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-
-
-       
-
-        <Stack.Screen name="Urgences" component={UrgenceScreen} />
+        <Stack.Screen name="Urgences" component={EmergencyScreen} />
         <Stack.Screen name="Recherche" component={RechercherListeScreen} />
         <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} /> 
+
+         <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
+
       </Stack.Navigator>
 
     </NavigationContainer>
   )
 }
+
+
 
