@@ -9,6 +9,7 @@ import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ProfileProScreen from "./screens/ProfileProScreen";
+import UrgenceScreen from "./screens/UrgenceScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -47,6 +48,7 @@ export default function App() {
         <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
+        <Tab.Screen name="urgence" component={UrgenceScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
