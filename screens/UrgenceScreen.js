@@ -39,7 +39,7 @@ export default function UrgenceScreen() {
             <Text>{aff}</Text>
           </View>
           <View style={styles.dispoLink}>
-            <Text>Voir plus de disponiblité</Text>
+            <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
           </View>
         </View>
       </View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
 
   date: {
     // gestion des mini card pour les jours et heures
-    backgroundColor: "f0f0f0",
+    backgroundColor: "grey",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -142,5 +142,9 @@ const styles = StyleSheet.create({
     height: "10%",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  dispoLinkText: {
+    color: "#1472AE",
   },
 });
