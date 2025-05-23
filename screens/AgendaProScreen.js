@@ -3,7 +3,7 @@ import React from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
-export default function agendaPro() {
+export default function AgendaPro() {
     const calendar = <FontAwesome name={"calendar"} size={40} style={styles.calendarIcon} />;
 
     return (
@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
     },
     profilDate: {
         backgroundColor: 'lightgray',
-        padding: "7",
-        borderRadius: "6%",
+        padding: 7,
+        borderRadius: 10,
         fontSize: 20,
         marginRight: 20
     },
