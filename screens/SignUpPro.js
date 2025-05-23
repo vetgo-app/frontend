@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacit
 import React, { useState, useRef, useEffect } from 'react'
 import { CameraView, Camera } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useDispatch, useSelector } from 'react-redux';
+import { login }from '../redux/userSlice';
 
 
 
@@ -15,6 +17,9 @@ export default function SignUpPro() {
     const [modalVisible, setModalVisible] = useState(false);
     const [facing, setFacing] = useState("front");
     const [profilPicture, setProfilPicture] = useState(null);
+
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
 
     useEffect(() => {
         (async () => {
@@ -46,6 +51,7 @@ export default function SignUpPro() {
         })
             .then((res) => res.json())
             .then((data) => {
+                dispatch(login(data))
                 console.log(data);
                 setFirstname('');
                 setLastname('');
