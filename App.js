@@ -6,13 +6,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 //import pour redux persist
-import user from '../reducers/user';
+import user from './reducers/user';
 import { Provider } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { storage } 
-import { persistStore, persistReducer } from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import {  configureStore } from '@reduxjs/toolkit';
 
 
 //imports des écrans

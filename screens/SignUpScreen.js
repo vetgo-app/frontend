@@ -2,7 +2,9 @@ import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacit
 import React, { useState, useRef, useEffect } from 'react'
 import { CameraView, Camera } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-
+import { login } from '../redux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import user from '../reducers/user';
 
 
 export default function SignUpScreen() {
@@ -15,6 +17,10 @@ export default function SignUpScreen() {
     const [modalVisible, setModalVisible] = useState(false);
     const [facing, setFacing] = useState("front");
     const [profilPicture, setProfilPicture] = useState(null);
+
+
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
 
     useEffect(() => {
         (async () => {
@@ -46,6 +52,7 @@ export default function SignUpScreen() {
         })
             .then((res) => res.json())
             .then((data) => {
+                dispatch(login(data))
                 console.log(data);
                 setFirstname('');
                 setLastname('');
@@ -98,7 +105,7 @@ export default function SignUpScreen() {
                 <Text style={styles.pageTitle}>S'inscrire</Text>
             </View>
             <KeyboardAvoidingView style={styles.bodyContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View style={{ alignItems:'center', justifyContent: 'space-between', width: '80%', height: 50, flexDirection: 'row', marginBottom: 30 }}>
+                <View style={{ alignItems: 'center', justifyContent: 'space-between', width: '80%', height: 50, flexDirection: 'row', marginBottom: 30 }}>
                     <TouchableOpacity onPress={() => handlePressProfilPhoto()}><Image source={profilPicture ? { uri: profilPicture } : require('../assets/add-profile-picture.jpg')} style={{ height: 70, width: 70, borderRadius: 100 }} height={(profilPicture ? 70 : 140)} width={(profilPicture ? 70 : 140)} /></TouchableOpacity>
                     <TextInput style={styles.firstnameInput} placeholder="Marine" onChangeText={(value) => setFirstname(value)} value={firstname} />
                 </View>
@@ -212,7 +219,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    
+
     snapContainer: {
         flexDirection: "row",
         justifyContent: "center",
