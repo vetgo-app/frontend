@@ -5,7 +5,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 
-export default function SignUpScreen() {
+export default function SignUpPro() {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -42,7 +42,7 @@ export default function SignUpScreen() {
         fetch("http://192.168.100.14:3000/users/signUp", {
             method: "POST",
             headers: { 'Content-Type': 'Application/json' },
-            body: JSON.stringify({ firstname, lastname, email, password, role: 'Particulier', photo: profilPicture }),
+            body: JSON.stringify({ firstname, lastname, email, password, role: 'Professionnel', photo: profilPicture }),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -212,7 +212,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    
     snapContainer: {
         flexDirection: "row",
         justifyContent: "center",

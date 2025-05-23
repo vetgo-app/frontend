@@ -5,6 +5,16 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+//import pour redux persist
+import user from '../reducers/user';
+import { Provider } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storage } 
+import { persistStore, persistReducer } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+
 //imports des écrans
 import HomeScreen from "./screens/HomeScreen";
 import AgendaScreen from "./screens/AgendaScreen";
@@ -25,11 +35,17 @@ import RechercherListeScreen from './screens/RechercherListeScreen';
 import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen';
 import UrgenceScreen from "./screens/UrgenceScreen";
 
+
+const store = configureStore({
+  reducer: { user },
+});
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainTabs() {
   return (
+    <Provider store={store}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
@@ -37,11 +53,11 @@ function MainTabs() {
             if (route.name === "Home") {
               iconName = "home";
             } else if (route.name === "Agenda") {
-            //   iconName = "calendar";
-            // } else if (route.name === "Animal") {
-            //   iconName = "paw";
-            // } else if (route.name === "Faq") {
-            //   iconName = "info-circle";
+              //   iconName = "calendar";
+              // } else if (route.name === "Animal") {
+              //   iconName = "paw";
+              // } else if (route.name === "Faq") {
+              //   iconName = "info-circle";
             } else if (route.name === "SignUp") {
               iconName = "user";
             } else if (route.name === "SignIn") {
@@ -59,7 +75,7 @@ function MainTabs() {
               iconName = "info-circle";
             } else if (route.name === "Profile") {
               iconName = "user";
-            } else if (route.name === "AgendaPro") {
+            } else if (route.name === "AgendaPro") {
               iconName = "star"
             }
             return (
@@ -89,6 +105,7 @@ function MainTabs() {
         <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
         <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
       </Tab.Navigator>
+    </Provider>
   );
 }
 
@@ -114,9 +131,9 @@ export default function App() {
         <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
         <Stack.Screen name="Urgences" component={EmergencyScreen} />
         <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-        <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} /> 
+        <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
 
-         <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
+        <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
 
       </Stack.Navigator>
 

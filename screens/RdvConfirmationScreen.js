@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Pressable } from 'react-native'
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // ou react-native-vector-icons
 
@@ -11,8 +11,16 @@ const data = [
 ]
 
 export default function RdvConfirmationScreen() {
-
     const [confirmed, setConfirmed] = useState(false);
+    const [stores, setStores] = useState([]);
+
+  useEffect(() => {
+    fetch('http://192.168.100.14/store')
+      .then(response => response.json())
+      .then(data => {
+        setStores(data); 
+      });
+  }, []);
 
     return (
         <SafeAreaView style={styles.container}>
