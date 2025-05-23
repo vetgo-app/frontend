@@ -50,15 +50,17 @@ export default function SignUpScreen() {
         })
             .then((res) => res.json())
             .then((data) => {
-                dispatch(login(data))
-                console.log(data);
-                setFirstname('');
-                setLastname('');
-                setEmail('');
-                setPassword('');
-                setProfilPicture(null);
-            });
-    }
+                if (data) {
+                    dispatch(login({ firstname, lastname, email, photo: profilPicture }))
+                    console.log(data);
+                    setFirstname('');
+                    setLastname('');
+                    setEmail('');
+                    setPassword('');
+                    setProfilPicture(null);
+                }
+            })
+    };
 
 
     const takePicture = async () => {

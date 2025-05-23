@@ -1,9 +1,13 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import login from '../reducers/user';
+import { useDispatch } from 'react-redux';  
+
 
 export default function SignInPro() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
 
     const handleSignIn = () => {
         console.log(JSON.stringify({
@@ -19,6 +23,7 @@ export default function SignInPro() {
             }),
         }).then(response => response.json()).then(data => {
             if (data) {
+                dispatch(login({ firstname: data.firstname, lastname: data.lastname, email: data.email, photo: data.photo }));
                 setEmail('');
                 setPassword('');
             }

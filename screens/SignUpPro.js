@@ -51,14 +51,15 @@ export default function SignUpPro() {
         })
             .then((res) => res.json())
             .then((data) => {
-                dispatch(login(data))
-                console.log(data);
-                setFirstname('');
-                setLastname('');
-                setEmail('');
-                setPassword('');
-                setProfilPicture(null);
-            });
+                if (data) {
+                    dispatch(login({ firstname, lastname, email, photo: profilPicture }));
+                    setFirstname('');
+                    setLastname('');
+                    setEmail('');
+                    setPassword('');
+                    setProfilPicture(null);
+                }
+            })
     }
 
 
@@ -104,7 +105,7 @@ export default function SignUpPro() {
                 <Text style={styles.pageTitle}>S'inscrire</Text>
             </View>
             <KeyboardAvoidingView style={styles.bodyContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View style={{ alignItems:'center', justifyContent: 'space-between', width: '80%', height: 50, flexDirection: 'row', marginBottom: 30 }}>
+                <View style={{ alignItems: 'center', justifyContent: 'space-between', width: '80%', height: 50, flexDirection: 'row', marginBottom: 30 }}>
                     <TouchableOpacity onPress={() => handlePressProfilPhoto()}><Image source={profilPicture ? { uri: profilPicture } : require('../assets/add-profile-picture.jpg')} style={{ height: 70, width: 70, borderRadius: 100 }} height={(profilPicture ? 70 : 140)} width={(profilPicture ? 70 : 140)} /></TouchableOpacity>
                     <TextInput style={styles.firstnameInput} placeholder="Marine" onChangeText={(value) => setFirstname(value)} value={firstname} />
                 </View>
