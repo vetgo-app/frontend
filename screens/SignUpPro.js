@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 
     firstnameInput: {
         width: '40%',
-        height: 30,
+        height: 40,
         borderBottomWidth: 1,
         borderColor: '#1472AE',
         marginRight: 38,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
 
     lastnameInput: {
         width: '60%',
-        height: 30,
+        height: 40,
         borderBottomWidth: 1,
         borderColor: '#1472AE',
         marginBottom: 20
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
 
     emailInput: {
         width: '60%',
-        height: 30,
+        height: 40,
         borderBottomWidth: 1,
         borderColor: '#1472AE',
         marginBottom: 20
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
 
     passwordInput: {
         width: '60%',
-        height: 30,
+        height: 40,
         borderBottomWidth: 1,
         borderColor: '#1472AE',
         marginBottom: 40,
