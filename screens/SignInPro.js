@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import login from '../reducers/user';
 import { useDispatch } from 'react-redux';  
 
-
 export default function SignInPro() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
