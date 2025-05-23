@@ -84,7 +84,7 @@ export default function SignUpScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <Modal visible={modalVisible} animationType="none" transparent>
-                <CameraView style={styles.camera} facing={facing} ref={(ref: any) => (cameraRef.current = ref)}>
+                <CameraView style={styles.camera} facing={facing} ref={(ref) => (cameraRef.current = ref)}>
                     {/* Top container with the setting buttons */}
                     <SafeAreaView style={styles.settingContainer}>
                         <TouchableOpacity style={styles.settingButton} onPress={toggleCameraFacing}>
