@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
 
   searchButton: {
-    backgroundColor: '#1472AE',
+    backgroundColor: '#0D2C56',
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 10,
