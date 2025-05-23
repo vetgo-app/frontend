@@ -2,10 +2,12 @@ import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacit
 import React, { useState, useRef, useEffect } from 'react'
 import { CameraView, Camera } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { login } from '../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../reducers/user';
 
-export default function SignUpScreen() {
+
+
+export default function SignUpPro() {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -15,7 +17,6 @@ export default function SignUpScreen() {
     const [modalVisible, setModalVisible] = useState(false);
     const [facing, setFacing] = useState("front");
     const [profilPicture, setProfilPicture] = useState(null);
-
 
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
@@ -43,16 +44,15 @@ export default function SignUpScreen() {
     };
 
     const handleSignUp = () => {
-        fetch("http://192.168.100.14:3000/users/signUp", {
+        fetch("http://192.168.100.14:3000/users/signUpPro", {
             method: "POST",
             headers: { 'Content-Type': 'Application/json' },
-            body: JSON.stringify({ firstname, lastname, email, password, role: 'Particulier', photo: profilPicture }),
+            body: JSON.stringify({ firstname, lastname, email, password, role: 'Professionnel', photo: profilPicture }),
         })
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
-                    dispatch(login({ firstname, lastname, email, photo: profilPicture }))
-                    console.log(data);
+                    dispatch(login({ firstname, lastname, email, photo: profilPicture }));
                     setFirstname('');
                     setLastname('');
                     setEmail('');
@@ -60,7 +60,7 @@ export default function SignUpScreen() {
                     setProfilPicture(null);
                 }
             })
-    };
+    }
 
 
     const takePicture = async () => {
@@ -219,7 +219,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-
     snapContainer: {
         flexDirection: "row",
         justifyContent: "center",

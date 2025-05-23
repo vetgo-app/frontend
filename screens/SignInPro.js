@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import login from '../reducers/user';
+import { useDispatch } from 'react-redux';  
 
-export default function SignInScreen() {
+export default function SignInPro() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
 
     const handleSignIn = () => {
         console.log(JSON.stringify({
             email: email,
             password: password,
         }));
-        fetch('http://192.168.100.14:3000/users/signin', {
+        fetch('http://192.168.100.14:3000/users/signInPro', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -27,10 +30,6 @@ export default function SignInScreen() {
             console.error('Error:', error);
         }
         );
-    }
-
-    const handleSignUp = () => {
-
     }
 
     return (

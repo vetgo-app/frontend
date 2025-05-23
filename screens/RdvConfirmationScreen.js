@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Pressable } from 'react-native'
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // ou react-native-vector-icons
+import { useSelector } from 'react-redux';
 
 
 const data = [
@@ -11,8 +12,20 @@ const data = [
 ]
 
 export default function RdvConfirmationScreen() {
-
     const [confirmed, setConfirmed] = useState(false);
+    const [stores, setStores] = useState([]);
+
+    const user = useSelector((state) => state.user.value);
+
+  useEffect(() => {
+    fetch('http://192.168.100.14/store')
+      .then(response => response.json())
+      .then(data => {
+        setStores(data); 
+      });
+  }, []);
+
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -28,7 +41,7 @@ export default function RdvConfirmationScreen() {
                     <View style={styles.proContainer}>
                         <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
                         <View style={styles.proInfo}>
-                            <Text style={styles.text}>Isabelle Artas</Text>
+                            <Text style={styles.text}>{user.firstname} {user.lastname}</Text>
                             <Text style={styles.text}>Vétérinaire</Text>
                         </View>
                         {/* ------------------------------------------------- DONNEES DU RDV */}
