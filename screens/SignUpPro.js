@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { CameraView, Camera } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from 'react-redux';
-import { login }from '../redux/userSlice';
+import { login } from '../reducers/user';
 
 
 
@@ -44,7 +44,7 @@ export default function SignUpPro() {
     };
 
     const handleSignUp = () => {
-        fetch("http://192.168.100.14:3000/users/signUp", {
+        fetch("http://192.168.100.14:3000/users/signUpPro", {
             method: "POST",
             headers: { 'Content-Type': 'Application/json' },
             body: JSON.stringify({ firstname, lastname, email, password, role: 'Professionnel', photo: profilPicture }),

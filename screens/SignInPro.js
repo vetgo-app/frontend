@@ -10,7 +10,7 @@ export default function SignInPro() {
             email: email,
             password: password,
         }));
-        fetch('http://192.168.100.14:3000/users/signinPro', {
+        fetch('http://192.168.100.14:3000/users/signInPro', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -2,10 +2,8 @@ import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacit
 import React, { useState, useRef, useEffect } from 'react'
 import { CameraView, Camera } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { login } from '../redux/userSlice';
+import { login } from '../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
-import user from '../reducers/user';
-
 
 export default function SignUpScreen() {
     const [firstname, setFirstname] = useState('');
