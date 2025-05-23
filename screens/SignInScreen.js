@@ -19,6 +19,7 @@ export default function SignInScreen() {
             }),
         }).then(response => response.json()).then(data => {
             if (data) {
+                dispatch(login({ firstname: data.firstname, lastname: data.lastname, email: data.email, photo: data.photo }));
                 setEmail('');
                 setPassword('');
             }
