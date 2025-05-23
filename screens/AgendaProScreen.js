@@ -1,10 +1,49 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import { useEffect, useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import moment from 'moment';
+import 'moment/locale/fr';
 
 
 export default function AgendaPro() {
     const calendar = <FontAwesome name={"calendar"} size={40} style={styles.calendarIcon} />;
+    // Take data from mongoDB 
+    const [rdvData, setRdvData] = useState([]);
+
+    // Using the today's date 
+    const [currentDate, setCurrentDate] = useState(moment());
+
+    const previousDayClick = () => {
+        setCurrentDate(moment(currentDate.subtract(1, "days")));
+    };
+
+    const nextDayClick = () => {
+        setCurrentDate(moment(currentDate.add(1, "days")));
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch("http://localhost:3000/appointments");
+            const data = await response.json();
+
+            setRdvData(data.Overview.sort());
+        };
+        fetchData();
+    }, []);
+
+    const infoContainer = rdvData.map((element, index) => {
+        return (
+            <View style={styles.cardContainer} key={index}>
+                <View style={styles.hoursContainer}>
+                    <Text style={styles.hours}>{element.appointmentHour}</Text>
+                </View>
+                <View style={styles.information}>
+                    <Text style={styles.reasonConsultation}>{element.reason}</Text>
+                    <Text style={styles.profesionnalName}>{element.userName}</Text>
+                </View>
+            </View>
+        )
+    });
 
     return (
         <View style={styles.mainDiv} >
@@ -20,31 +59,24 @@ export default function AgendaPro() {
                         <View style={styles.bottomAgenda}>
                             {calendar}
                             <View style={styles.dateContainer}>
-                                <Text style={styles.profilDate}>June 10, 2024</Text>
+                                <Text style={styles.profilDate}>{currentDate.locale('fr').format('ll')}</Text>
                             </View>
                         </View>
                     </View>
                 </View>
                 <View style={styles.bottomHeader}>
                     <TouchableOpacity style={styles.previousBtn}>
-                        <Text style={styles.previousBtnTxt} >{'<'}  Précédent</Text>
+                        <Text style={styles.previousBtnTxt} onPress={() => previousDayClick()}>{'<'}  Précédent</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.nextBtn}>
-                        <Text style={styles.nextBtnTxt} >Suivant  {'>'}</Text>
+                        <Text style={styles.nextBtnTxt} onPress={() => nextDayClick()} >Suivant  {'>'}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.body}>
-                <View style={styles.cardContainer}>
-                    <View style={styles.hoursContainer}>
-                        <Text style={styles.hours}>9:00</Text>
-                    </View>
-                    <View style={styles.information}>
-                        <Text style={styles.anmialInfo}>Chat / Siamois / Poupon</Text>
-                        <Text style={styles.reasonConsultation}>Vaccin</Text>
-                        <Text style={styles.profesionnalName}>M Dupont</Text>
-                    </View>
-                </View>
+                <ScrollView style={styles.viewContainer}>
+                    {infoContainer}
+                </ScrollView>
             </View>
         </View>
     )
@@ -139,19 +171,23 @@ const styles = StyleSheet.create({
     // BODY PART
     body: {
         height: "65%",
-        flexDirection: "row",
-        justifyContent: 'center',
+        alignItems: 'center',
+
+    },
+    viewContainer:{
+        width: 270,
     },
     cardContainer: {
-        height: "20%",
-        width: "80%",
+        height: 80,
+        width: "100%",
         flexDirection: "row",
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        marginTop: 5
     },
     hoursContainer: {
         height: "64%",
-        width: "21%",
+        width: "19%",
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: "#1472AE",
@@ -161,16 +197,13 @@ const styles = StyleSheet.create({
         color: "white"
     },
     information: {
-        height: "80%",
+        height: "60%",
         width: "70%",
         borderWidth: 1,
         borderColor: "#1472AE",
         borderRadius: 11,
         alignItems: 'flex-start',
         justifyContent: 'center'
-    },
-    anmialInfo: {
-        marginLeft: 15
     },
     reasonConsultation: {
         marginLeft: 15
