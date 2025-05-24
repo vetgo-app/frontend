@@ -1,18 +1,18 @@
 import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useEffect } from "react";
 
 export default function RechercherListeScreen() {
-  const date = [
-    "heure1",
-    "heure2",
-    "heure3",
-    "heure1",
-    "heure2",
-    "heure3",
-    "heure1",
-    "heure2",
-    "heure3",
-  ];
+  const [store, setStore] = useState([]);
+  useEffect(() => {
+    fetch("http://192.168.1.81:3000/store")
+      .then((response) => response.json())
+      .then((data) => {
+        setStore(data);
+      });
+  }, []);
+
+  const date = ["heure1", "heure2", "heure3", "heure1", "heure2"];
   const aff = date.map((e, i) => (
     <View key={i} style={styles.tabHeure}>
       <Text>{e}</Text>
@@ -22,6 +22,7 @@ export default function RechercherListeScreen() {
     <ScrollView style={styles.container}>
       <View style={styles.styleContainer}>
         <View style={styles.filtre}>
+          <View>{card}</View>
           <Text style={styles.filtreText}>Au + tôt</Text>
           <Text style={styles.filtreText}>A domicile</Text>
           <Text style={styles.filtreText}>Visio</Text>
