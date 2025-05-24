@@ -7,30 +7,44 @@ import 'moment/locale/fr';
 
 export default function AgendaPro() {
     const calendar = <FontAwesome name={"calendar"} size={40} style={styles.calendarIcon} />;
-    // Take data from mongoDB 
+
+    // Take appointment's information from mongoDB 
     const [rdvData, setRdvData] = useState([]);
 
-    // Using the today's date 
-    const [currentDate, setCurrentDate] = useState(moment());
+    // Using today's date 
+    const [currentDate, setCurrentDate] = useState(moment().locale('fr'));
 
     const previousDayClick = () => {
-        setCurrentDate(moment(currentDate.subtract(1, "days")));
+        setCurrentDate(prev => moment(prev).subtract(1, "days"));
     };
 
     const nextDayClick = () => {
-        setCurrentDate(moment(currentDate.add(1, "days")));
+        setCurrentDate(prev => moment(prev).add(1, "days"));
     };
+
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch("http://localhost:3000/appointments");
             const data = await response.json();
 
-            setRdvData(data.Overview.sort());
-        };
-        fetchData();
-    }, []);
+            // Same Date format
+            const currentDateFormatted = currentDate.format("YYYY-MM-DD");
 
+            // Filter on the good date
+            const filteredAppointments = data.Overview.filter(element => {
+                const appointmentDate = moment(element.appointmentDate, "DD MMMM YYYY", 'fr').format("YYYY-MM-DD");
+                return appointmentDate === currentDateFormatted;
+            });
+
+            setRdvData(filteredAppointments);
+        };
+
+        fetchData();
+    }, [currentDate]);
+
+
+    // Display the RDV's container
     const infoContainer = rdvData.map((element, index) => {
         return (
             <View style={styles.cardContainer} key={index}>
@@ -59,7 +73,7 @@ export default function AgendaPro() {
                         <View style={styles.bottomAgenda}>
                             {calendar}
                             <View style={styles.dateContainer}>
-                                <Text style={styles.profilDate}>{currentDate.locale('fr').format('ll')}</Text>
+                                <Text style={styles.profilDate}>{currentDate.format('LL')}</Text>
                             </View>
                         </View>
                     </View>
@@ -174,7 +188,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 
     },
-    viewContainer:{
+    viewContainer: {
         width: 270,
     },
     cardContainer: {
