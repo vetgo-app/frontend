@@ -15,11 +15,11 @@ export default function AgendaPro() {
     const [currentDate, setCurrentDate] = useState(moment().locale('fr'));
 
     const previousDayClick = () => {
-        setCurrentDate(prev => moment(prev).subtract(1, "days"));
+        setCurrentDate(moment(currentDate).subtract(1, "days"));
     };
 
     const nextDayClick = () => {
-        setCurrentDate(prev => moment(prev).add(1, "days"));
+        setCurrentDate(moment(currentDate).add(1, "days"));
     };
 
 
@@ -31,7 +31,7 @@ export default function AgendaPro() {
             // Same Date format
             const currentDateFormatted = currentDate.format("YYYY-MM-DD");
 
-            // Filter on the good date
+            // Filter on good date
             const filteredAppointments = data.Overview.filter(element => {
                 const appointmentDate = moment(element.appointmentDate, "DD MMMM YYYY", 'fr').format("YYYY-MM-DD");
                 return appointmentDate === currentDateFormatted;
