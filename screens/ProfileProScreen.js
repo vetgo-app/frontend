@@ -12,6 +12,7 @@ import Checkbox from "expo-checkbox";
 import RNPickerSelect from "react-native-picker-select";
 import { width } from "@fortawesome/free-solid-svg-icons/fa0";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 
 export default function ProfileProScreen() {
   const [isSelectedL, setSelectionL] = useState(false);
@@ -25,9 +26,6 @@ export default function ProfileProScreen() {
   const [isSelectedVisio, setSelectionVisio] = useState(false);
   const [isSelectedUrgence, setSelectionUrgence] = useState(false);
 
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
-  const [email, setEmail] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -36,17 +34,20 @@ export default function ProfileProScreen() {
   const [specialization, setSpecialization] = useState("");
   const [occupation, setOccupation] = useState("");
 
-  fetch("http://192.168.100.110:3000/users")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("route user:", data.data[0].name);
-    });
+  // fetch("http://192.168.100.110:3000/users")
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log("route user:", data.data[0].name);
+  //   });
+
+  const user = useSelector((state) => state.user.value);
 
   const handleSubmit = () => {
-    fetch("http://192.168.100.110:3000/store/addStore", {
+    fetch("http://192.168.1.81:3000/store/addStore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        user: user._id, // pour generer la relation de user avec store
         specialization,
         occupation,
         price,
@@ -69,7 +70,6 @@ export default function ProfileProScreen() {
       .then((response) => response.json())
       .then((data) => {
         setStreet(""), setCity(""), alert(data.message);
-        console.log("message :", data);
       });
   };
 
@@ -86,11 +86,11 @@ export default function ProfileProScreen() {
           </View>
 
           <View style={styles.name}>
-            <TextInput style={styles.nameText}>Valérie</TextInput>
-            <TextInput style={styles.nameText}>Veto</TextInput>
+            <TextInput style={styles.nameText}>{user.firstname}</TextInput>
+            <TextInput style={styles.nameText}>{user.lastname}</TextInput>
           </View>
           <View style={styles.email}>
-            <Text style={styles.emailText}>valerie.veto@mail.fr</Text>
+            <Text style={styles.emailText}>{user.email}</Text>
           </View>
 
           <View style={styles.input}>

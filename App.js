@@ -6,10 +6,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 //import pour redux persist
-import user from './reducers/user';
+import user from "./reducers/user";
 import { Provider } from "react-redux";
-import {  configureStore } from '@reduxjs/toolkit';
-
+import { configureStore } from "@reduxjs/toolkit";
 
 //imports des écrans
 import HomeScreen from "./screens/HomeScreen";
@@ -17,21 +16,21 @@ import AgendaScreen from "./screens/AgendaScreen";
 import AnimalScreen from "./screens/AnimalScreen";
 import FaqScreen from "./screens/FaqScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import TakeRdvScreen from "./screens/TakeRdvScreen"
+import TakeRdvScreen from "./screens/TakeRdvScreen";
 import RdvConfirmationScreen from "./screens/RdvConfirmationScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignUpPro from "./screens/SignUpPro";
 
 import SignInScreen from "./screens/SignInScreen";
+import SignInPro from "./screens/SignInPro";
 
 import AgendaProScreen from "./screens/AgendaProScreen";
 import HealthJournal from "./screens/HealthJournal";
 import ProfileProScreen from "./screens/ProfileProScreen";
-import EmergencyScreen from './screens/EmergencyScreen';
-import RechercherListeScreen from './screens/RechercherListeScreen';
-import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen';
+import EmergencyScreen from "./screens/EmergencyScreen";
+import RechercherListeScreen from "./screens/RechercherListeScreen";
+import ProfessionnelLoginScreen from "./screens/ProfessionnelLoginScreen";
 import UrgenceScreen from "./screens/UrgenceScreen";
-
 
 const store = configureStore({
   reducer: { user },
@@ -55,26 +54,26 @@ function MainTabs() {
               //   iconName = "paw";
               // } else if (route.name === "Faq") {
               //   iconName = "info-circle";
-            // } else if (route.name === "SignUp") {
-            //   iconName = "user";
-            // } else if (route.name === "SignIn") {
-            //   iconName = "user";
+              // } else if (route.name === "SignUp") {
+              //   iconName = "user";
+              // } else if (route.name === "SignIn") {
+              //   iconName = "user";
             } else if (route.name === "TakeRdv") {
               iconName = "plus-circle";
             } else if (route.name === "RdvConfirmation") {
               iconName = "check-circle";
-            // } else if (route.name === "Animal") {
-            //   iconName = "paw";
-            // } else if (route.name === "HealthCard") {
-            //   iconName = "thumbs-up";
-            //   } else if (route.name === "SignUpPro") {
-            //   iconName = "user";
-            // } else if (route.name === "Faq") {
-            //   iconName = "info-circle";
-            // } else if (route.name === "Profile") {
-            //   iconName = "user";
-            // } else if (route.name === "AgendaPro") {
-            //   iconName = "star"
+              // } else if (route.name === "Animal") {
+              //   iconName = "paw";
+              // } else if (route.name === "HealthCard") {
+              //   iconName = "thumbs-up";
+              //   } else if (route.name === "SignUpPro") {
+              //   iconName = "user";
+              // } else if (route.name === "Faq") {
+              //   iconName = "info-circle";
+              // } else if (route.name === "Profile") {
+              //   iconName = "user";
+              // } else if (route.name === "AgendaPro") {
+              //   iconName = "star"
             }
             return (
               <FontAwesome name={iconName} size={size} color={color} solid />
@@ -89,6 +88,7 @@ function MainTabs() {
         {/* <Tab.Screen name="Agenda" component={AgendaScreen} /> */}
         {/* <Tab.Screen name="Animal" component={AnimalScreen} /> */}
         <Tab.Screen name="SignIn" component={SignInScreen} />
+        <Tab.Screen name="SignInPro" component={SignInPro} />
         <Tab.Screen name="SignUpPro" component={SignUpPro} />
         {/* <Tab.Screen name="Faq" component={FaqScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} /> */}
@@ -99,9 +99,9 @@ function MainTabs() {
         {/* <Tab.Screen name="Animal" component={AnimalScreen} />
         <Tab.Screen name="HealthCard" component={HealthJournal} />
         <Tab.Screen name="Faq" component={FaqScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} /> */}
         <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
-        <Tab.Screen name="AgendaPro" component={AgendaProScreen} /> */}
+        <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
       </Tab.Navigator>
     </Provider>
   );
@@ -114,30 +114,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
 });
-
 
 //navigation principale:
 
 export default function App() {
   return (
     <NavigationContainer>
-
       <Stack.Navigator>
-
-        <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabs}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="Urgences" component={EmergencyScreen} />
         <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-        <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
+        <Stack.Screen
+          name="Professionnel"
+          component={ProfessionnelLoginScreen}
+        />
 
         <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
-
       </Stack.Navigator>
-
     </NavigationContainer>
-  )
+  );
 }
-
-
-
