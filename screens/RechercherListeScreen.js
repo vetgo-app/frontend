@@ -1,28 +1,50 @@
 import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function RechercherListeScreen() {
   const [store, setStore] = useState([]);
   useEffect(() => {
+    // use Effect permet d'afficher les elements a chaque re render
     fetch("http://192.168.1.81:3000/store")
       .then((response) => response.json())
       .then((data) => {
         setStore(data);
       });
   }, []);
-
-  const date = ["heure1", "heure2", "heure3", "heure1", "heure2"];
-  const aff = date.map((e, i) => (
-    <View key={i} style={styles.tabHeure}>
-      <Text>{e}</Text>
+  //le '?' permet d'attendre des données asynchrone (venant du fetch)
+  const card = store.data?.map((e, i) => (
+    <View key={i} style={styles.card}>
+      <View style={styles.coordonnees}>
+        <Image
+          style={styles.image}
+          source={require("../assets/doctorPicture.jpg")}
+        />
+        <View style={styles.coordonneesText}>
+          <Text style={styles.h2}>
+            {e.user.firstname}
+            {e.user.lastname}
+          </Text>
+          <Text style={styles.text}>{e.occupation}</Text>
+          <Text style={styles.text}>{e.address.street}</Text>
+          <Text style={styles.text}>{e.address.city}</Text>
+        </View>
+      </View>
+      <View style={styles.dispo}>
+        <Text>Prochaine disponibilité :</Text>
+        <Text style={styles.span}>$ mardi 6 mai</Text>
+      </View>
+      <View style={styles.date}></View>
+      <View style={styles.dispoLink}>
+        <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
+      </View>
     </View>
   ));
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.styleContainer}>
         <View style={styles.filtre}>
-          <View>{card}</View>
           <Text style={styles.filtreText}>Au + tôt</Text>
           <Text style={styles.filtreText}>A domicile</Text>
           <Text style={styles.filtreText}>Visio</Text>
@@ -31,31 +53,7 @@ export default function RechercherListeScreen() {
           <Text style={styles.map}>Voir sur la carte</Text>
           <FontAwesome name="map-marker" size={30} color="#1472AE" />
         </View>
-        <View style={styles.card}>
-          <View style={styles.coordonnees}>
-            <Image
-              style={styles.image}
-              source={require("../assets/favicon.png")}
-            />
-            <View style={styles.coordonneesText}>
-              <Text style={styles.h2}>$Nom $Prenom</Text>
-              <Text style={styles.text}>$ Profession</Text>
-              <Text style={styles.text}>$ Adresse</Text>
-              <Text style={styles.text}>$ city</Text>
-            </View>
-          </View>
-          <View style={styles.dispo}>
-            <Text>Prochaine disponibilité :</Text>
-            <Text style={styles.span}>$ mardi 6 mai</Text>
-          </View>
-          <View style={styles.date}>
-            {/* affichage du tableau pour les heures de rdv, info dispo dans le tableau date , a supprimer apres fetch bdd */}
-            {aff}
-          </View>
-          <View style={styles.dispoLink}>
-            <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-          </View>
-        </View>
+        {card}
       </View>
     </ScrollView>
   );
@@ -65,6 +63,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 20,
+    overflow: "scroll",
+  },
+
+  styleContainer: {
+    alignItems: "center",
   },
 
   filtre: {
@@ -90,15 +93,13 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 
-  styleContainer: {
-    alignItems: "center",
-  },
   card: {
     borderWidth: 1,
     borderColor: "#1472AE",
     width: "80%",
     alignItems: "center",
     borderRadius: 10,
+    marginTop: 50,
   },
 
   coordonnees: {
@@ -107,7 +108,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0D2C56",
     width: "100%",
-    height: "40%",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: "40%",
+    height: "20%",
     width: "100%",
     borderBottomWidth: 1,
     borderColor: "#1472AE",
