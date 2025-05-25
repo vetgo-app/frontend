@@ -8,7 +8,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 //import pour redux persist
 import user from './reducers/user';
 import { Provider } from "react-redux";
-import {  configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 
 
 //imports des écrans
@@ -55,26 +55,26 @@ function MainTabs() {
               //   iconName = "paw";
               // } else if (route.name === "Faq") {
               //   iconName = "info-circle";
-            // } else if (route.name === "SignUp") {
-            //   iconName = "user";
-            // } else if (route.name === "SignIn") {
-            //   iconName = "user";
+              // } else if (route.name === "SignUp") {
+              //   iconName = "user";
+              // } else if (route.name === "SignIn") {
+              //   iconName = "user";
             } else if (route.name === "TakeRdv") {
               iconName = "plus-circle";
             } else if (route.name === "RdvConfirmation") {
               iconName = "check-circle";
-            // } else if (route.name === "Animal") {
-            //   iconName = "paw";
-            // } else if (route.name === "HealthCard") {
-            //   iconName = "thumbs-up";
-            //   } else if (route.name === "SignUpPro") {
-            //   iconName = "user";
-            // } else if (route.name === "Faq") {
-            //   iconName = "info-circle";
-            // } else if (route.name === "Profile") {
-            //   iconName = "user";
-            // } else if (route.name === "AgendaPro") {
-            //   iconName = "star"
+              // } else if (route.name === "Animal") {
+              //   iconName = "paw";
+              // } else if (route.name === "HealthCard") {
+              //   iconName = "thumbs-up";
+              //   } else if (route.name === "SignUpPro") {
+              //   iconName = "user";
+              // } else if (route.name === "Faq") {
+              //   iconName = "info-circle";
+              // } else if (route.name === "Profile") {
+              //   iconName = "user";
+              // } else if (route.name === "AgendaPro") {
+              //   iconName = "star"
             }
             return (
               <FontAwesome name={iconName} size={size} color={color} solid />
@@ -122,20 +122,16 @@ const styles = StyleSheet.create({
 
 export default function App() {
   return (
-    <NavigationContainer>
-
-      <Stack.Navigator>
-
-        <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="Urgences" component={EmergencyScreen} />
-        <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-        <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
-
-        <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
-
-      </Stack.Navigator>
-
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="Urgences" component={EmergencyScreen} />
+          <Stack.Screen name="Recherche" component={RechercherListeScreen} />
+          <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
+          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+          <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
   )
 }
 
