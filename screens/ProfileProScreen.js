@@ -43,7 +43,7 @@ export default function ProfileProScreen() {
     });
 
   const handleSubmit = () => {
-    fetch("http://192.168.100.110:3000/store/addStore", {
+    fetch("http://192.168.100.14:3000/store/addStore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

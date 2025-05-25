@@ -94,14 +94,14 @@ function MainTabs() {
         <Tab.Screen name="Profile" component={ProfileScreen} /> */}
         <Tab.Screen name="TakeRdv" component={TakeRdvScreen} />
         <Tab.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
-        <Tab.Screen name="Home" component={HomeScreen} />
+        {/* <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Agenda" component={AgendaScreen} />
-        {/* <Tab.Screen name="Animal" component={AnimalScreen} />
+        <Tab.Screen name="Animal" component={AnimalScreen} />
         <Tab.Screen name="HealthCard" component={HealthJournal} />
         <Tab.Screen name="Faq" component={FaqScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} /> */}
         <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
-        <Tab.Screen name="AgendaPro" component={AgendaProScreen} /> */}
+        {/* <Tab.Screen name="AgendaPro" component={AgendaProScreen} /> */}
       </Tab.Navigator>
     </Provider>
   );

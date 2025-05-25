@@ -7,7 +7,7 @@ import { login } from '../reducers/user';
 
 
 
-export default function SignUpPro() {
+export default function SignUpPro({ navigation }) {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -44,6 +44,7 @@ export default function SignUpPro() {
     };
 
     const handleSignUp = () => {
+        navigation.navigate('SignIn', { origin: 'SignUpPro' });
         fetch("http://192.168.100.14:3000/users/signUpPro", {
             method: "POST",
             headers: { 'Content-Type': 'Application/json' },

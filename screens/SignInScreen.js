@@ -1,15 +1,13 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 
-export default function SignInScreen() {
+export default function SignInScreen({ navigation, route }) {
+    console.log(route?.params?.origin);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSignIn = () => {
-        console.log(JSON.stringify({
-            email: email,
-            password: password,
-        }));
         fetch('http://192.168.100.14:3000/users/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -23,10 +21,13 @@ export default function SignInScreen() {
                 setEmail('');
                 setPassword('');
             }
+            if (route?.params?.origin === 'HomeScreen') {
+            navigation.navigate('HomeScreen');
+        }
         }).catch(error => {
             console.error('Error:', error);
-        }
-        );
+        });
+
     }
 
     const handleSignUp = () => {
@@ -90,26 +91,30 @@ const styles = StyleSheet.create({
 
     signinInputs: {
         width: '80%',
-        height: 200,
+        height: 200
+        ,
         backgroundColor: '#ffff',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         marginBottom: 30,
+        borderWidth: 1,
     },
 
     emailInput: {
         width: '100%',
-        height: 50,
+        height: 40,
         borderBottomWidth: 1,
         borderBottomColor: '#1472AE',
         borderRadius: 10,
         paddingLeft: 10,
+        marginBottom: 20,
+
     },
 
     passwordInput: {
         width: '100%',
-        height: 50,
+        height: 40,
         borderBottomWidth: 1,
         borderBottomColor: '#1472AE',
         borderRadius: 10,
