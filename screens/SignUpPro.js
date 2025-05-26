@@ -59,7 +59,7 @@ export default function SignUpPro({ navigation }) {
     setProfilPicture(photo.uri);
   };
   const handleSignUp = () => {
-    fetch("http://192.168.100.112:3000/users/signUpPro", {
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signUpPro", {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({

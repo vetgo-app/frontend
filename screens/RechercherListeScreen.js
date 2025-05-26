@@ -12,11 +12,10 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function RechercherListeScreen({ navigation }) {
   const [store, setStore] = useState([]);
-  console.log("All stores =>", store)
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
-    fetch("http://192.168.100.112:3000/store")
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
         setStore(data.data);
@@ -25,9 +24,9 @@ export default function RechercherListeScreen({ navigation }) {
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store.map((e, i) => {
-    const storeId = e._id
+    const storeId = e._id;
     return (
-      <View key={e._id} style={styles.card} >
+      <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
           <View>
             <Image
@@ -53,10 +52,19 @@ export default function RechercherListeScreen({ navigation }) {
         <View style={styles.date}></View>
         <View style={styles.dispoLink}>
           <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-          <Button onPress={navigation.navigate('InfoProScreen', { firstname, lastname, occupation, address })}>10h00</Button>
+          <Button
+            onPress={navigation.navigate("InfoProScreen", {
+              firstname,
+              lastname,
+              occupation,
+              address,
+            })}
+          >
+            10h00
+          </Button>
         </View>
-      </View >
-    )
+      </View>
+    );
   });
 
   // console.log(card?.length);

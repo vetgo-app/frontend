@@ -34,7 +34,7 @@ export default function ProfileProScreen() {
   const [specialization, setSpecialization] = useState("");
   const [occupation, setOccupation] = useState("");
 
-  // fetch("http://192.168.100.110:3000/users")
+  // fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users")
   //   .then((response) => response.json())
   //   .then((data) => {
   //     console.log("route user:", data.data[0].name);
@@ -43,7 +43,7 @@ export default function ProfileProScreen() {
   const user = useSelector((state) => state.user.value);
 
   const handleSubmit = () => {
-    fetch("http://192.168.100.47:3000/store/addStore", {
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store/addStore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
