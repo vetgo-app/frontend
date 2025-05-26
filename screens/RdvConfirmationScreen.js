@@ -21,7 +21,7 @@ export default function RdvConfirmationScreen({navigation, route}) {
     fetch('http://192.168.100.14/store')
       .then(response => response.json())
       .then(data => {
-        setStores(data); 
+        setStores(data.data); 
       });
   }, []);
 

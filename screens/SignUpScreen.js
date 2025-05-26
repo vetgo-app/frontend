@@ -5,7 +5,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { login } from '../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ navigation, route }) {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -60,6 +60,11 @@ export default function SignUpScreen() {
                     setProfilPicture(null);
                 }
             })
+            if (route?.params?.origin === 'HomeScreen') {
+                navigation.navigate('HomeScreen');
+            } else if (route?.params?.origin === 'TakeRdvScreen') {
+                navigation.navigate('ConfirmationRdvScreen');
+            }
     };
 
 

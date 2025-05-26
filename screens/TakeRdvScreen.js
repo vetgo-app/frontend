@@ -43,6 +43,8 @@ export default function TakeRdvScreen({navigation}) {
         }
     ]), []);
 
+
+    // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
     const handleBookRdvkClick = () => {
         if (!user.token) {
             return navigation.navigate('SignIn')
