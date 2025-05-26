@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, FlatList, TouchableOpacity
 import React, { useState, useMemo } from 'react';
 import RadioGroup from 'react-native-radio-buttons-group';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const data = [
@@ -10,11 +11,14 @@ const data = [
     { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
 ]
 
-export default function TakeRdvScreen() {
+export default function TakeRdvScreen({navigation}) {
     const [selectedReason, setSelectedReason] = useState(null);
     const [isSelectedReason, setIsSelectedReason] = useState(false)
     const [isFirstRdv, setIsFirstRdv] = useState()
     const [isMyAnimal, setIsMyAnimal] = useState()
+    const dispatch = useDispatch()
+    const user = useSelector((state) => state.user.value);
+
 
     console.log('isFirstRdv', isFirstRdv);
     console.log('isMyAnimal', isMyAnimal);
@@ -40,6 +44,19 @@ export default function TakeRdvScreen() {
     ]), []);
 
 
+    // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
+    const handleBookRdvkClick = () => {
+        if (!user.token) {
+            return navigation.navigate('SignIn')
+        }
+        fetch(`http://192.168.100.14:3000/users/canBookRdv/${user.token}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    navigation.navigate('RdvConfirmationScreen')
+                }
+            });
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -73,7 +90,7 @@ export default function TakeRdvScreen() {
                             <TouchableOpacity
                                 activeOpacity={0.8}
                                 onPress={() => handlePressReason(item.value)}
-                                style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: '#F0F0F0', borderRadius: 10 }}
+                                style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: (selectedReason === item.value) ? '#C2E7F7' : '#F0F0F0', borderRadius: 10 }}
                             >
                                 <Text>{item.label}</Text>
                             </TouchableOpacity>
@@ -103,7 +120,7 @@ export default function TakeRdvScreen() {
                         containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
                     />
                 </View>
-                <TouchableOpacity style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => handleBookRdvkClick()} style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
             </View>
         </SafeAreaView>
     )

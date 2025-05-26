@@ -42,6 +42,8 @@ export default function HomeScreen() {
     { label: 'Marseille', value: 'marseille' },
   ]);
 
+  
+
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Header */}
