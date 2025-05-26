@@ -6,8 +6,19 @@ import * as DocumentPicker from 'expo-document-picker';
 
 export default function HealthJournal() {
     const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
-    const formData = new formData();
     const [animalInformation, setAnimalInformation] = useState([]);
+
+        useEffect(() => {
+
+        const fetchedData = async () => {
+
+            const response = await fetch("http://192.168.100.47:3000/healthJournal");
+            const data = await response.json();
+
+            setAnimalInformation(data.animalInformations[0])
+        }
+        fetchedData();
+    }, []);
 
     // dataInformation's variables
     const dataInformation = [
@@ -23,28 +34,16 @@ export default function HealthJournal() {
         { label: `${adoptionCertificate}` }
     ];
 
-    useEffect(() => {
-
-        const fetchedData = async () => {
-
-            const response = await fetch("http://localhost:3000/healthJournal");
-            const data = await response.json();
-
-            setAnimalInformation(data.animalInformations[0])
-        }
-        fetchedData();
-    }, []);
-
-
     const handleAddDocuments = () => {
         const selecDoc = async () => {
+            const formData = new FormData();
             const doc = await DocumentPicker.getDocumentAsync()
             console.log(doc)
 
             // formData.append('animalNewDocument', {
             //     uri: 'file://...',
             //     name: 'photo.jpg',
-            //     type: 'image/jpeg',
+            //     type: 'application/pdf',
             // });
             // fetch('http://.../upload', {
             //     method: 'POST',
