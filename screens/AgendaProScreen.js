@@ -24,7 +24,7 @@ export default function AgendaPro() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/appointments");
+      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments");
       const data = await response.json();
 
       // Same Date format
@@ -51,8 +51,8 @@ export default function AgendaPro() {
           <Text style={styles.hours}>{element.appointmentHour}</Text>
         </View>
         <View style={styles.information}>
-          <Text style={styles.reasonConsultation}>{element.reason}</Text>
-          <Text style={styles.profesionnalName}>{element.userName}</Text>
+          <Text style={styles.reasonConsultation}>{element.Reason}</Text>
+          <Text style={styles.profesionnalName}>{element.user}</Text>
         </View>
       </View>
     )
