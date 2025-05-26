@@ -11,7 +11,7 @@ const data = [
     { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
 ]
 
-export default function RdvConfirmationScreen() {
+export default function RdvConfirmationScreen({navigation, route}) {
     const [confirmed, setConfirmed] = useState(false);
     const [stores, setStores] = useState([]);
 
