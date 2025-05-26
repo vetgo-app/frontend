@@ -8,7 +8,7 @@ export default function HealthJournal() {
     const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
     const [animalInformation, setAnimalInformation] = useState([]);
 
-        useEffect(() => {
+    useEffect(() => {
 
         const fetchedData = async () => {
 
@@ -37,107 +37,116 @@ export default function HealthJournal() {
     const handleAddDocuments = () => {
         const selecDoc = async () => {
             const formData = new FormData();
-            const doc = await DocumentPicker.getDocumentAsync()
-            console.log(doc)
 
-            // formData.append('animalNewDocument', {
-            //     uri: 'file://...',
-            //     name: 'photo.jpg',
-            //     type: 'application/pdf',
-            // });
-            // fetch('http://.../upload', {
-            //     method: 'POST',
-            //     body: formData,
-            // }).then((response) => response.json())
-            //     .then((data) => {
-            //         console.log(data)
-            // });
+            const doc = await DocumentPicker.getDocumentAsync();
 
+            if (doc.canceled) {
+                Alert.alert("Chargement du document annulé !")
+            } else {
+                Alert.alert("Document correctement chargé !")
+            }
+
+            formData.append('animalNewDocument', {
+                uri: doc.assets[0].uri,
+                name: 'animalDocument.pdf',
+                type: 'application/pdf',
+            });
+
+            fetch('http://192.168.100.47:3000/healthJournal', {
+                method: 'POST',
+                body: formData,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("après le fetch => ")
+                console.log(data)
+            });
+
+        }
+
+        selecDoc()
+        // Alert.alert("Document ajouté !")
     }
 
-    selecDoc()
-    // Alert.alert("Document ajouté !")
-}
+    return (
+        <View style={styles.mainDiv}>
 
-return (
-    <View style={styles.mainDiv}>
-
-        {/* Header Part */}
-        <View style={styles.header}>
-            <View style={styles.topHeader}>
-                <View style={styles.topHeaderTitle}>
-                    <Text style={styles.title}>Carnet de Santé de</Text>
+            {/* Header Part */}
+            <View style={styles.header}>
+                <View style={styles.topHeader}>
+                    <View style={styles.topHeaderTitle}>
+                        <Text style={styles.title}>Carnet de Santé de</Text>
+                    </View>
+                    <View style={styles.topHeaderIcon}>
+                        {modifyIcon}
+                    </View>
                 </View>
-                <View style={styles.topHeaderIcon}>
-                    {modifyIcon}
-                </View>
-            </View>
-            <View style={styles.bottomHeader}>
-                <View style={styles.bottomHeaderProfile}>
-                    <View style={styles.bottomHeaderInformationContainer}>
-                        <View style={styles.bottomHeaderPictureProfile}>
-                            <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
-                        </View>
-                        <View style={styles.bottomHeaderInformation}>
-                            <View style={styles.bottomHeaderInformationName}>
-                                <Text style={styles.animalName}>{animalInformation.name}</Text>
+                <View style={styles.bottomHeader}>
+                    <View style={styles.bottomHeaderProfile}>
+                        <View style={styles.bottomHeaderInformationContainer}>
+                            <View style={styles.bottomHeaderPictureProfile}>
+                                <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
                             </View>
-                            <View style={styles.bottomHeaderInformationGeneral}>
-                                <View style={styles.bottomHeaderInformationBirth}>
-                                    <Text style={styles.animalBirth}>{animalInformation.age} ans, né le {animalInformation.dateOfBirth}</Text>
+                            <View style={styles.bottomHeaderInformation}>
+                                <View style={styles.bottomHeaderInformationName}>
+                                    <Text style={styles.animalName}>{animalInformation.name}</Text>
                                 </View>
-                                <View style={styles.bottomHeaderInformationRace}>
-                                    <Text style={styles.animalRace}>{animalInformation.race}</Text>
+                                <View style={styles.bottomHeaderInformationGeneral}>
+                                    <View style={styles.bottomHeaderInformationBirth}>
+                                        <Text style={styles.animalBirth}>{animalInformation.age} ans, né le {animalInformation.dateOfBirth}</Text>
+                                    </View>
+                                    <View style={styles.bottomHeaderInformationRace}>
+                                        <Text style={styles.animalRace}>{animalInformation.race}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </View>
             </View>
+
+            {/* Body Part */}
+            <View style={styles.body}>
+
+                {/* Informations Container */}
+                <View style={styles.bodyInformationContainer}>
+                    <Dropdown
+                        style={styles.dropdown}
+                        itemTextStyle={styles.itemTextStyle}
+                        placeholderStyle={styles.placeholderStyle}
+                        iconStyle={styles.iconStyle}
+                        data={dataInformation}
+                        labelField="label"
+                        valueField="value"
+                        placeholder="Information de l'animal"
+                        itemContainerStyle={styles.itemContainerStyles}
+                        containerStyle={styles.containerStyles}
+                    />
+                </View>
+
+                {/* Documents Container */}
+                <View style={styles.bodyDocumentContainer}>
+                    <Dropdown
+                        style={styles.dropdown}
+                        itemTextStyle={styles.itemTextStyle}
+                        placeholderStyle={styles.placeholderStyle}
+                        iconStyle={styles.iconStyle}
+                        data={dataDocuments}
+                        labelField="label"
+                        valueField="label"
+                        value="null"
+                        placeholder="Documents"
+                    />
+                </View>
+                {/* Added documents */}
+                <View style={styles.addDocumentContainer}>
+                    <TouchableOpacity style={styles.addDocumentBtn} onPress={() => handleAddDocuments()}>
+                        <Text style={styles.addDocumentBtnTxt}>Ajouter un document</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
-
-        {/* Body Part */}
-        <View style={styles.body}>
-
-            {/* Informations Container */}
-            <View style={styles.bodyInformationContainer}>
-                <Dropdown
-                    style={styles.dropdown}
-                    itemTextStyle={styles.itemTextStyle}
-                    placeholderStyle={styles.placeholderStyle}
-                    iconStyle={styles.iconStyle}
-                    data={dataInformation}
-                    labelField="label"
-                    valueField="value"
-                    placeholder="Information de l'animal"
-                    itemContainerStyle={styles.itemContainerStyles}
-                    containerStyle={styles.containerStyles}
-                />
-            </View>
-
-            {/* Documents Container */}
-            <View style={styles.bodyDocumentContainer}>
-                <Dropdown
-                    style={styles.dropdown}
-                    itemTextStyle={styles.itemTextStyle}
-                    placeholderStyle={styles.placeholderStyle}
-                    iconStyle={styles.iconStyle}
-                    data={dataDocuments}
-                    labelField="label"
-                    valueField="label"
-                    value="null"
-                    placeholder="Documents"
-                />
-            </View>
-            {/* Added documents */}
-            <View style={styles.addDocumentContainer}>
-                <TouchableOpacity style={styles.addDocumentBtn} onPress={() => handleAddDocuments()}>
-                    <Text style={styles.addDocumentBtnTxt}>Ajouter un document</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    </View>
-)
+    )
 }
 
 const styles = StyleSheet.create({
