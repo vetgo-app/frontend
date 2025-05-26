@@ -1,13 +1,20 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native'
-import { useState, useEffect } from 'react';
-import { Dropdown } from 'react-native-element-dropdown';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { useState, useEffect } from "react";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function FaqScreen() {
   // Text in the Input
   const [word, setWord] = useState("");
 
   // Initialization of the regex
-  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(escapeRegex(word), "i");
 
   // Fetch the value of the backend
@@ -21,13 +28,15 @@ export default function FaqScreen() {
 
       setOriginalFAQ(data.FAQ);
       setFilteredFAQ(data.FAQ);
-    }
+    };
     fetchData();
   }, []);
 
   // Filter the questions
   const handlePress = () => {
-    const filteredDropdownContainer = originalFAQ.filter((element) => regex.test(element.question));
+    const filteredDropdownContainer = originalFAQ.filter((element) =>
+      regex.test(element.question)
+    );
     setFilteredFAQ(filteredDropdownContainer);
   };
 
@@ -48,7 +57,7 @@ export default function FaqScreen() {
         containerStyle={styles.containerStyles}
         fontFamily={"Arial"}
       />
-    )
+    );
   });
 
   return (
@@ -58,30 +67,36 @@ export default function FaqScreen() {
           <Text style={styles.title}>FAQ</Text>
         </View>
         <View style={styles.questionsContainer}>
-          <ScrollView style={styles.scroll}>
-            {dropdownContainer}
-          </ScrollView>
+          <ScrollView style={styles.scroll}>{dropdownContainer}</ScrollView>
         </View>
       </View>
       <View style={styles.body}>
         <View style={styles.informationContainer}>
-          <TextInput style={styles.inpuText} placeholder='Que recherchez-vous ?' onChangeText={(value) => setWord(value)} value={word}></TextInput>
-          <TouchableOpacity style={styles.searchBtn} onPress={() => handlePress()}>
+          <TextInput
+            style={styles.inpuText}
+            placeholder="Que recherchez-vous ?"
+            onChangeText={(value) => setWord(value)}
+            value={word}
+          ></TextInput>
+          <TouchableOpacity
+            style={styles.searchBtn}
+            onPress={() => handlePress()}
+          >
             <Text style={styles.searchBtnTxt}>Rechercher</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   mainDiv: {
     flex: 1,
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: "Arial, sans-serif",
     backgroundColor: "#C2E7F7",
-    alignItems: 'center',
-    fontFamily: 'Arial, Sans-Serif'
+    alignItems: "center",
+    fontFamily: "Arial, Sans-Serif",
   },
   header: {
     height: "75%",
@@ -89,8 +104,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     height: "20%",
-    justifyContent: 'flex-end',
-    alignItems: 'center'
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   title: {
     fontSize: 26,
@@ -101,47 +116,44 @@ const styles = StyleSheet.create({
   questionsContainer: {
     height: "70%",
   },
-  scroll: {
-
-  },
+  scroll: {},
   cardContainerTxt: {
     fontSize: 16,
   },
-
 
   // BODY PART
   body: {
     height: "25%",
     width: "90%",
-    alignItems: 'center',
+    alignItems: "center",
   },
   informationContainer: {
     height: "100%",
     width: "100%",
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   inpuText: {
-    backgroundColor: 'white',
-    height: '23%',
-    width: '87%',
+    backgroundColor: "white",
+    height: "23%",
+    width: "87%",
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#3884BB",
-    textAlign: 'center',
+    textAlign: "center",
   },
   searchBtn: {
     borderWidth: 1,
-    height: '23%',
-    width: '87%',
+    height: "23%",
+    width: "87%",
     borderRadius: 10,
   },
   searchBtnTxt: {
-    height: '100%',
+    height: "100%",
     padding: 10,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
     backgroundColor: "#0D2C56",
     borderRadius: 10,
     fontWeight: 600,
@@ -150,7 +162,7 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: "white",
     padding: 15,
-    width: '100%',
+    width: "100%",
     borderRadius: 10,
     marginTop: 10,
     height: 100,
@@ -168,15 +180,15 @@ const styles = StyleSheet.create({
   itemTextStyle: {
     fontSize: 16,
     color: "#1472AE",
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   itemContainerStyles: {
     borderRadius: 10,
-    backgroundColor: "#f0f0f0"
+    backgroundColor: "#f0f0f0",
   },
   containerStyles: {
     borderRadius: 10,
     height: "fit-content",
-    fontSize: 16
-  }
-})
+    fontSize: 16,
+  },
+});
