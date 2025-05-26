@@ -1,15 +1,23 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, FlatList, TouchableOpacity, CheckBox } from 'react-native'
-import React, { useState, useMemo } from 'react';
-import RadioGroup from 'react-native-radio-buttons-group';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  CheckBox,
+} from "react-native";
+import React, { useState, useMemo } from "react";
+import RadioGroup from "react-native-radio-buttons-group";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useSelector, useDispatch } from "react-redux";
 
 const data = [
-    { value: "Soins préventifs", label: "Soins préventifs" },
-    { value: "Maladies et urgences", label: "Maladies et urgences" },
-    { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
-]
+  { value: "Soins préventifs", label: "Soins préventifs" },
+  { value: "Maladies et urgences", label: "Maladies et urgences" },
+  { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
+];
 
 export default function TakeRdvScreen({ navigation }) {
     const [selectedReason, setSelectedReason] = useState(null);
@@ -18,32 +26,32 @@ export default function TakeRdvScreen({ navigation }) {
     const [isMyAnimal, setIsMyAnimal] = useState()
     const dispatch = useDispatch()
     const user = useSelector((state) => state.user.value);
-    // const { firstname, lastname, occupation, price, date } = route.params;
+    const { firstname, lastname, occupation, price, address } = route.params;
 
+  console.log("isFirstRdv", isFirstRdv);
+  console.log("isMyAnimal", isMyAnimal);
 
-    console.log('isFirstRdv', isFirstRdv);
-    console.log('isMyAnimal', isMyAnimal);
+  const handlePressReason = (value) => {
+    setSelectedReason(value);
+    setIsSelectedReason(!isSelectedReason);
+    console.log("value", value);
+  };
 
-    const handlePressReason = (value) => {
-        setSelectedReason(value);
-        setIsSelectedReason(!isSelectedReason)
-        console.log('value', value)
-    }
-
-
-    const RadioButtons = useMemo(() => ([
-        {
-            id: true, // acts as primary key, should be unique and non-empty string
-            label: 'Oui',
-            value: 'Oui'
-        },
-        {
-            id: false,
-            label: 'Non',
-            value: 'Non'
-        }
-    ]), []);
-
+  const RadioButtons = useMemo(
+    () => [
+      {
+        id: true, // acts as primary key, should be unique and non-empty string
+        label: "Oui",
+        value: "Oui",
+      },
+      {
+        id: false,
+        label: "Non",
+        value: "Non",
+      },
+    ],
+    []
+  );
 
     // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
     const handleBookRdvkClick = () => {
@@ -51,7 +59,7 @@ export default function TakeRdvScreen({ navigation }) {
         if (!user.token) {
             return navigation.navigate('SignIn')
         }
-        fetch(`http://192.168.100.14:3000/users/canBookRdv/${user.token}`)
+        fetch(process.env.EXPO_PUBLIC_BACKEND_URL + `/users/canBookRdv/${user.token}`)
             .then(response => response.json())
             .then(data => {
                 if (data.result) {
@@ -134,95 +142,94 @@ export default function TakeRdvScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: "center",
+  },
 
-    headerContainer: {
-        width: '100%',
-        height: '13%',
-        backgroundColor: '#ffff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#1472AE',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
+  headerContainer: {
+    width: "100%",
+    height: "13%",
+    backgroundColor: "#ffff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#1472AE",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
 
-    pageTitle: {
-        fontWeight: 800,
-        fontSize: 26,
-        color: '#1472AE',
-        marginLeft: 30,
-    },
-    pageTitle: {
-        fontWeight: 800,
-        fontSize: 26,
-        color: '#1472AE',
-        marginLeft: 30,
-    },
+  pageTitle: {
+    fontWeight: 800,
+    fontSize: 26,
+    color: "#1472AE",
+    marginLeft: 30,
+  },
+  pageTitle: {
+    fontWeight: 800,
+    fontSize: 26,
+    color: "#1472AE",
+    marginLeft: 30,
+  },
 
-    bodyContainer: {
-        height: '87%',
-        width: '100%',
-        backgroundColor: '#ffff',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-    },
+  bodyContainer: {
+    height: "87%",
+    width: "100%",
+    backgroundColor: "#ffff",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
 
-    proContainer: {
-        padding: 15,
-        width: '80%',
-        height: 125,
-        backgroundColor: '#0D2C56',
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
-    image: {
-        width: '30%',
-        height: '100%',
-        borderRadius: 50,
-    },
+  proContainer: {
+    padding: 15,
+    width: "80%",
+    height: 125,
+    backgroundColor: "#0D2C56",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  image: {
+    width: "30%",
+    height: "100%",
+    borderRadius: 50,
+  },
 
-    proInfo: {
-        width: '60%',
-        height: '90%',
-        justifyContent: 'space-around',
-        alignItems: 'center'
-    },
+  proInfo: {
+    width: "60%",
+    height: "90%",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
 
-    text: {
-        color: '#ffff',
-        fontSize: 20,
-    },
+  text: {
+    color: "#ffff",
+    fontSize: 20,
+  },
 
-    selectReason: {
-        flexDirection: 'row',
-        textAlign: 'center',
-        width: '80%',
-        fontWeight: 700,
-    },
+  selectReason: {
+    flexDirection: "row",
+    textAlign: "center",
+    width: "80%",
+    fontWeight: 700,
+  },
 
-    reasons: {
-        // padding: 10,
-        height: 60,
-        // marginTop: 20,
-        marginBottom: 20,
-        width: '70%',
-    },
+  reasons: {
+    // padding: 10,
+    height: 60,
+    // marginTop: 20,
+    marginBottom: 20,
+    width: "70%",
+  },
 
-    takeRdvButton: {
-        width: '80%',
-        height: 50,
-        backgroundColor: '#0D2C56',
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-})
+  takeRdvButton: {
+    width: "80%",
+    height: 50,
+    backgroundColor: "#0D2C56",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

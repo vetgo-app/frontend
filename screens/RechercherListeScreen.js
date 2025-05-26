@@ -5,56 +5,71 @@ import {
   ScrollView,
   Image,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-export default function RechercherListeScreen() {
+export default function RechercherListeScreen({ navigation }) {
   const [store, setStore] = useState([]);
+
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
-    fetch("http://192.168.100.14:3000/store")
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.data);
         setStore(data.data);
-        console.log(data);
       });
   }, []);
 
+  const handleNavigation = (elem) => {
+    navigation.navigate("InfoProScreen", {
+      firstname: elem.user?.firstname,
+      lastname: elem.user?.lastname,
+      occupation: elem.occupation,
+      address: elem.address,
+      price: elem.price,
+    });
+  };
+
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
-  const card = store.map((e, i) => (
-    <View key={e._id} style={styles.card}>
-      <View style={styles.coordonnees}>
-        <View>
-          <Image
-            style={styles.image}
-            source={require("../assets/doctorPicture.jpg")}
-          />
+  const card = store?.map((e, i) => {
+    console.log("element =>", e);
+    return (
+      <View key={e._id} style={styles.card}>
+        <View style={styles.coordonnees}>
+          <View>
+            <Image
+              style={styles.image}
+              source={require("../assets/doctorPicture.jpg")}
+            />
+          </View>
+          <View style={styles.coordonneesText}>
+            <Text style={styles.h2}>
+              {e?.user?.firstname}
+              {e?.user?.lastname}
+            </Text>
+            <Text style={styles.text}>{e.occupation}</Text>
+            <Text style={styles.text}>{e.address.street}</Text>
+            <Text style={styles.text}>{e.address.city}</Text>
+          </View>
         </View>
-
-        <View style={styles.coordonneesText}>
-          <Text style={styles.h2}>
-            {e.user.firstname}
-            {e.user.lastname}
-          </Text>
-          <Text style={styles.text}>{e.occupation}</Text>
-          <Text style={styles.text}>{e.address.street}</Text>
-          <Text style={styles.text}>{e.address.city}</Text>
+        <View style={styles.dispo}>
+          <Text>Prochaine disponibilité :</Text>
+          <Text style={styles.span}>mardi 6 mai</Text>
+        </View>
+        <View style={styles.date}></View>
+        <View style={styles.dispoLink}>
+          <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
+          <TouchableOpacity onPress={() => handleNavigation(e)}>
+            <Text>10h00</Text>
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.dispo}>
-        <Text>Prochaine disponibilité :</Text>
-        <Text style={styles.span}>mardi 6 mai</Text>
-      </View>
-      <View style={styles.date}></View>
-      <View style={styles.dispoLink}>
-        <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-      </View>
-    </View>
-  ));
-
-  // console.log(card?.length);
+    );
+  });
 
   return (
     <SafeAreaProvider>
