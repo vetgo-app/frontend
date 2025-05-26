@@ -52,7 +52,7 @@ export default function SignUpScreen({ navigation, route }) {
   };
 
   const handleSignUp = () => {
-    fetch("http://192.168.100.110:3000/users/signUp", {
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signUp", {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({

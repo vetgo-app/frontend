@@ -16,7 +16,7 @@ export default function InfoProScreen({ navigation }) {
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
-    fetch(`http://192.168.100.112:3000/${storeId}`)
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
       .then((response) => response.json())
       .then((data) => {});
   }, []);

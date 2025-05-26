@@ -23,7 +23,9 @@ export default function FaqScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://192.168.100.110:3000/faq");
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_BACKEND_URL + "/faq"
+      );
       const data = await response.json();
 
       setOriginalFAQ(data.FAQ);

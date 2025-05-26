@@ -15,7 +15,7 @@ export default function RechercherListeScreen({ navigation }) {
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
-    fetch("http://192.168.100.110:3000/store")
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
         setStore(data.data);
