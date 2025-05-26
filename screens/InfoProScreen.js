@@ -12,14 +12,18 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 
 export default function InfoProScreen({ navigation }) {
   const route = useRoute();
-  const { storeId, firstname, lastname, address, occupation } = route.params;
+  const { storeId, firstname, lastname, address, occupation, price } = route.params;
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
     fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
       .then((response) => response.json())
-      .then((data) => {});
+      .then((data) => { });
   }, []);
+
+  // const fullAddress = address.map((e) => {
+  // return (<Text key={e} style={styles.adresse}>{e.street}, {e.zipCode} {e.city}</Text>);
+  // })
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -38,9 +42,9 @@ export default function InfoProScreen({ navigation }) {
       <View style={styles.card}>
         <Image source={{ uri: "test" }} style={styles.profileImage} />
         <View>
-          <Text style={styles.name}>{firstname}</Text>
-          <Text style={styles.specialite}>{firstname}</Text>
-          <Text style={styles.adresse}>{firstname}</Text>
+          <Text style={styles.name}>{firstname} {lastname}</Text>
+          <Text style={styles.specialite}>{occupation}</Text>
+          <Text style={styles.adresse}>{address.street}, {address.zipCode} {address.city}</Text>
         </View>
       </View>
 
@@ -67,15 +71,15 @@ export default function InfoProScreen({ navigation }) {
           </TouchableOpacity>
         ))}
       </View>
-
+<Text>{price}</Text>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("TakeRdvScreen", {
+          navigation.navigate("TakeRdv", {
             firstname,
             lastname,
             occupation,
+            address,
             price,
-            date,
           });
         }}
         style={styles.nextButton}

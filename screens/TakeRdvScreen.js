@@ -20,12 +20,13 @@ const data = [
 ];
 
 export default function TakeRdvScreen({ navigation }) {
-  const [selectedReason, setSelectedReason] = useState(null);
-  const [isSelectedReason, setIsSelectedReason] = useState(false);
-  const [isFirstRdv, setIsFirstRdv] = useState();
-  const [isMyAnimal, setIsMyAnimal] = useState();
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
+    const [selectedReason, setSelectedReason] = useState(null);
+    const [isSelectedReason, setIsSelectedReason] = useState(false)
+    const [isFirstRdv, setIsFirstRdv] = useState()
+    const [isMyAnimal, setIsMyAnimal] = useState()
+    const dispatch = useDispatch()
+    const user = useSelector((state) => state.user.value);
+    const { firstname, lastname, occupation, price, address } = route.params;
 
   console.log("isFirstRdv", isFirstRdv);
   console.log("isMyAnimal", isMyAnimal);
@@ -52,131 +53,92 @@ export default function TakeRdvScreen({ navigation }) {
     []
   );
 
-  // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
-  const handleBookRdvkClick = () => {
-    if (!user.token) {
-      return navigation.navigate("SignIn");
-    }
-    fetch(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/users/canBookRdv/${user.token}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          navigation.navigate("RdvConfirmationScreen");
+    // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
+    const handleBookRdvkClick = () => {
+        console.log('je suis entré');
+        if (!user.token) {
+            return navigation.navigate('SignIn')
         }
-      });
-  };
+        fetch(process.env.EXPO_PUBLIC_BACKEND_URL + `/users/canBookRdv/${user.token}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    navigation.navigate('RdvConfirmationScreen', {
+                        reason: selectedReason,
+                        isFirstRdv: isFirstRdv,
+                        isMyAnimal: isMyAnimal
+                    });
+                }
+            });
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <FontAwesome
-          name="arrow-left"
-          size={15}
-          color="#1472AE"
-          style={{ color: "#1472AE", marginLeft: 30 }}
-        />
-        {/* //-------------------------------------------------TITRE DE LA PAGE */}
-        <Text style={styles.pageTitle}>Votre rendez-vous</Text>
-        <Text
-          style={{
-            fontSize: 20,
-            frontWeight: "bold",
-            color: "#1472AE",
-            marginRight: 30,
-          }}
-        >
-          1/2
-        </Text>
-      </View>
-      {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
-      <View style={styles.bodyContainer}>
-        <View style={styles.proContainer}>
-          <Image
-            source={require("../assets/doctorPicture.jpg")}
-            style={styles.image}
-          />
-          <View style={styles.proInfo}>
-            <Text style={styles.text}>Isabelle Artas</Text>
-            <Text style={styles.text}>Vétérinaire</Text>
-          </View>
-        </View>
-        <Text style={styles.selectReason}>Selectionner un motif</Text>
-        <View style={styles.reasons}>
-          <FlatList
-            horizontal={true}
-            style={{
-              borderWidth: 1,
-              borderColor: "lightgray",
-              padding: (5, 15),
-              borderRadius: 15,
-            }}
-            keyExtractor={(item) => item.value}
-            data={data}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => handlePressReason(item.value)}
-                style={{
-                  marginLeft: 20,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 180,
-                  backgroundColor:
-                    selectedReason === item.value ? "#C2E7F7" : "#F0F0F0",
-                  borderRadius: 10,
-                }}
-              >
-                <Text>{item.label}</Text>
-              </TouchableOpacity>
-            )}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-          />
-        </View>
-        <Text style={{ fontWeight: 700 }}>
-          Est-ce votre premier rendez-vous ?
-        </Text>
-        <View style={styles.checkboxContainer}>
-          <RadioGroup
-            radioButtons={RadioButtons}
-            onPress={setIsFirstRdv}
-            selectedId={isFirstRdv}
-            layout="row"
-            containerStyle={{
-              width: "50%",
-              justifyContent: "space-between",
-              borderRadius: 10,
-              borderColor: "lightgray",
-              padding: (5, 10),
-            }}
-          />
-        </View>
-        <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
-        <View style={styles.checkboxContainer}>
-          <RadioGroup
-            radioButtons={RadioButtons}
-            onPress={setIsMyAnimal}
-            selectedId={isMyAnimal}
-            layout="row"
-            containerStyle={{
-              width: "50%",
-              justifyContent: "space-between",
-              borderRadius: 10,
-              borderColor: "lightgray",
-              padding: (5, 10),
-            }}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => handleBookRdvkClick()}
-          style={styles.takeRdvButton}
-        >
-          <Text style={{ fontWeight: 700, color: "white" }}>Prendre RDV</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
+    }
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.headerContainer}>
+                <FontAwesome name="arrow-left" size={15} color="#1472AE" style={{ color: '#1472AE', marginLeft: 30 }} />
+                {/* //-------------------------------------------------TITRE DE LA PAGE */}
+                <Text style={styles.pageTitle}>Votre rendez-vous</Text>
+                <Text style={{ fontSize: 20, frontWeight: 'bold', color: '#1472AE', marginRight: 30 }}>1/2</Text>
+            </View>
+            {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
+            <View style={styles.bodyContainer}>
+                <View style={styles.proContainer}>
+                    <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
+                    <View  style={styles.proInfo}>
+                        <Text style={styles.text}>Isabelle Artas</Text>
+                        <Text style={styles.text}>Vétérinaire</Text>
+                    </View>
+                </View>
+                <Text style={styles.selectReason} >Selectionner un motif</Text>
+                <View style={styles.reasons}>
+                    <FlatList horizontal={true}
+                        style={{
+                            borderWidth: 1,
+                            borderColor: 'lightgray',
+                            padding: (5, 15),
+                            borderRadius: 15,
+                        }}
+                        keyExtractor={(item) => item.value}
+                        data={data}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={() => handlePressReason(item.value)}
+                                style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: (selectedReason === item.value) ? '#C2E7F7' : '#F0F0F0', borderRadius: 10 }}
+                            >
+                                <Text>{item.label}</Text>
+                            </TouchableOpacity>
+                        )}
+                        ItemSeparatorComponent={() => (
+                            <View style={styles.separator} />
+                        )}
+                    />
+                </View>
+                <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
+                <View style={styles.checkboxContainer}>
+                    <RadioGroup
+                        radioButtons={RadioButtons}
+                        onPress={setIsFirstRdv}
+                        selectedId={isFirstRdv}
+                        layout='row'
+                        containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                    />
+                </View>
+                <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
+                <View style={styles.checkboxContainer}>
+                    <RadioGroup
+                        radioButtons={RadioButtons}
+                        onPress={setIsMyAnimal}
+                        selectedId={isMyAnimal}
+                        layout='row'
+                        containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+                    />
+                </View>
+                <TouchableOpacity onPress={() => handleBookRdvkClick()} style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
+            </View>
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
