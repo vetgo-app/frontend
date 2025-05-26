@@ -90,6 +90,7 @@ function MainTabs() {
       <Tab.Screen name="Agenda" component={AgendaScreen} />
       <Tab.Screen name="Animal" component={AnimalScreen} />
       <Tab.Screen name="SignIn" component={SignInScreen} />
+      <Tab.Screen name="SignUp" component={SignUpScreen} />
       <Tab.Screen name="SignInPro" component={SignInPro} />
       <Tab.Screen name="SignUpPro" component={SignUpPro} />
       <Tab.Screen name="Faq" component={FaqScreen} />

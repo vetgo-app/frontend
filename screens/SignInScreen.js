@@ -5,11 +5,12 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../reducers/user";
-export default function SignInScreen({ navigation, route }) {
+export default function SignInScreen({ navigation, route, setModalVisible }) {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -26,20 +27,22 @@ export default function SignInScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        console.log(data);
+
+        if (data.result) {
+          console.log(data);
+
           dispatch(
-            login({
-              firstname: data.firstname,
-              lastname: data.lastname,
-              email: data.email,
-              photo: data.photo,
-            })
+            login({ ...data })
           );
           setEmail("");
           setPassword("");
-        }
-        if (route?.params?.origin === "HomeScreen") {
-          navigation.navigate("HomeScreen");
+          setModalVisible && setModalVisible(false);
+          if (route?.params?.origin === "HomeScreen") {
+            navigation.navigate("HomeScreen");
+          }
+        } else {
+          Alert.alert("Erreur de connexion", data.error);
         }
       })
       .catch((error) => {
@@ -49,7 +52,7 @@ export default function SignInScreen({ navigation, route }) {
 
   const handleSignUpClick = () => {
     console.log("redirection");
-    navigation.navigate("SignUpScreen");
+    navigation.navigate("SignUp");
   };
 
   return (

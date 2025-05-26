@@ -10,8 +10,8 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-export default function InfoProScreen({ navigation }) {
-  const route = useRoute();
+export default function InfoProScreen({ navigation, route }) {
+
   const { storeId, firstname, lastname, address, occupation, price } = route.params;
 
   useEffect(() => {
