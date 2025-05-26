@@ -1,25 +1,38 @@
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  StatusBar,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function RechercherListeScreen() {
   const [store, setStore] = useState([]);
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
-    fetch("http://192.168.1.81:3000/store")
+    fetch("http://192.168.100.110:3000/store")
       .then((response) => response.json())
       .then((data) => {
-        setStore(data);
+        setStore(data.data);
+        console.log(data);
       });
   }, []);
+
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
-  const card = store.data?.map((e, i) => (
-    <View key={i} style={styles.card}>
+  const card = store.map((e, i) => (
+    <View key={e._id} style={styles.card}>
       <View style={styles.coordonnees}>
-        <Image
-          style={styles.image}
-          source={require("../assets/doctorPicture.jpg")}
-        />
+        <View>
+          <Image
+            style={styles.image}
+            source={require("../assets/doctorPicture.jpg")}
+          />
+        </View>
+
         <View style={styles.coordonneesText}>
           <Text style={styles.h2}>
             {e.user.firstname}
@@ -32,7 +45,7 @@ export default function RechercherListeScreen() {
       </View>
       <View style={styles.dispo}>
         <Text>Prochaine disponibilité :</Text>
-        <Text style={styles.span}>$ mardi 6 mai</Text>
+        <Text style={styles.span}>mardi 6 mai</Text>
       </View>
       <View style={styles.date}></View>
       <View style={styles.dispoLink}>
@@ -41,29 +54,33 @@ export default function RechercherListeScreen() {
     </View>
   ));
 
+  // console.log(card?.length);
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.styleContainer}>
-        <View style={styles.filtre}>
-          <Text style={styles.filtreText}>Au + tôt</Text>
-          <Text style={styles.filtreText}>A domicile</Text>
-          <Text style={styles.filtreText}>Visio</Text>
-        </View>
-        <View style={styles.searchMap}>
-          <Text style={styles.map}>Voir sur la carte</Text>
-          <FontAwesome name="map-marker" size={30} color="#1472AE" />
-        </View>
-        {card}
-      </View>
-    </ScrollView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <ScrollView>
+          <View style={styles.styleContainer}>
+            <View style={styles.filtre}>
+              <Text style={styles.filtreText}>Au + tôt</Text>
+              <Text style={styles.filtreText}>A domicile</Text>
+              <Text style={styles.filtreText}>Visio</Text>
+            </View>
+            <View style={styles.searchMap}>
+              <Text style={styles.map}>Voir sur la carte</Text>
+              <FontAwesome name="map-marker" size={30} color="#1472AE" />
+            </View>
+            {card}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
-    overflow: "scroll",
   },
 
   styleContainer: {
@@ -99,7 +116,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
     borderRadius: 10,
-    marginTop: 50,
+    marginTop: 20,
   },
 
   coordonnees: {
@@ -138,8 +155,8 @@ const styles = StyleSheet.create({
     borderColor: "#1472AE",
     flexDirection: "row",
     justifyContent: "center",
-    height: "10%",
     alignItems: "center",
+    padding: 10,
   },
 
   span: {
@@ -151,7 +168,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: "20%",
     width: "100%",
     borderBottomWidth: 1,
     borderColor: "#1472AE",
@@ -164,14 +180,13 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgrey",
     borderRadius: 10,
     borderWidth: 2,
-    padding: 5,
   },
 
   dispoLink: {
     width: "100%",
-    height: "10%",
     alignItems: "center",
     justifyContent: "center",
+    padding: 10,
   },
 
   dispoLinkText: {

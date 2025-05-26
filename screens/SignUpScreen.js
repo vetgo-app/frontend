@@ -43,7 +43,7 @@ export default function SignUpScreen() {
     };
 
     const handleSignUp = () => {
-        fetch("http://192.168.100.14:3000/users/signUp", {
+        fetch("http://192.168.100.110:3000/users/signUp", {
             method: "POST",
             headers: { 'Content-Type': 'Application/json' },
             body: JSON.stringify({ firstname, lastname, email, password, role: 'Particulier', photo: profilPicture }),

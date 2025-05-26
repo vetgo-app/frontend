@@ -121,12 +121,8 @@ const styles = StyleSheet.create({
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MainTabs"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="MainTabs" component={MainTabs} />
         <Stack.Screen name="Urgences" component={EmergencyScreen} />
         <Stack.Screen name="Recherche" component={RechercherListeScreen} />
         <Stack.Screen

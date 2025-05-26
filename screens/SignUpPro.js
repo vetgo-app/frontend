@@ -52,7 +52,7 @@ export default function SignUpPro() {
   };
 
   const handleSignUp = () => {
-    fetch("http://192.168.1.81:3000/users/signUpPro", {
+    fetch("http://192.168.100.110:3000/users/signUpPro", {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({
