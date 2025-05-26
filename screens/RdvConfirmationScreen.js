@@ -14,11 +14,13 @@ const data = [
 export default function RdvConfirmationScreen({navigation, route}) {
     const [confirmed, setConfirmed] = useState(false);
     const [stores, setStores] = useState([]);
+    // const { reason, isFirstRdv, isMyAnimal } = route.params;
+    // const { firstname, lastname, occupation, price, date } = route.params;
 
-    const user = useSelector((state) => state.user.value);
+    // const user = useSelector((state) => state.user.value);
 
   useEffect(() => {
-    fetch('http://192.168.100.14/store')
+    fetch(`http://192.168.100.14/store/${user._id}`)
       .then(response => response.json())
       .then(data => {
         setStores(data.data); 

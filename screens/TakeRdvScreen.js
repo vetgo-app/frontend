@@ -11,13 +11,14 @@ const data = [
     { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
 ]
 
-export default function TakeRdvScreen({navigation}) {
+export default function TakeRdvScreen({ navigation }) {
     const [selectedReason, setSelectedReason] = useState(null);
     const [isSelectedReason, setIsSelectedReason] = useState(false)
     const [isFirstRdv, setIsFirstRdv] = useState()
     const [isMyAnimal, setIsMyAnimal] = useState()
     const dispatch = useDispatch()
     const user = useSelector((state) => state.user.value);
+    // const { firstname, lastname, occupation, price, date } = route.params;
 
 
     console.log('isFirstRdv', isFirstRdv);
@@ -46,6 +47,7 @@ export default function TakeRdvScreen({navigation}) {
 
     // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
     const handleBookRdvkClick = () => {
+        console.log('je suis entré');
         if (!user.token) {
             return navigation.navigate('SignIn')
         }
@@ -53,9 +55,14 @@ export default function TakeRdvScreen({navigation}) {
             .then(response => response.json())
             .then(data => {
                 if (data.result) {
-                    navigation.navigate('RdvConfirmationScreen')
+                    navigation.navigate('RdvConfirmationScreen', {
+                        reason: selectedReason,
+                        isFirstRdv: isFirstRdv,
+                        isMyAnimal: isMyAnimal
+                    });
                 }
             });
+
     }
 
     return (
@@ -70,7 +77,7 @@ export default function TakeRdvScreen({navigation}) {
             <View style={styles.bodyContainer}>
                 <View style={styles.proContainer}>
                     <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
-                    <View style={styles.proInfo}>
+                    <View  style={styles.proInfo}>
                         <Text style={styles.text}>Isabelle Artas</Text>
                         <Text style={styles.text}>Vétérinaire</Text>
                     </View>
