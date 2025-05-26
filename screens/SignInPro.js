@@ -16,7 +16,7 @@ export default function SignInPro() {
   const dispatch = useDispatch();
 
   const handleSignIn = () => {
-    fetch("http://192.168.100.47:3000/users/signInPro", {
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signInPro", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
