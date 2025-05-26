@@ -7,9 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/user";
 export default function SignInScreen({ navigation, route }) {
-  console.log(route?.params?.origin);
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
