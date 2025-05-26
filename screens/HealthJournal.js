@@ -1,75 +1,115 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from 'expo-document-picker';
 
 export default function HealthJournal() {
+    const petId = "6831ca6e1bdf6463fe893433"
     const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
-    const [animalInformation, setAnimalInformation] = useState([]);
+    const [petInfo, setPetInfo] = useState(null);
+    
+    const [documentName, setDocumentName] = useState("")
+    const [modalVisible, setModalVisible] = useState(false)
+    const [previsualisationModalVisible, setPrevisualisationModalVisible] = useState(false)
+    const [selectedDoc, setSelectedDoc] = useState(null)
+
+    const fetchData = async () => {
+        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId );
+        const data = await response.json();
+
+        if (data.result) {                
+            setPetInfo(data.petInfo)
+        } else {
+            Alert.alert(data.error)
+        }
+    }
 
     useEffect(() => {
-
-        const fetchedData = async () => {
-
-            const response = await fetch("http://192.168.100.47:3000/healthJournal");
-            const data = await response.json();
-
-            setAnimalInformation(data.animalInformations[0])
-        }
-        fetchedData();
+        fetchData();
     }, []);
 
     // dataInformation's variables
     const dataInformation = [
-        { label: `Sexe : ${animalInformation.sexe}`, value: `${animalInformation.sexe}` },
-        { label: `Identification: ${animalInformation.identification}`, value: `${animalInformation.identification}` },
-        { label: `Poids : ${animalInformation.weight}`, value: `${animalInformation.weight}` },
+        { label: `Sexe : ${petInfo?.sexe}`, value: `${petInfo?.sexe}` },
+        { label: `Identification: ${petInfo?.identification}`, value: `${petInfo?.identification}` },
+        { label: `Poids : ${petInfo?.weight}`, value: `${petInfo?.weight}` },
     ];
 
-    // dataDoucments' variables
-    const adoptionCertificate = "Contrat d'adoption (17/01/24)";
+    const dataDocuments = petInfo?.documents.map((e) => {
+        return { label: `Nom : ${e.docName}`, value: `${e.file}` }
+    }) || []    
 
-    const dataDocuments = [
-        { label: `${adoptionCertificate}` }
-    ];
+    const handleAddDocuments = async (docName) => {
+        const doc = await DocumentPicker.getDocumentAsync({ type: ["application/pdf"] });
 
-    const handleAddDocuments = () => {
-        const selecDoc = async () => {
-            const formData = new FormData();
-
-            const doc = await DocumentPicker.getDocumentAsync();
-
-            if (doc.canceled) {
-                Alert.alert("Chargement du document annulé !")
-            } else {
-                Alert.alert("Document correctement chargé !")
-            }
-
-            formData.append('animalNewDocument', {
-                uri: doc.assets[0].uri,
-                name: 'animalDocument.pdf',
-                type: 'application/pdf',
-            });
-
-            fetch(process.env.EXPO_PUBLIC_BACKEND_URL + '/healthJournal', {
-                method: 'POST',
-                body: formData,
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("après le fetch => ")
-                console.log(data)
-            });
-
+        if (doc.canceled) {
+            Alert.alert("Chargement du document annulé !")
+            return;
         }
 
-        selecDoc()
-        // Alert.alert("Document ajouté !")
+        const formData = new FormData();
+
+        formData.append('animalNewDocument', {
+            uri: doc.assets[0].uri,
+            name: `${docName}.pdf`,
+            type: 'application/pdf',
+        });
+
+        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + '/petDocuments/' + petId, {
+            method: 'POST',
+            body: formData,
+        })
+
+        const data = await response.json()
+
+        if (data.result) {
+            setDocumentName("")
+            setModalVisible(false)
+            fetchData()
+            Alert.alert("Document chargé avec succès !")
+        }
     }
 
     return (
         <View style={styles.mainDiv}>
+            <Modal visible={modalVisible} animationType="fade">
+                <View style={styles.informationContainer}>
+                    <TextInput
+                        style={styles.inpuText}
+                        placeholder="Nommez votre document"
+                        onChangeText={(value) => setDocumentName(value)}
+                        value={documentName}
+                    />
+                    <View style={{ flexDirection: "row", columnGap: 20 }}>
+                        <TouchableOpacity style={styles.searchBtn} onPress={() => {
+                            setDocumentName("")
+                            setModalVisible(false)
+                            }}>
+                            <Text style={styles.searchBtnTxt}>Annuler</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.searchBtn} onPress={() => documentName.length > 0 && handleAddDocuments(documentName)}>
+                            <Text style={styles.searchBtnTxt}>Enregistrer</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                </View>
+            </Modal>
+
+            {selectedDoc && <Modal visible={previsualisationModalVisible} animationType="fade">
+                <View style={styles.informationContainer}>
+                    <Image source={{ uri: selectedDoc }} style={styles.docImg} />
+                    <View style={{ flexDirection: "row", columnGap: 20, justifyContent: "center", alignItems: "center" }}>
+                        <TouchableOpacity style={styles.searchBtn} onPress={() => {
+                            setSelectedDoc(null)
+                            setPrevisualisationModalVisible(false)
+                            }}>
+                            <Text style={styles.searchBtnTxt}>Annuler</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                </View>
+            </Modal>}
 
             {/* Header Part */}
             <View style={styles.header}>
@@ -89,14 +129,14 @@ export default function HealthJournal() {
                             </View>
                             <View style={styles.bottomHeaderInformation}>
                                 <View style={styles.bottomHeaderInformationName}>
-                                    <Text style={styles.animalName}>{animalInformation.name}</Text>
+                                    <Text style={styles.animalName}>{petInfo?.name}</Text>
                                 </View>
                                 <View style={styles.bottomHeaderInformationGeneral}>
                                     <View style={styles.bottomHeaderInformationBirth}>
-                                        <Text style={styles.animalBirth}>{animalInformation.age} ans, né le {animalInformation.dateOfBirth}</Text>
+                                        <Text style={styles.animalBirth}>{petInfo?.age} ans, né le {petInfo?.dateOfBirth}</Text>
                                     </View>
                                     <View style={styles.bottomHeaderInformationRace}>
-                                        <Text style={styles.animalRace}>{animalInformation.race}</Text>
+                                        <Text style={styles.animalRace}>{petInfo?.race}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -133,14 +173,17 @@ export default function HealthJournal() {
                         iconStyle={styles.iconStyle}
                         data={dataDocuments}
                         labelField="label"
-                        valueField="label"
-                        value="null"
-                        placeholder="Documents"
+                        valueField="value"
+                        onChange={(doc) => {
+                            setSelectedDoc(doc.value)
+                            setPrevisualisationModalVisible(true)
+                        }}
+                        placeholder="Documents de l'animal"
                     />
                 </View>
                 {/* Added documents */}
                 <View style={styles.addDocumentContainer}>
-                    <TouchableOpacity style={styles.addDocumentBtn} onPress={() => handleAddDocuments()}>
+                    <TouchableOpacity style={styles.addDocumentBtn} onPress={() => setModalVisible(true)}>
                         <Text style={styles.addDocumentBtnTxt}>Ajouter un document</Text>
                     </TouchableOpacity>
                 </View>
@@ -155,9 +198,46 @@ const styles = StyleSheet.create({
         fontFamily: 'Arial, Sans-Serif',
         backgroundColor: "white"
     },
+    docImg: {
+        width: "100%",
+        height: "80%",
+        objectFit: "contain"
+    },
 
     // HEADER PART
-
+    informationContainer: {
+        height: "100%",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        rowGap: 20
+    },
+    inpuText: {
+        backgroundColor: "white",
+        height: 50,
+        width: "87%",
+        padding: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#3884BB",
+        textAlign: "center",
+    },
+    searchBtn: {
+        borderWidth: 1,
+        height: 50,
+        width: 150,
+        borderRadius: 10,
+    },
+    searchBtnTxt: {
+        height: "100%",
+        padding: 10,
+        textAlign: "center", 
+        color: "white",
+        backgroundColor: "#0D2C56",
+        borderRadius: 10,
+        fontWeight: 600,
+        fontSize: 16,
+    },
     header: {
         height: '30%',
         alignItems: 'center',
