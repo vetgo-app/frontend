@@ -18,7 +18,7 @@ export default function InfoProScreen({ navigation }) {
       }, []);
 
     }
-
+    
     return (
         <ScrollView contentContainerStyle={styles.container}> 
             {/* Flèche retour */}

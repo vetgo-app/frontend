@@ -4,54 +4,73 @@ import MapView, { Marker } from 'react-native-maps';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function MapSearchScreen() {
+export default function MapSearchScreen(navigation) {
     const route = useRoute();
-    const navigation = useNavigation();
-    const adresse = route.params?.adresse;
+    const adresse = route.params?.adresse; //on récupère l'adresse envoyé dans homeScreen
 
-    const [region, setRegion] = useState(null);
-    const [veterinaires, setVeterinaires] = useState([]);
-    const [activeFilter, setActiveFilter] = useState(null);
+    const [region, setRegion] = useState(null);  //Stocke la zone à afficher sur la carte (latitude, longitude)
+    const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
+    const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
 
-    useEffect(() => {
-        if (adresse) {
-            fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=1`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.features.length > 0) {
-                        const coords = data.features[0].geometry.coordinates;
-                        const longitude = coords[0];
-                        const latitude = coords[1];
+ useEffect(() => {
+    // Si une adresse est donnée → recherche les coordonnées via l'API
+    if (adresse) {
+        fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=1`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.features.length > 0) {
+                    const coords = data.features[0].geometry.coordinates;
+                    const longitude = coords[0];
+                    const latitude = coords[1];
 
-                        setRegion({
-                            latitude,
-                            longitude,
-                            latitudeDelta: 0.01,
-                            longitudeDelta: 0.01,
-                        });
+                    //on centre la carte sur cette adresse, avec un certain zoom delta
+                    setRegion({
+                        latitude,
+                        longitude,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
+                    });
+                    
+                    //professionnels qui se filtrent en fonction de l'adresse
+                    setVeterinaires([
+                        {
+                            nom: 'Isabelle Veto',
+                             specialite: 'Vétérinaire',
+                             distance: '100 m',
+                             image: 'photo',
+                            lat: latitude + 0.002,
+                            lon: longitude + 0.001,
+                        },
+                        
+                    ]);
+                }
+            });
+    } else {
+        // Sinon : affiche Paris par défaut
+        const latitude = 48.866667;
+        const longitude = 2.333333;
 
-                        setVeterinaires([
-                            {
-                                nom: 'Isabelle Veto',
-                                specialite: 'Vétérinaire',
-                                distance: '100 m',
-                                image: 'https://randomuser.me/api/portraits/women/44.jpg',
-                                lat: latitude + 0.002,
-                                lon: longitude + 0.001,
-                            },
-                            {
-                                nom: 'Karine Canin',
-                                specialite: 'Vétérinaire',
-                                distance: '100 m',
-                                image: 'https://randomuser.me/api/portraits/women/68.jpg',
-                                lat: latitude - 0.001,
-                                lon: longitude - 0.002,
-                            },
-                        ]);
-                    }
-                });
-        }
-    }, [adresse]);
+        setRegion({
+            latitude,
+            longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+        }); //on centre la carte 
+
+        //tous les professionnels s'affichent
+        setVeterinaires([
+            {
+                nom: 'Isabelle Veto',
+                specialite: 'Vétérinaire',
+                distance: '100 m',
+                image: 'photo',
+                lat: latitude + 0.002,
+                lon: longitude + 0.001,
+            },
+            
+        ]);
+    }
+}, [adresse]);
 
     return (
         <View style={styles.container}>
