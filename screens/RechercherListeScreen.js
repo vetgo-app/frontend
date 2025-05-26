@@ -14,11 +14,10 @@ export default function RechercherListeScreen() {
   const [store, setStore] = useState([]);
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
-    fetch("http://192.168.100.47:3000/store")
+    fetch("http://192.168.100.110:3000/store")
       .then((response) => response.json())
       .then((data) => {
         setStore(data.data);
-        console.log(data);
       });
   }, []);
 
