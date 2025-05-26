@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 
 export default function InfoProScreen({ navigation }) {
   const route = useRoute();
-  const { storeId } = route.params;
+  const { storeId, firstname, lastname, address, occupation } = route.params;
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
@@ -36,11 +36,11 @@ export default function InfoProScreen({ navigation }) {
 
       {/* Carte identité */}
       <View style={styles.card}>
-        <Image source={{ uri: image }} style={styles.profileImage} />
+        <Image source={{ uri: "test" }} style={styles.profileImage} />
         <View>
-          <Text style={styles.name}>{nom}</Text>
-          <Text style={styles.specialite}>{specialite}</Text>
-          <Text style={styles.adresse}>{adresse}</Text>
+          <Text style={styles.name}>{firstname}</Text>
+          <Text style={styles.specialite}>{firstname}</Text>
+          <Text style={styles.adresse}>{firstname}</Text>
         </View>
       </View>
 

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -18,13 +19,23 @@ export default function RechercherListeScreen({ navigation }) {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.data);
         setStore(data.data);
       });
   }, []);
 
+  const handleNavigation = (elem) => {
+    navigation.navigate("InfoProScreen", {
+      firstname: elem.user?.firstname,
+      lastname: elem.user?.lastname,
+      occupation: elem.occupation,
+      address: elem.address,
+    });
+  };
+
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
-  const card = store.map((e, i) => {
-    const storeId = e._id;
+  const card = store?.map((e, i) => {
+    console.log("element =>", e);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
@@ -34,11 +45,10 @@ export default function RechercherListeScreen({ navigation }) {
               source={require("../assets/doctorPicture.jpg")}
             />
           </View>
-
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {e.user.firstname}
-              {e.user.lastname}
+              {e?.user?.firstname}
+              {e?.user?.lastname}
             </Text>
             <Text style={styles.text}>{e.occupation}</Text>
             <Text style={styles.text}>{e.address.street}</Text>
@@ -52,22 +62,13 @@ export default function RechercherListeScreen({ navigation }) {
         <View style={styles.date}></View>
         <View style={styles.dispoLink}>
           <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-          <Button
-            onPress={navigation.navigate("InfoProScreen", {
-              firstname,
-              lastname,
-              occupation,
-              address,
-            })}
-          >
-            10h00
-          </Button>
+          <TouchableOpacity onPress={() => handleNavigation(e)}>
+            <Text>10h00</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
   });
-
-  // console.log(card?.length);
 
   return (
     <SafeAreaProvider>
