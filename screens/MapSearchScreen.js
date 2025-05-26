@@ -15,11 +15,7 @@ export default function MapSearchScreen(navigation) {
  useEffect(() => {
     // Si une adresse est donnée → recherche les coordonnées via l'API
     if (adresse) {
-<<<<<<< HEAD
-        fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=1`)
-=======
         fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=5`)
->>>>>>> urgence
             .then(res => res.json())
             .then(data => {
                 if (data.features.length > 0) {

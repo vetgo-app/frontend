@@ -32,12 +32,7 @@ import RechercherListeScreen from "./screens/RechercherListeScreen";
 import ProfessionnelLoginScreen from "./screens/ProfessionnelLoginScreen";
 import UrgenceScreen from "./screens/UrgenceScreen";
 import QuestionScreen from "./screens/QuestionScreen";
-<<<<<<< HEAD
-import MapSearchScreen from "./screens/MapSearchScreen";
-import InfoProScreen from "./screens/InfoProScreen";
-=======
 import InfoProScreen from './screens/InfoProScreen';
->>>>>>> urgence
 
 const store = configureStore({
   reducer: { user },
@@ -135,32 +130,19 @@ export default function App() {
             component={ProfessionnelLoginScreen}
           />
 
-<<<<<<< HEAD
+          <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="Urgences" component={EmergencyScreen} />
+          <Stack.Screen name="Recherche" component={RechercherListeScreen} />
+          <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
+
           <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
           <Stack.Screen name="LienQuestion" component={QuestionScreen} />
           <Stack.Screen name="LienFaq" component={FaqScreen} />
-          <Stack.Screen name="MapSearchScreen" component={MapSearchScreen} />
           <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
+
         </Stack.Navigator>
+
       </NavigationContainer>
     </Provider>
-  );
-=======
-      <Stack.Navigator>
-
-        <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="Urgences" component={EmergencyScreen} />
-        <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-        <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} /> 
-
-        <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
-        <Stack.Screen name="LienQuestion" component={QuestionScreen} />
-        <Stack.Screen name="LienFaq" component={FaqScreen} />
-        <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
-
-      </Stack.Navigator>
-
-    </NavigationContainer>
   )
->>>>>>> urgence
 }
