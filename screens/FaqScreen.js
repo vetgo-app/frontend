@@ -16,7 +16,7 @@ export default function FaqScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http:localhost:3000/faq");
+      const response = await fetch("http://192.168.100.47:3000/faq");
       const data = await response.json();
 
       setOriginalFAQ(data.FAQ);
