@@ -13,6 +13,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function RechercherListeScreen({ navigation }) {
   const [store, setStore] = useState([]);
+  const time = "10h00";
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
@@ -30,6 +31,8 @@ export default function RechercherListeScreen({ navigation }) {
       lastname: elem.user?.lastname,
       occupation: elem.occupation,
       address: elem.address,
+      price: elem.price,
+      time,
     });
   };
 
@@ -59,12 +62,16 @@ export default function RechercherListeScreen({ navigation }) {
           <Text>Prochaine disponibilité :</Text>
           <Text style={styles.span}>mardi 6 mai</Text>
         </View>
-        <View style={styles.date}></View>
+        <View style={styles.date}>
+          <TouchableOpacity
+            style={styles.btnDate}
+            onPress={() => handleNavigation(e)}
+          >
+            <Text>{time}</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.dispoLink}>
           <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-          <TouchableOpacity onPress={() => handleNavigation(e)}>
-            <Text>10h00</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -155,6 +162,12 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
+  btnDate: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: "lightgrey",
+  },
   coordonneesText: {
     alignItems: "center",
   },

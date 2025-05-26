@@ -46,11 +46,11 @@ export default function InfoProScreen({ navigation }) {
 
       {/* Photo enseigne */}
       <Text style={styles.sectionTitle}>Photos de l’enseigne</Text>
-      <Image
+      {/* <Image
         source={{ uri: photoClinique }}
         style={styles.cliniqueImage}
         resizeMode="cover"
-      />
+      /> */}
 
       {/* Informations */}
       <Text style={styles.sectionTitle}>Informations</Text>
