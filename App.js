@@ -8,12 +8,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 //import pour redux persist
 import user from "./reducers/user";
 import { Provider } from "react-redux";
-<<<<<<< HEAD
 import { configureStore } from "@reduxjs/toolkit";
-=======
-import { configureStore } from '@reduxjs/toolkit';
-
->>>>>>> 9bb4b2abc0d2b9b4326e5ad711e1be68350f4f3f
 
 //imports des écrans
 import HomeScreen from "./screens/HomeScreen";
@@ -89,14 +84,14 @@ function MainTabs() {
           headerShown: false,
         })}
       >
-        {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
+        <Tab.Screen name="Home" component={HomeScreen} />
         {/* <Tab.Screen name="Agenda" component={AgendaScreen} /> */}
         {/* <Tab.Screen name="Animal" component={AnimalScreen} /> */}
         <Tab.Screen name="SignIn" component={SignInScreen} />
         <Tab.Screen name="SignInPro" component={SignInPro} />
         <Tab.Screen name="SignUpPro" component={SignUpPro} />
-        {/* <Tab.Screen name="Faq" component={FaqScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} /> */}
+        {/* <Tab.Screen name="Faq" component={FaqScreen} /> */}
+        <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="TakeRdv" component={TakeRdvScreen} />
         <Tab.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
         {/* <Tab.Screen name="Home" component={HomeScreen} />
@@ -125,15 +120,22 @@ const styles = StyleSheet.create({
 
 export default function App() {
   return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-          <Stack.Screen name="Urgences" component={EmergencyScreen} />
-          <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-          <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
-          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-          <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-  )
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Urgences" component={EmergencyScreen} />
+        <Stack.Screen name="Recherche" component={RechercherListeScreen} />
+        <Stack.Screen
+          name="Professionnel"
+          component={ProfessionnelLoginScreen}
+        />
+        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+        <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }

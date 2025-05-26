@@ -16,8 +16,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../reducers/user";
 
-<<<<<<< HEAD
-export default function SignUpPro() {
+export default function SignUpPro({ navigation }) {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -27,18 +26,6 @@ export default function SignUpPro() {
   const [modalVisible, setModalVisible] = useState(false);
   const [facing, setFacing] = useState("front");
   const [profilPicture, setProfilPicture] = useState(null);
-=======
-export default function SignUpPro({ navigation }) {
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [hasPermission, setHasPermission] = useState(false);
-    const cameraRef = useRef(null);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [facing, setFacing] = useState("front");
-    const [profilPicture, setProfilPicture] = useState(null);
->>>>>>> 9bb4b2abc0d2b9b4326e5ad711e1be68350f4f3f
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -64,6 +51,13 @@ export default function SignUpPro({ navigation }) {
     });
   };
 
+  const takePicture = async () => {
+    const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 }); // Javascript
+    photo && uploadPicture(photo);
+    console.log(photo);
+    setModalVisible(false);
+    setProfilPicture(photo.uri);
+  };
   const handleSignUp = () => {
     fetch("http://192.168.100.110:3000/users/signUpPro", {
       method: "POST",
@@ -89,36 +83,6 @@ export default function SignUpPro({ navigation }) {
         }
       });
   };
-
-<<<<<<< HEAD
-  const takePicture = async () => {
-    const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 }); // Javascript
-    photo && uploadPicture(photo);
-    console.log(photo);
-    setModalVisible(false);
-    setProfilPicture(photo.uri);
-  };
-=======
-    const handleSignUp = () => {
-        navigation.navigate('SignIn', { origin: 'SignUpPro' });
-        fetch("http://192.168.100.14:3000/users/signUpPro", {
-            method: "POST",
-            headers: { 'Content-Type': 'Application/json' },
-            body: JSON.stringify({ firstname, lastname, email, password, role: 'Professionnel', photo: profilPicture }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data) {
-                    dispatch(login({ firstname, lastname, email, photo: profilPicture }));
-                    setFirstname('');
-                    setLastname('');
-                    setEmail('');
-                    setPassword('');
-                    setProfilPicture(null);
-                }
-            })
-    }
->>>>>>> 9bb4b2abc0d2b9b4326e5ad711e1be68350f4f3f
 
   const toggleCameraFacing = () => {
     setFacing((current) => (current === "front" ? "back" : "front"));
