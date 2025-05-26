@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
   },
   containerStyles: {
     borderRadius: 10,
-    backgroundColor: "gray",
     height: "fit-content",
     fontSize: 16
   }
