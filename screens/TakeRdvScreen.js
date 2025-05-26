@@ -49,7 +49,7 @@ export default function TakeRdvScreen({navigation}) {
         if (!user.token) {
             return navigation.navigate('SignIn')
         }
-        fetch(`http://localhost:3000/users/canBookRdv/${user.token}`)
+        fetch(`http://192.168.100.14:3000/users/canBookRdv/${user.token}`)
             .then(response => response.json())
             .then(data => {
                 if (data.result) {
