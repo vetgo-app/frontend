@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import {
   ScrollView,
@@ -11,6 +12,13 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
+=======
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, TextInput, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons';
+import DropDownPicker from 'react-native-dropdown-picker';
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d
 
 const urlBack = process.env.EXPO_PUBLIC_BACKEND_URL;
 export default function EmergencyScreen() {
@@ -20,6 +28,7 @@ export default function EmergencyScreen() {
   const [openAnimal, setOpenAnimal] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [animalItems, setAnimalItems] = useState([
+<<<<<<< HEAD
     { label: "Chien", value: "chien" },
     { label: "Chat", value: "chat" },
     { label: "Lapin", value: "lapin" },
@@ -62,6 +71,48 @@ export default function EmergencyScreen() {
             marginLeft: 10,
           }}
         >
+=======
+    { label: 'Chien', value: 'chien' },
+    { label: 'Chat', value: 'chat' },
+    { label: 'Lapin', value: 'lapin' },
+    { label: 'Cheval', value: 'cheval' },
+    { label: 'Rongeur', value: 'rongeur' },
+    { label: 'Oiseaux', value: 'oiseaux' },
+    { label: 'Bovin', value: 'bovin' },
+  ]);
+
+  // Lieu (saisie + suggestions)
+  const [selectedLieu, setSelectedLieu] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+
+  const handleLieuChange = async (text) => {
+    setSelectedLieu(text);
+    if (text.length > 2) {
+      try {
+        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(text)}&limit=5`);
+        const data = await response.json();
+        const results = data.features.map((item) => item.properties.label);
+        setSuggestions(results);
+      } catch (error) {
+        console.error('Erreur API adresse :', error);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  return (
+    <View style={styles.container} keyboardShouldPersistTaps="handled">
+      <Text style={styles.title}>URGENCES</Text>
+
+      <View style={styles.logoEmergency}>
+        <FontAwesome name="ambulance" size={50} color="#FA3034" style={{ transform: [{ scaleX: -1 }] }} />
+      </View>
+
+      {/* Animaux */}
+      <View>
+        <View style={styles.iconLeft}>
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d
           <FontAwesome name="paw" size={30} color="#1472AE" />
         </View>
         <DropDownPicker
@@ -70,7 +121,10 @@ export default function EmergencyScreen() {
           items={animalItems}
           setOpen={() => {
             setOpenAnimal(!openAnimal);
+<<<<<<< HEAD
             setOpenLieu(false);
+=======
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d
           }}
           setValue={setSelectedAnimal}
           setItems={setAnimalItems}
@@ -80,7 +134,11 @@ export default function EmergencyScreen() {
           dropDownContainerStyle={styles.dropdownContainer}
           listItemContainerStyle={{
             borderBottomWidth: 1,
+<<<<<<< HEAD
             borderBlockColor: "#1472AE",
+=======
+            borderBlockColor: "#1472AE"
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d
           }}
           zIndex={2000}
           zIndexInverse={2000}
@@ -88,6 +146,7 @@ export default function EmergencyScreen() {
       </View>
 
       {/* Lieu */}
+<<<<<<< HEAD
       <View>
         <View
           style={{
@@ -123,18 +182,165 @@ export default function EmergencyScreen() {
           }}
           zIndex={1000}
           zIndexInverse={3000}
+=======
+      <View style={{ width: '100%', alignItems: 'center' }}>
+        <View style={[styles.iconLeft, { zIndex: 1001, left: '7%' }]}>
+          <FontAwesome name="map-marker" size={30} color="#1472AE" />
+        </View>
+
+        <TextInput
+          placeholder="Lieu"
+          value={selectedLieu}
+          onChangeText={handleLieuChange}
+          style={styles.textInputLieu}
+          placeholderTextColor="#999"
+        />
+
+        {/* Suggestions d'adresses */}
+        <FlatList
+          data={suggestions}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLieu(item);
+                setSuggestions([]);
+              }}
+              style={styles.suggestionItem}
+            >
+              <Text>{item}</Text>
+            </TouchableOpacity>
+          )}
+          style={styles.suggestionList}
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d
         />
       </View>
 
       {/* Bouton Rechercher */}
       <TouchableOpacity
         style={styles.searchButton}
+<<<<<<< HEAD
         onPress={() => navigation.navigate("RechercherUrgence")}
       >
         <Text style={styles.searchText}>Rechercher</Text>
       </TouchableOpacity>
+=======
+        onPress={() => navigation.navigate("RechercherUrgence", { adresse: selectedLieu })}
+      >
+        <Text style={styles.searchText}>Rechercher</Text>
+      </TouchableOpacity>
+
+      {/* Liens bas */}
+      <TouchableOpacity onPress={() => navigation.navigate("LienQuestion")}>
+        <Text style={styles.linkQuestion}>Qu'est-ce qu'une urgence ?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate("LienFaq")}>
+        <Text style={styles.linkFaq}>FAQ</Text>
+      </TouchableOpacity>
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d
     </View>
   );
 }
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({});
+=======
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    flexGrow: 1,
+    paddingTop: 70,
+    alignItems: 'center',
+    backgroundColor: '#C2E7F7',
+  },
+  title: {
+    color: 'red',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  logoEmergency: {
+    marginTop: 10,
+    marginBottom: 50,
+  },
+  dropdown: {
+    marginBottom: 20,
+    borderRadius: 10,
+    borderColor: '#1472AE',
+    height: 55,
+    width: '85%',
+  },
+  dropdownText: {
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  dropdownContainer: {
+    borderColor: '#1472AE',
+    width: '85%',
+    height: 200,
+  },
+  iconLeft: {
+    width: 50,
+    height: 50,
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 10,
+    zIndex: 2001,
+  },
+  textInputLieu: {
+    marginBottom: 10,
+    borderRadius: 10,
+    borderColor: '#1472AE',
+    borderWidth: 1,
+    height: 55,
+    width: '85%',
+    paddingLeft: 100, // ajusté pour alignement avec "Animaux"
+    fontSize: 18,
+    backgroundColor: 'white',
+    color: '#000',
+    textAlign: 'left',
+    textAlignVertical: 'center',
+  },
+  suggestionList: {
+    width: '85%',
+    maxHeight: 150,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  suggestionItem: {
+    padding: 10,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  searchButton: {
+    backgroundColor: '#0D2C56',
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    width: '85%',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  searchText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  linkQuestion: {
+    textAlign: 'center',
+    marginTop: 50,
+    textDecorationLine: 'underline',
+    color: '#0D2C56',
+    fontWeight: 'bold',
+  },
+  linkFaq: {
+    textAlign: 'center',
+    marginTop: 25,
+    textDecorationLine: 'underline',
+    color: '#0D2C56',
+    fontWeight: 'bold',
+  },
+});
+>>>>>>> 64fee7c4359c1bc575aadee57bbd16574998002d

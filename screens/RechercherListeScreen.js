@@ -10,8 +10,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-export default function RechercherListeScreen() {
+export default function RechercherListeScreen({ navigation }) {
   const [store, setStore] = useState([]);
+
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
     fetch("http://192.168.100.110:3000/store")
@@ -22,36 +23,49 @@ export default function RechercherListeScreen() {
   }, []);
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
-  const card = store.map((e, i) => (
-    <View key={e._id} style={styles.card}>
-      <View style={styles.coordonnees}>
-        <View>
-          <Image
-            style={styles.image}
-            source={require("../assets/doctorPicture.jpg")}
-          />
-        </View>
+  const card = store.map((e, i) => {
+    const storeId = e._id;
+    return (
+      <View key={e._id} style={styles.card}>
+        <View style={styles.coordonnees}>
+          <View>
+            <Image
+              style={styles.image}
+              source={require("../assets/doctorPicture.jpg")}
+            />
+          </View>
 
-        <View style={styles.coordonneesText}>
-          <Text style={styles.h2}>
-            {e.user.firstname}
-            {e.user.lastname}
-          </Text>
-          <Text style={styles.text}>{e.occupation}</Text>
-          <Text style={styles.text}>{e.address.street}</Text>
-          <Text style={styles.text}>{e.address.city}</Text>
+          <View style={styles.coordonneesText}>
+            <Text style={styles.h2}>
+              {e.user.firstname}
+              {e.user.lastname}
+            </Text>
+            <Text style={styles.text}>{e.occupation}</Text>
+            <Text style={styles.text}>{e.address.street}</Text>
+            <Text style={styles.text}>{e.address.city}</Text>
+          </View>
+        </View>
+        <View style={styles.dispo}>
+          <Text>Prochaine disponibilité :</Text>
+          <Text style={styles.span}>mardi 6 mai</Text>
+        </View>
+        <View style={styles.date}></View>
+        <View style={styles.dispoLink}>
+          <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
+          <Button
+            onPress={navigation.navigate("InfoProScreen", {
+              firstname,
+              lastname,
+              occupation,
+              address,
+            })}
+          >
+            10h00
+          </Button>
         </View>
       </View>
-      <View style={styles.dispo}>
-        <Text>Prochaine disponibilité :</Text>
-        <Text style={styles.span}>mardi 6 mai</Text>
-      </View>
-      <View style={styles.date}></View>
-      <View style={styles.dispoLink}>
-        <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-      </View>
-    </View>
-  ));
+    );
+  });
 
   // console.log(card?.length);
 
