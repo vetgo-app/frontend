@@ -10,7 +10,8 @@ import MapView, { Marker } from "react-native-maps";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { SafeAreaProvider, SafeAreaView } from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import vetgologo from '../assets/vetgologo.png';
 
 export default function RechercherListeScreen() {
   const route = useRoute();
@@ -24,7 +25,7 @@ export default function RechercherListeScreen() {
   // récupération des vétérinaires fictifs autour d'une adresse
   useEffect(() => {
     if (adresse) {
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=1`)
+      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=5`)
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {
@@ -95,7 +96,7 @@ export default function RechercherListeScreen() {
         <View style={styles.coordonnees}>
           <Image
             style={styles.image}
-            source={require("../assets/doctorPicture.jpg")}
+            source={require("../assets/vetgologo.png")}
           />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>{firstname} {lastname}</Text>
@@ -125,7 +126,7 @@ export default function RechercherListeScreen() {
           </TouchableOpacity>
         </View>
       </View>
-    );
+    ); 
   });
 
   return (

@@ -166,7 +166,7 @@ export default function HomeScreen() {
       {/* Rechercher */}
       <TouchableOpacity
         style={styles.searchButton}
-        onPress={() => navigation.navigate("RechercherListeScreen", { adresse: selectedLieu })}
+        onPress={() => navigation.navigate("Recherche", { adresse: selectedLieu })}
       >
         <Text style={styles.searchText}>Rechercher</Text>
       </TouchableOpacity>

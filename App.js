@@ -17,7 +17,6 @@ import RechercherListeScreen from './screens/RechercherListeScreen';
 import ProfessionnelLoginScreen from './screens/ProfessionnelLoginScreen';
 import UrgenceScreen from "./screens/UrgenceScreen";
 import QuestionScreen from "./screens/QuestionScreen";
-import MapSearchScreen from './screens/MapSearchScreen';
 import InfoProScreen from './screens/InfoProScreen';
 
 
@@ -86,7 +85,6 @@ export default function App() {
         <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
         <Stack.Screen name="LienQuestion" component={QuestionScreen} />
         <Stack.Screen name="LienFaq" component={FaqScreen} />
-        <Stack.Screen name="MapSearchScreen" component={MapSearchScreen} />
         <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
 
       </Stack.Navigator>
