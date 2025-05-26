@@ -11,6 +11,8 @@ import { useState } from "react";
 import Checkbox from "expo-checkbox";
 import RNPickerSelect from "react-native-picker-select";
 import { width } from "@fortawesome/free-solid-svg-icons/fa0";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 
 export default function ProfileProScreen() {
   const [isSelectedL, setSelectionL] = useState(false);
@@ -24,9 +26,6 @@ export default function ProfileProScreen() {
   const [isSelectedVisio, setSelectionVisio] = useState(false);
   const [isSelectedUrgence, setSelectionUrgence] = useState(false);
 
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
-  const [email, setEmail] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -35,17 +34,20 @@ export default function ProfileProScreen() {
   const [specialization, setSpecialization] = useState("");
   const [occupation, setOccupation] = useState("");
 
-  fetch("http://192.168.100.110:3000/users")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("route user:", data.data[0].name);
-    });
+  // fetch("http://192.168.100.110:3000/users")
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log("route user:", data.data[0].name);
+  //   });
+
+  const user = useSelector((state) => state.user.value);
 
   const handleSubmit = () => {
-    fetch("http://192.168.100.110:3000/store/addStore", {
+    fetch("http://192.168.100.47:3000/store/addStore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        user: user._id, // pour generer la relation de user avec store
         specialization,
         occupation,
         price,
@@ -68,153 +70,157 @@ export default function ProfileProScreen() {
       .then((response) => response.json())
       .then((data) => {
         setStreet(""), setCity(""), alert(data.message);
-        console.log("message :", data);
       });
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View>
-        <View style={styles.title}>
-          <Image
-            style={styles.image}
-            source={require("../assets/favicon.png")}
-          />
-          <Text>Mon profil</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View>
+          <View style={styles.title}>
+            <Image
+              style={styles.image}
+              source={require("../assets/doctorPicture.jpg")}
+            />
+            <Text style={styles.titleText}>Mon profil</Text>
+          </View>
 
-        <View style={styles.name}>
-          <Text>Valérie</Text>
-          <Text>Veto</Text>
-        </View>
-        <View style={styles.email}>
-          <Text style={styles.emailText}>valerie.veto@mail.fr</Text>
-        </View>
+          <View style={styles.name}>
+            <TextInput style={styles.nameText}>{user.firstname}</TextInput>
+            <TextInput style={styles.nameText}>{user.lastname}</TextInput>
+          </View>
+          <View style={styles.email}>
+            <Text style={styles.emailText}>{user.email}</Text>
+          </View>
 
-        <View style={styles.input}>
-          <RNPickerSelect
-            placeholder={{ label: "Profession", value: null }} // valeur par defaut du placeholder
-            onValueChange={(value) => setOccupation(value)}
-            items={[
-              { label: "vétérinaire", value: "Vétérinaire" },
-              { label: "ostéopathe", value: "Ostéopathe" },
-              { label: "toiletteur", value: "Toiletteur" },
-              { label: "éducateur", value: "Educateur" },
-              { label: "physiothérapeute", value: "Physiothérapeute" },
-            ]}
-          />
-          <RNPickerSelect
-            placeholder={{ label: "Spécialisation", value: null }} // valeur par defaut du placeholder
-            onValueChange={(value) => setSpecialization(value)}
-            items={[
-              { label: "chien", value: "chien" },
-              { label: "chat", value: "chat" },
-              { label: "cheval", value: "cheval" },
-              { label: "rongeur", value: "rongeur" },
-              { label: "oiseaux", value: "oiseaux" },
-              { label: "bovin", value: "bovin" },
-            ]}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Adresse"
-            onChangeText={(value) => setStreet(value)}
-            value={street}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Ville"
-            onChangeText={(value) => setCity(value)}
-            value={city}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Code postal"
-            onChangeText={(value) => setZipCode(value)}
-            value={zipCode}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Tarif consultatinon"
-            onChangeText={(value) => setPrice(value)}
-            value={price}
-          />
-        </View>
-        <View style={styles.consultation}>
-          <Text style={styles.consultationText}>Jour de consultation</Text>
-          <View style={styles.box}>
-            <View style={styles.firstCheckbox}>
-              <Checkbox
-                value={isSelectedL}
-                onValueChange={setSelectionL}
-                style={styles.checkbox}
-              />
-              <Text style={styles.label}>Lundi</Text>
-              <Checkbox
-                value={isSelectedM}
-                onValueChange={setSelectionM}
-                style={styles.checkbox}
-              />
-              <Text style={styles.label}>Mardi</Text>
-              <Checkbox
-                value={isSelectedMe}
-                onValueChange={setSelectionMe}
-                style={styles.checkbox}
-              />
-              <Text style={styles.label}>Mercredi</Text>
+          <View style={styles.input}>
+            <RNPickerSelect
+              placeholder={{ label: "Profession", value: null }} // valeur par defaut du placeholder
+              onValueChange={(value) => setOccupation(value)}
+              items={[
+                { label: "vétérinaire", value: "Vétérinaire" },
+                { label: "ostéopathe", value: "Ostéopathe" },
+                { label: "toiletteur", value: "Toiletteur" },
+                { label: "éducateur", value: "Educateur" },
+                { label: "physiothérapeute", value: "Physiothérapeute" },
+              ]}
+            />
+            <RNPickerSelect
+              placeholder={{ label: "Spécialisation", value: null }} // valeur par defaut du placeholder
+              onValueChange={(value) => setSpecialization(value)}
+              items={[
+                { label: "chien", value: "chien" },
+                { label: "chat", value: "chat" },
+                { label: "cheval", value: "cheval" },
+                { label: "rongeur", value: "rongeur" },
+                { label: "oiseaux", value: "oiseaux" },
+                { label: "bovin", value: "bovin" },
+              ]}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Adresse"
+              onChangeText={(value) => setStreet(value)}
+              value={street}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Ville"
+              onChangeText={(value) => setCity(value)}
+              value={city}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Code postal"
+              onChangeText={(value) => setZipCode(value)}
+              value={zipCode}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Tarif consultatinon"
+              onChangeText={(value) => setPrice(value)}
+              value={price}
+            />
+          </View>
+          <View style={styles.consultation}>
+            <Text style={styles.consultationText}>Jour de consultation</Text>
+            <View style={styles.box}>
+              <View style={styles.firstCheckbox}>
+                <Checkbox
+                  value={isSelectedL}
+                  onValueChange={setSelectionL}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label}>Lundi</Text>
+                <Checkbox
+                  value={isSelectedM}
+                  onValueChange={setSelectionM}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label}>Mardi</Text>
+                <Checkbox
+                  value={isSelectedMe}
+                  onValueChange={setSelectionMe}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label}>Mercredi</Text>
+              </View>
+              <View style={styles.lastCheckbox}>
+                <Checkbox
+                  value={isSelectedJ}
+                  onValueChange={setSelectionJ}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label}>Jeudi</Text>
+                <Checkbox
+                  value={isSelectedV}
+                  onValueChange={setSelectionV}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label}>Vendredi</Text>
+                <Checkbox
+                  value={isSelectedS}
+                  onValueChange={setSelectionS}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label}>Samedi</Text>
+              </View>
             </View>
-            <View style={styles.lastCheckbox}>
+          </View>
+          <View style={styles.option}>
+            <Text style={styles.optionText}>Options</Text>
+            <View style={styles.optionBox}>
               <Checkbox
-                value={isSelectedJ}
-                onValueChange={setSelectionJ}
+                value={isSelectedDom}
+                onValueChange={setSelectionDom}
                 style={styles.checkbox}
               />
-              <Text style={styles.label}>Jeudi</Text>
+              <Text style={styles.label}>A domicile</Text>
               <Checkbox
-                value={isSelectedV}
-                onValueChange={setSelectionV}
+                value={isSelectedVisio}
+                onValueChange={setSelectionVisio}
                 style={styles.checkbox}
               />
-              <Text style={styles.label}>Vendredi</Text>
+              <Text style={styles.label}>Visio</Text>
               <Checkbox
-                value={isSelectedS}
-                onValueChange={setSelectionS}
+                value={isSelectedUrgence}
+                onValueChange={setSelectionUrgence}
                 style={styles.checkbox}
               />
-              <Text style={styles.label}>Samedi</Text>
+              <Text style={styles.label}>Urgences</Text>
             </View>
           </View>
         </View>
-        <View style={styles.option}>
-          <Text style={styles.optionText}>Options</Text>
-          <View style={styles.optionBox}>
-            <Checkbox
-              value={isSelectedDom}
-              onValueChange={setSelectionDom}
-              style={styles.checkbox}
-            />
-            <Text style={styles.label}>A domicile</Text>
-            <Checkbox
-              value={isSelectedVisio}
-              onValueChange={setSelectionVisio}
-              style={styles.checkbox}
-            />
-            <Text style={styles.label}>Visio</Text>
-            <Checkbox
-              value={isSelectedUrgence}
-              onValueChange={setSelectionUrgence}
-              style={styles.checkbox}
-            />
-            <Text style={styles.label}>Urgences</Text>
-          </View>
+        <View style={styles.viewButton}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleSubmit()}
+          >
+            <Text style={styles.buttonText}>Valider les modifications</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.viewButton}>
-        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
-          <Text style={styles.buttonText}>Valider les modifications</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -229,8 +235,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop: 100,
     marginBottom: 20,
+  },
+
+  titleText: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#1472AE",
   },
 
   image: {
@@ -243,7 +254,18 @@ const styles = StyleSheet.create({
   name: {
     marginTop: 20,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
+  },
+
+  nameText: {
+    fontSize: 16,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#3884BB",
+    borderRadius: 10,
+    textAlign: "center",
+    width: "37%",
+    margin: 10,
   },
 
   email: {
@@ -274,9 +296,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: "#3884BB",
     textAlign: "center",
     width: "80%",
-    height: "40",
     margin: 10,
   },
 

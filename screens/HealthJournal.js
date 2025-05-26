@@ -1,22 +1,19 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
-import React from "react";
+import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import * as DocumentPicker from 'expo-document-picker';
 
 export default function HealthJournal() {
-    const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />
-    // dataInformation's variables
-    const sexeAnimalTxt = "Sexe";
-    const sexeAnimal = "Mâle";
-    const identificationTxt = "Identification";
-    const identification = "n°22175049";
-    const Poids = "Poids";
-    const PoidsTxt = "35Kg (renseigné le 22/02/2025)"
+    const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
+    const formData = new formData();
+    const [animalInformation, setAnimalInformation] = useState([]);
 
+    // dataInformation's variables
     const dataInformation = [
-        { label: `${sexeAnimalTxt}: ${sexeAnimal}`, value: `${sexeAnimal}` },
-        { label: `${identificationTxt}: ${identification}`, value: `${identification}` },
-        { label: `${Poids}: ${PoidsTxt}`, value: `${PoidsTxt}` },
+        { label: `Sexe : ${animalInformation.sexe}`, value: `${animalInformation.sexe}` },
+        { label: `Identification: ${animalInformation.identification}`, value: `${animalInformation.identification}` },
+        { label: `Poids : ${animalInformation.weight}`, value: `${animalInformation.weight}` },
     ];
 
     // dataDoucments' variables
@@ -26,160 +23,122 @@ export default function HealthJournal() {
         { label: `${adoptionCertificate}` }
     ];
 
-    // dataVaccinations' variables
-    const vacinnationCertificate = "Certificat de vaccination (24/12/24)";
+    useEffect(() => {
 
-    const dataVaccinations = [
-        { label: `${vacinnationCertificate}` }
-    ];
+        const fetchedData = async () => {
 
-    // dataHealthHistor's variable
-    const rhumatismTrack = "Compte-Rendu Rhumathisme (02/07/25)";
+            const response = await fetch("http://localhost:3000/healthJournal");
+            const data = await response.json();
 
-    const dataHealthHistory = [
-        { label: `${rhumatismTrack}` }
-    ];
+            setAnimalInformation(data.animalInformations[0])
+        }
+        fetchedData();
+    }, []);
 
 
-    return (
-        <View style={styles.mainDiv}>
+    const handleAddDocuments = () => {
+        const selecDoc = async () => {
+            const doc = await DocumentPicker.getDocumentAsync()
+            console.log(doc)
 
-            {/* Header Part */}
-            <View style={styles.header}>
-                <View style={styles.topHeader}>
-                    <View style={styles.topHeaderTitle}>
-                        <Text style={styles.title}>Carnet de Santé de</Text>
-                    </View>
-                    <View style={styles.topHeaderIcon}>
-                        {modifyIcon}
-                    </View>
+            // formData.append('animalNewDocument', {
+            //     uri: 'file://...',
+            //     name: 'photo.jpg',
+            //     type: 'image/jpeg',
+            // });
+            // fetch('http://.../upload', {
+            //     method: 'POST',
+            //     body: formData,
+            // }).then((response) => response.json())
+            //     .then((data) => {
+            //         console.log(data)
+            // });
+
+    }
+
+    selecDoc()
+    // Alert.alert("Document ajouté !")
+}
+
+return (
+    <View style={styles.mainDiv}>
+
+        {/* Header Part */}
+        <View style={styles.header}>
+            <View style={styles.topHeader}>
+                <View style={styles.topHeaderTitle}>
+                    <Text style={styles.title}>Carnet de Santé de</Text>
                 </View>
-                <View style={styles.bottomHeader}>
-                    <View style={styles.bottomHeaderProfile}>
-                        <View style={styles.bottomHeaderInformationContainer}>
-                            <View style={styles.bottomHeaderPictureProfile}>
-                                <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
-                            </View>
-                            <View style={styles.bottomHeaderInformation}>
-                                <View style={styles.bottomHeaderInformationName}>
-                                    <Text style={styles.animalName}>Regex</Text>
-                                </View>
-                                <View style={styles.bottomHeaderInformationGeneral}>
-                                    <View style={styles.bottomHeaderInformationBirth}>
-                                        <Text style={styles.animalBirth}>6 ans, né le 17/06/19</Text>
-                                    </View>
-                                    <View style={styles.bottomHeaderInformationRace}>
-                                        <Text style={styles.animalRace}>Berger Allemand</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
+                <View style={styles.topHeaderIcon}>
+                    {modifyIcon}
                 </View>
             </View>
-
-            {/* Body Part */}
-            <View style={styles.body}>
-
-                {/* Informations Container */}
-                <View style={styles.bodyInformationContainer}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        iconStyle={styles.iconStyle}
-                        data={dataInformation}
-                        labelField="label"
-                        valueField="value"
-                        placeholder="Information de l'animal"
-                    />
-                </View>
-
-                {/* Documents Container */}
-                <View style={styles.bodyDocumentContainer}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        iconStyle={styles.iconStyle}
-                        data={dataDocuments}
-                        labelField="label"
-                        valueField="label"
-                        value="null"
-                        placeholder="Documents"
-                    />
-                </View>
-
-                {/* Vaccination Container */}
-                <View style={styles.bodyInformationVaccination}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        iconStyle={styles.iconStyle}
-                        data={dataVaccinations}
-                        labelField="label"
-                        valueField="label"
-                        value="null"
-                        placeholder="Vaccination"
-                    />
-                </View>
-
-                <View style={styles.bodyHealthHistoryContainer}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        iconStyle={styles.iconStyle}
-                        data={dataHealthHistory}
-                        labelField="label"
-                        valueField="label"
-                        value="null"
-                        placeholder="Antécédents médicaux"
-                    />
-                </View>
-
-
-
-
-                {/* <View style={styles.bodyInformationCard}>
-                    <View style={styles.bodyInformationContainer}>
-                        <View style={styles.bodyInformationTitle}>
-                            <Text style={styles.bodyInformationTitleTxt}>Informations de l'animal</Text>
+            <View style={styles.bottomHeader}>
+                <View style={styles.bottomHeaderProfile}>
+                    <View style={styles.bottomHeaderInformationContainer}>
+                        <View style={styles.bottomHeaderPictureProfile}>
+                            <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
+                        </View>
+                        <View style={styles.bottomHeaderInformation}>
+                            <View style={styles.bottomHeaderInformationName}>
+                                <Text style={styles.animalName}>{animalInformation.name}</Text>
+                            </View>
+                            <View style={styles.bottomHeaderInformationGeneral}>
+                                <View style={styles.bottomHeaderInformationBirth}>
+                                    <Text style={styles.animalBirth}>{animalInformation.age} ans, né le {animalInformation.dateOfBirth}</Text>
+                                </View>
+                                <View style={styles.bottomHeaderInformationRace}>
+                                    <Text style={styles.animalRace}>{animalInformation.race}</Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.bodyInformationGeneral}>
-                        <View style={styles.bodyInformationGender}></View>
-                        <View style={styles.bodyInformationIdentification}></View>
-                        <View style={styles.bodyInformationWeight}></View>
-                    </View>
-                </View> */}
-
-                {/* Document Container */}
-                {/* <View style={styles.bodyDocumentContainer}>
-                    <View style={styles.bodyDocumentContainerTitle}>
-                        <Text style={styles.bodyDocumentTitleTxt}>Documents</Text>
-                    </View>
-                    <View style={styles.bodyDocumentContainerInformation}>
-                        <Text style={styles.bodyDocumentInformationTxt}>
-                            Contrat d'adoption (17/01/24)
-                        </Text>
-                    </View>
-                </View> */}
-
-                {/* Vaccination Container */}
-                {/* <View style={styles.bodyInformationVaccination}>
-                    <View style={styles.bodyInformationVaccinationTitle}>
-                        <Text style={styles.bodyInformationVaccinationTitleTxt}>Documents</Text>
-                    </View>
-                    <View style={styles.bodyVaccinationContainerInformation}>
-                        <Text style={styles.bodyDVaccinationInformationTxt}>
-                            Certificat de vacinnation (24/12/24)
-                        </Text>
-                    </View>
-                </View> */}
-
-                {/* Health history Container */}
-                {/* <View style={styles.bodyHealthHistoryContainer}></View> */}
+                </View>
             </View>
         </View>
-    )
+
+        {/* Body Part */}
+        <View style={styles.body}>
+
+            {/* Informations Container */}
+            <View style={styles.bodyInformationContainer}>
+                <Dropdown
+                    style={styles.dropdown}
+                    itemTextStyle={styles.itemTextStyle}
+                    placeholderStyle={styles.placeholderStyle}
+                    iconStyle={styles.iconStyle}
+                    data={dataInformation}
+                    labelField="label"
+                    valueField="value"
+                    placeholder="Information de l'animal"
+                    itemContainerStyle={styles.itemContainerStyles}
+                    containerStyle={styles.containerStyles}
+                />
+            </View>
+
+            {/* Documents Container */}
+            <View style={styles.bodyDocumentContainer}>
+                <Dropdown
+                    style={styles.dropdown}
+                    itemTextStyle={styles.itemTextStyle}
+                    placeholderStyle={styles.placeholderStyle}
+                    iconStyle={styles.iconStyle}
+                    data={dataDocuments}
+                    labelField="label"
+                    valueField="label"
+                    value="null"
+                    placeholder="Documents"
+                />
+            </View>
+            {/* Added documents */}
+            <View style={styles.addDocumentContainer}>
+                <TouchableOpacity style={styles.addDocumentBtn} onPress={() => handleAddDocuments()}>
+                    <Text style={styles.addDocumentBtnTxt}>Ajouter un document</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    </View>
+)
 }
 
 const styles = StyleSheet.create({
@@ -288,13 +247,25 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 35
     },
+    itemContainerStyles: {
+        borderRadius: 10
+    },
+    containerStyles: {
+        // fontFamily: 'Arial',
+        // fontSize: 16,
+    },
+    itemTextStyle: {
+        fontFamily: 'Arial',
+        fontSize: 16,
+        color: "#1472AE",
+        fontWeight: 800,
+    },
 
     // BODY PART
 
     body: {
         height: '70%',
         marginTop: 45,
-        // justifyContent: 'center'
     },
 
     // Drop Down
@@ -306,8 +277,8 @@ const styles = StyleSheet.create({
     },
     placeholderStyle: {
         fontSize: 16,
-        color: "#1472AE",
-        fontWeight: 800,
+        // color: "#1472AE",
+        fontWeight: 600,
     },
 
     bodyInformationContainer: {
@@ -327,74 +298,21 @@ const styles = StyleSheet.create({
         height: "15%",
         alignItems: 'center',
     },
-
-
-
-
-    // Body Information
-
-    // bodyInformationCard: {
-    //     height: '25%',
-    //     width: '100%',
-    //     borderWidth: 5,
-    //     borderColor: 'gray'
-    // },
-    // bodyInformationContainer: {
-    //     height: '30%',
-    //     width: '100%',
-    //     borderWidth: 5,
-    //     borderColor: 'blue'
-    // },
-    // bodyInformationTitle: {
-    //     borderWidth: 5,
-    //     borderColor: 'black'
-    // },
-    // bodyInformationTitleTxt: {
-    //     borderWidth: 5,
-    //     borderColor: 'blueviolet'
-    // },
-    // bodyInformationGeneral: {
-    //     height: '70%',
-    //     width: '100%',
-    //     borderWidth: 5,
-    //     borderColor: 'green'
-    // },
-    // bodyInformationGender: {
-    //     borderWidth: 5,
-    //     borderColor: 'yellow'
-    // },
-    // bodyInformationIdentification: {
-    //     borderWidth: 5,
-    //     borderColor: 'orange'
-    // },
-    // bodyInformationWeight: {
-    //     borderWidth: 5,
-    //     borderColor: 'black'
-    // },
-
-    // // Body Document
-    // bodyDocumentContainer: {
-    //     height: '20%',
-    //     width: '100%',
-    // },
-    // bodyDocumentContainerTitle: {},
-    // bodyDocumentContainerTitleTxt: {},
-    // bodyDocumentContainerInformation: {},
-    // bodyDocumentContainerInformationTxt: {},
-
-    // // Body Vaccination
-    // bodyInformationVaccination: {
-    //     height: '15%',
-    //     width: '100%',
-    // },
-    // bodyInformationVaccinationTitle: {},
-    // bodyInformationVaccinationTitleTxt: {},
-    // bodyVaccinationContainerInformation: {},
-    // bodyVaccinationContainerInformationTxt: {},
-
-    // // Body Health history
-    // bodyHealthHistoryContainer: {
-    //     height: '40%',
-    //     width: '100%',
-    // }
+    addDocumentContainer: {
+        height: "15%",
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    addDocumentBtn: {
+        backgroundColor: "#0C2D56",
+        padding: 15,
+        width: '80%',
+        borderRadius: 10
+    },
+    addDocumentBtnTxt: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: 700,
+        textAlign: 'center'
+    },
 })

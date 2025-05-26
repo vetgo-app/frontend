@@ -3,14 +3,24 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'rea
 import { FontAwesome } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-export default function InfoProScreen() {
+export default function InfoProScreen({ navigation }) {
     const route = useRoute();
-    const navigation = useNavigation();
+    const { storeId } = route.params;
 
-    const { nom, specialite, adresse, image, photoClinique } = route.params;
+
+      useEffect(() => {
+        // use Effect permet d'afficher les elements a chaque re render
+        fetch(`http://192.168.100.112:3000/${storeId}`)
+          .then((response) => response.json())
+          .then((data) => {
+           ;
+          });
+      }, []);
+
+    }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}> 
             {/* Flèche retour */}
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backArrow}>
                 <FontAwesome name="chevron-left" size={20} color="#0D2C56" />
@@ -47,6 +57,8 @@ export default function InfoProScreen() {
                     </TouchableOpacity>
                 ))}
             </View>
+
+            <TouchableOpacity onPress={() => { navigation.navigate('TakeRdvScreen', { firstname, lastname, occupation, price, date }) }} style={styles.nextButton}><Text>Suivant</Text></TouchableOpacity>
         </ScrollView>
     );
 }
@@ -108,6 +120,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     infoBox: {
+
         backgroundColor: '#F2F9FF',
         borderRadius: 10,
         padding: 15,
@@ -122,4 +135,11 @@ const styles = StyleSheet.create({
         color: '#0D2C56',
         fontWeight: 'bold',
     },
+    nextButton: {
+        borderWidth: 1,
+        width: '60%',
+        alignItems: 'center',
+
+    },
+
 });
