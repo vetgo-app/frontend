@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,11 +8,11 @@ import {
   Image,
   TextInput,
   FlatList,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { FontAwesome } from '@expo/vector-icons';
-import DropDownPicker from 'react-native-dropdown-picker';
-import vetgologo from '../assets/vetgologo.png';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+import DropDownPicker from "react-native-dropdown-picker";
+import vetgologo from "../assets/vetgologo.png";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -21,28 +21,28 @@ export default function HomeScreen() {
   const [openProfession, setOpenProfession] = useState(false);
   const [selectedProfession, setSelectedProfession] = useState(null);
   const [professionItems, setProfessionItems] = useState([
-    { label: 'Vétérinaire', value: 'veterinaire' },
-    { label: 'Ostéopathe', value: 'osteopathe' },
-    { label: 'Toiletteur', value: 'toiletteur' },
-    { label: 'Educateur', value: 'educateur' },
-    { label: 'Physiothérapeute', value: 'physiotherapeute' },
+    { label: "Vétérinaire", value: "veterinaire" },
+    { label: "Ostéopathe", value: "osteopathe" },
+    { label: "Toiletteur", value: "toiletteur" },
+    { label: "Educateur", value: "educateur" },
+    { label: "Physiothérapeute", value: "physiotherapeute" },
   ]);
 
   // Animaux
   const [openAnimal, setOpenAnimal] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [animalItems, setAnimalItems] = useState([
-    { label: 'Chien', value: 'chien' },
-    { label: 'Chat', value: 'chat' },
-    { label: 'Lapin', value: 'lapin' },
-    { label: 'Cheval', value: 'cheval' },
-    { label: 'Rongeur', value: 'rongeur' },
-    { label: 'Oiseaux', value: 'oiseaux' },
-    { label: 'Bovin', value: 'bovin' },
+    { label: "Chien", value: "chien" },
+    { label: "Chat", value: "chat" },
+    { label: "Lapin", value: "lapin" },
+    { label: "Cheval", value: "cheval" },
+    { label: "Rongeur", value: "rongeur" },
+    { label: "Oiseaux", value: "oiseaux" },
+    { label: "Bovin", value: "bovin" },
   ]);
 
   // Lieu avec suggestions API
-  const [selectedLieu, setSelectedLieu] = useState('');
+  const [selectedLieu, setSelectedLieu] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
   const handleLieuChange = async (text) => {
@@ -50,27 +50,32 @@ export default function HomeScreen() {
     if (text.length > 2) {
       try {
         const response = await fetch(
-          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(text)}&limit=5`
+          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+            text
+          )}&limit=5`
         );
         const data = await response.json();
         const results = data.features.map((item) => item.properties.label);
         setSuggestions(results);
       } catch (error) {
-        console.error('Erreur API adresse :', error);
+        console.error("Erreur API adresse :", error);
       }
     } else {
       setSuggestions([]);
     }
   };
 
-  
-
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Ambulance button */}
       <View style={styles.logoEmergency}>
-        <TouchableOpacity onPress={() => navigation.navigate('Urgences')}>
-          <FontAwesome name="ambulance" size={50} color="#FA3034" style={{ transform: [{ scaleX: -1 }] }} />
+        <TouchableOpacity onPress={() => navigation.navigate("Urgences")}>
+          <FontAwesome
+            name="ambulance"
+            size={50}
+            color="#FA3034"
+            style={{ transform: [{ scaleX: -1 }] }}
+          />
         </TouchableOpacity>
       </View>
 
@@ -100,7 +105,7 @@ export default function HomeScreen() {
           dropDownContainerStyle={styles.dropdownContainer}
           listItemContainerStyle={{
             borderBottomWidth: 1,
-            borderBlockColor: "#1472AE"
+            borderBlockColor: "#1472AE",
           }}
           zIndex={3000}
           zIndexInverse={1000}
@@ -128,7 +133,7 @@ export default function HomeScreen() {
           dropDownContainerStyle={styles.dropdownContainer}
           listItemContainerStyle={{
             borderBottomWidth: 1,
-            borderBlockColor: "#1472AE"
+            borderBlockColor: "#1472AE",
           }}
           zIndex={2000}
           zIndexInverse={2000}
@@ -136,8 +141,8 @@ export default function HomeScreen() {
       </View>
 
       {/* Lieu */}
-      <View style={{ width: '100%', alignItems: 'center' }}>
-        <View style={[styles.iconPosition(1001), { left: '7%' }]}>
+      <View style={{ width: "100%", alignItems: "center" }}>
+        <View style={[styles.iconPosition(1001), { left: "7%" }]}>
           <FontAwesome name="map-marker" size={30} color="#1472AE" />
         </View>
         <TextInput
@@ -168,7 +173,7 @@ export default function HomeScreen() {
       {/* Rechercher */}
       <TouchableOpacity
         style={styles.searchButton}
-        onPress={() => navigation.navigate("MapSearchScreen", { adresse: selectedLieu })}
+        onPress={() => navigation.navigate("Recherche", { adresse: selectedLieu })}
       >
         <Text style={styles.searchText}>Rechercher</Text>
       </TouchableOpacity>
@@ -184,40 +189,40 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#C2E7F7',
+    backgroundColor: "#C2E7F7",
     flexGrow: 1,
     paddingTop: 60,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logoEmergency: {
-    position: 'absolute',
+    position: "absolute",
     top: 50,
     right: 20,
   },
   header: {
     marginBottom: 30,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logoImage: {
     marginTop: 25,
     width: 250,
     height: 200,
   },
-  
+
   dropdown: {
     marginBottom: 10,
     borderRadius: 10,
-    borderColor: '#1472AE',
+    borderColor: "#1472AE",
     height: 55,
-    width: '85%',
+    width: "85%",
   },
   dropdownText: {
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
   },
   dropdownContainer: {
-    borderColor: '#1472AE',
-    width: '85%',
+    borderColor: "#1472AE",
+    width: "85%",
     height: 200,
   },
   iconPosition: (z) => ({
@@ -229,53 +234,53 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 10,
   }),
-  
+
   textInputLieu: {
     marginBottom: 10,
     borderRadius: 10,
-    borderColor: '#1472AE',
+    borderColor: "#1472AE",
     borderWidth: 1,
     height: 55,
-    width: '85%',
+    width: "85%",
     paddingLeft: 100,
     fontSize: 18,
-    backgroundColor: 'white',
-    color: '#000',
-    textAlign: 'left',
-    textAlignVertical: 'center',
+    backgroundColor: "white",
+    color: "#000",
+    textAlign: "left",
+    textAlignVertical: "center",
   },
 
   suggestionList: {
-    width: '85%',
+    width: "85%",
     maxHeight: 150,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
     marginTop: 5,
   },
   suggestionItem: {
     padding: 10,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderBottomWidth: 1,
   },
   searchButton: {
-    backgroundColor: '#0D2C56',
+    backgroundColor: "#0D2C56",
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 10,
-    width: '85%',
-    alignItems: 'center',
+    width: "85%",
+    alignItems: "center",
     marginTop: 20,
   },
   searchText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 18,
   },
   proLink: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 25,
-    textDecorationLine: 'underline',
-    color: '#0D2C56',
-    fontWeight: 'bold',
+    textDecorationLine: "underline",
+    color: "#0D2C56",
+    fontWeight: "bold",
   },
 });
