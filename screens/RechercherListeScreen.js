@@ -4,6 +4,7 @@ import {
   View,
   ScrollView,
   Image,
+  StatusBar,
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -19,8 +20,10 @@ export default function RechercherListeScreen() {
   const adresse = route.params?.adresse;
 
   const [store, setStore] = useState([]);
-  const [region, setRegion] = useState(null);
-  const [veterinaires, setVeterinaires] = useState([]);
+  const time = "10h00";
+  const [region, setRegion] = useState(null);  //Stocke la zone à afficher sur la carte (latitude, longitude)
+  const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
+  const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
 
   // récupération des vétérinaires fictifs autour d'une adresse
   useEffect(() => {
@@ -81,49 +84,57 @@ export default function RechercherListeScreen() {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.data);
         setStore(data.data);
       });
   }, []);
 
-  const card = store.map((e) => {
-    const firstname = e.user.firstname;
-    const lastname = e.user.lastname;
-    const occupation = e.occupation;
-    const address = e.address;
+  const handleNavigation = (elem) => {
+    navigation.navigate("InfoProScreen", {
+      firstname: elem.user?.firstname,
+      lastname: elem.user?.lastname,
+      occupation: elem.occupation,
+      address: elem.address,
+      price: elem.price,
+      time,
+    });
+  };
 
+  //le '?' permet d'attendre des données asynchrone (venant du fetch)
+  const card = store?.map((e, i) => {
+    console.log("element =>", e);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
-          <Image
-            style={styles.image}
-            source={require("../assets/vetgologo.png")}
-          />
+          <View>
+            <Image
+              style={styles.image}
+              source={require("../assets/doctorPicture.jpg")}
+            />
+          </View>
           <View style={styles.coordonneesText}>
-            <Text style={styles.h2}>{firstname} {lastname}</Text>
-            <Text style={styles.text}>{occupation}</Text>
-            <Text style={styles.text}>{address.street}</Text>
-            <Text style={styles.text}>{address.city}</Text>
+            <Text style={styles.h2}>
+              {e?.user?.firstname}
+              {e?.user?.lastname}
+            </Text>
+            <Text style={styles.text}>{e.occupation}</Text>
+            <Text style={styles.text}>{e.address.street}</Text>
+            <Text style={styles.text}>{e.address.city}</Text>
           </View>
         </View>
         <View style={styles.dispo}>
           <Text>Prochaine disponibilité : <Text style={styles.span}>mardi 6 mai</Text></Text>
         </View>
-        <View style={styles.date}></View>
-        <View style={styles.dispoLink}>
-          <Text style={styles.dispoLinkText}>Voir plus de disponibilités</Text>
+        <View style={styles.date}>
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("InfoProScreen", {
-                firstname,
-                lastname,
-                occupation,
-                address,
-              })
-            }
-            style={{ backgroundColor: "#1472AE", padding: 10, borderRadius: 8, marginTop: 10 }}
+            style={styles.btnDate}
+            onPress={() => handleNavigation(e)}
           >
-            <Text style={{ color: "white" }}>10h00</Text>
+            <Text>{time}</Text>
           </TouchableOpacity>
+        </View>
+        <View style={styles.dispoLink}>
+          <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
         </View>
       </View>
     ); 
@@ -220,6 +231,13 @@ const styles = StyleSheet.create({
   h2: {
     fontSize: 20,
     color: "white",
+  },
+
+  btnDate: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: "lightgrey",
   },
   coordonneesText: {
     alignItems: "center",

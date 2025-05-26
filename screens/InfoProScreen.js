@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -12,14 +12,18 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 
 export default function InfoProScreen({ navigation }) {
   const route = useRoute();
-  const { storeId } = route.params;
+  const { storeId, firstname, lastname, address, occupation, price } = route.params;
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
     fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
       .then((response) => response.json())
-      .then((data) => {});
+      .then((data) => { });
   }, []);
+
+  // const fullAddress = address.map((e) => {
+  // return (<Text key={e} style={styles.adresse}>{e.street}, {e.zipCode} {e.city}</Text>);
+  // })
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -36,21 +40,21 @@ export default function InfoProScreen({ navigation }) {
 
       {/* Carte identité */}
       <View style={styles.card}>
-        <Image source={{ uri: image }} style={styles.profileImage} />
+        <Image source={{ uri: "test" }} style={styles.profileImage} />
         <View>
-          <Text style={styles.name}>{nom}</Text>
-          <Text style={styles.specialite}>{specialite}</Text>
-          <Text style={styles.adresse}>{adresse}</Text>
+          <Text style={styles.name}>{firstname} {lastname}</Text>
+          <Text style={styles.specialite}>{occupation}</Text>
+          <Text style={styles.adresse}>{address.street}, {address.zipCode} {address.city}</Text>
         </View>
       </View>
 
       {/* Photo enseigne */}
       <Text style={styles.sectionTitle}>Photos de l’enseigne</Text>
-      <Image
+      {/* <Image
         source={{ uri: photoClinique }}
         style={styles.cliniqueImage}
         resizeMode="cover"
-      />
+      /> */}
 
       {/* Informations */}
       <Text style={styles.sectionTitle}>Informations</Text>
@@ -67,15 +71,15 @@ export default function InfoProScreen({ navigation }) {
           </TouchableOpacity>
         ))}
       </View>
-
+<Text>{price}</Text>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("TakeRdvScreen", {
+          navigation.navigate("TakeRdv", {
             firstname,
             lastname,
             occupation,
+            address,
             price,
-            date,
           });
         }}
         style={styles.nextButton}
