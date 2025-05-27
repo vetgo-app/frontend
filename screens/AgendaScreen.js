@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   StyleSheet,
   Text,
@@ -15,7 +14,12 @@ export default function AgendaScreen() {
   const [appointment, setAppointment] = useState([]);
 
   const handleClic = (id) => {
-    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/appointment/deleteRDV/${id}`)
+    fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/appointment/deleteRDV/683190de1bdf6463fe89341a`,
+      {
+        method: "DELETE",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setAppointment(data.rdv);
