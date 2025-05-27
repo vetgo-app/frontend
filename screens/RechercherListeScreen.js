@@ -13,22 +13,44 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import vetgologo from '../assets/vetgologo.png';
+import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 
-export default function RechercherListeScreen() {
-  const route = useRoute();
-  const navigation = useNavigation();
-  const adresse = route.params?.adresse;
+export default function RechercherListeScreen({ navigation, route }) {
 
   const [store, setStore] = useState([]);
   const time = "10h00";
   const [region, setRegion] = useState(null);  //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
+  const [address, setAddress] = useState(null)
+
+  // récupération des praticiens depuis la BDD
+  useEffect(() => {
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
+        setStore(data.data);
+        setAddress(data.data.address)
+      });
+  }, []);
+
+  const handleNavigation = (elem) => {
+    navigation.navigate("InfoProScreen", {
+      firstname: elem.user?.firstname,
+      lastname: elem.user?.lastname,
+      occupation: elem.occupation,
+      address: elem.address,
+      price: elem.price,
+      time,
+    });
+
+  };
 
   // récupération des vétérinaires fictifs autour d'une adresse
   useEffect(() => {
-    if (adresse) {
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=5`)
+    if (address) {
+      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {
@@ -77,28 +99,9 @@ export default function RechercherListeScreen() {
         },
       ]);
     }
-  }, [adresse]);
+  }, [address]);
 
-  // récupération des praticiens depuis la BDD
-  useEffect(() => {
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        setStore(data.data);
-      });
-  }, []);
 
-  const handleNavigation = (elem) => {
-    navigation.navigate("InfoProScreen", {
-      firstname: elem.user?.firstname,
-      lastname: elem.user?.lastname,
-      occupation: elem.occupation,
-      address: elem.address,
-      price: elem.price,
-      time,
-    });
-  };
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store?.map((e, i) => {
@@ -113,8 +116,7 @@ export default function RechercherListeScreen() {
           </View>
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {e?.user?.firstname}
-              {e?.user?.lastname}
+              {e?.user?.firstname} {e?.user?.lastname}
             </Text>
             <Text style={styles.text}>{e.occupation}</Text>
             <Text style={styles.text}>{e.address.street}</Text>
@@ -136,7 +138,7 @@ export default function RechercherListeScreen() {
           <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
         </View>
       </View>
-    ); 
+    );
   });
 
   return (

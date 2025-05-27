@@ -10,27 +10,29 @@ import {
 import React, { useState, useMemo, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // ou react-native-vector-icons
-import { useSelector } from "react-redux";
-
-const data = [
-  { value: "Soins préventifs", label: "Soins préventifs" },
-  { value: "Maladies et urgences", label: "Maladies et urgences" },
-  { value: "Suivi et soins spécifiques", label: "Suivi et soins spécifiques" },
-];
 
 export default function RdvConfirmationScreen({ navigation, route }) {
+
   const [confirmed, setConfirmed] = useState(false);
-  const [stores, setStores] = useState([]);
+  // const appointment = route.params.formData;
 
-  const user = useSelector((state) => state.user.value);
+  const onClick = () => {
+    setConfirmed(true)
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "Application/json" },
+      body: JSON.stringify({
+        address: appointment.address,
+        date: appointment.time,
+        reason: appointment.selectedReason,
+        myPet: appointment.isMyAnimal,
+        firstRdv: appointment.isFirstRdv
+      }),
+    })
+      .then((res) => res.json())
+      .exec();
+  }
 
-  useEffect(() => {
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
-      .then((response) => response.json())
-      .then((data) => {
-        setStores(data.data);
-      });
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,14 +64,53 @@ export default function RdvConfirmationScreen({ navigation, route }) {
               source={require("../assets/doctorPicture.jpg")}
               style={styles.image}
             />
-            <View style={styles.proInfo}>
+            {/* <View style={styles.proInfo}>
               <Text style={styles.text}>
-                {user.firstname} {user.lastname}
+                {appointment.firstname} {appointment.lastname}
               </Text>
-              <Text style={styles.text}>Vétérinaire</Text>
-            </View>
+              <Text style={styles.text}>{appointment.occupation}</Text>
+            </View> */}
             {/* ------------------------------------------------- DONNEES DU RDV */}
           </View>
+          <View style={styles.rdvInfo}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons
+                name="calendar-month"
+                size={40}
+                color="#1472AE"
+                style={{ marginRight: 8 }}
+              />
+              <Text>appointment.time</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons
+                name="map"
+                size={40}
+                color="#1472AE"
+                style={{ marginRight: 8 }}
+              />
+              <Text>appointment.address</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons
+                name="currency-eur"
+                size={40}
+                color="#1472AE"
+                style={{ marginRight: 8 }}
+              />
+              <Text>appointment.price</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons
+                name="medical-bag"
+                size={40}
+                color="#1472AE"
+                style={{ marginRight: 8 }}
+              />
+              <Text>appointment.selectedReason</Text>
+            </View>
+          </View>
+
         </View>
         <View
           style={{
@@ -79,7 +120,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
           }}
         >
           <Pressable
-            onPress={() => setConfirmed(true)}
+            onPress={() => onClick()}
             style={{
               backgroundColor: confirmed ? "#008000" : "#0B2A59", // vert ou bleu foncé
               paddingVertical: 12,
@@ -118,7 +159,7 @@ const styles = StyleSheet.create({
 
   headerContainer: {
     width: "100%",
-    height: "13%",
+    height: "7%",
     backgroundColor: "#ffff",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",
@@ -135,7 +176,7 @@ const styles = StyleSheet.create({
   },
 
   bodyContainer: {
-    height: "87%",
+    height: "93%",
     width: "100%",
     backgroundColor: "#ffff",
     alignItems: "center",
@@ -146,7 +187,7 @@ const styles = StyleSheet.create({
     width: "80%",
     display: "flex",
     alignItems: "center",
-    height: "70%",
+    height: "65%",
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "#0D2C56",
@@ -180,5 +221,11 @@ const styles = StyleSheet.create({
   text: {
     color: "#ffff",
     fontSize: 20,
+  },
+
+  rdvInfo: {
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    height: 240,
   },
 });

@@ -29,7 +29,6 @@ import HealthJournal from "./screens/HealthJournal";
 import ProfileProScreen from "./screens/ProfileProScreen";
 import EmergencyScreen from "./screens/EmergencyScreen";
 import RechercherListeScreen from "./screens/RechercherListeScreen";
-import ProfessionnelLoginScreen from "./screens/ProfessionnelLoginScreen";
 import UrgenceScreen from "./screens/UrgenceScreen";
 import QuestionScreen from "./screens/QuestionScreen";
 import InfoProScreen from './screens/InfoProScreen';
@@ -86,19 +85,19 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Agenda" component={AgendaScreen} />
-      <Tab.Screen name="Animal" component={AnimalScreen} />
+      {/* <Tab.Screen name="Agenda" component={AgendaScreen} />
+      <Tab.Screen name="Animal" component={AnimalScreen} /> */}
       <Tab.Screen name="SignIn" component={SignInScreen} />
       <Tab.Screen name="SignUp" component={SignUpScreen} />
       <Tab.Screen name="SignInPro" component={SignInPro} />
       <Tab.Screen name="SignUpPro" component={SignUpPro} />
-      <Tab.Screen name="Faq" component={FaqScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      {/* <Tab.Screen name="Faq" component={FaqScreen} /> */}
+      {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
       <Tab.Screen name="TakeRdv" component={TakeRdvScreen} />
       <Tab.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
-      <Tab.Screen name="HealthCard" component={HealthJournal} />
+      {/* <Tab.Screen name="HealthCard" component={HealthJournal} />
       <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
-      <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
+      <Tab.Screen name="AgendaPro" component={AgendaProScreen} /> */}
     </Tab.Navigator>
   );
 }
@@ -128,8 +127,7 @@ export default function App() {
 
           <Stack.Screen name="Urgences" component={EmergencyScreen} />
           <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-          <Stack.Screen name="Professionnel" component={ProfessionnelLoginScreen} />
-
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
           <Stack.Screen name="LienQuestion" component={QuestionScreen} />
           <Stack.Screen name="LienFaq" component={FaqScreen} />
