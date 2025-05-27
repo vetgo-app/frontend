@@ -13,6 +13,16 @@ import { FontAwesome } from "@expo/vector-icons";
 
 export default function AgendaScreen() {
   const [appointment, setAppointment] = useState([]);
+
+  const handleClic = (id) => {
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/appointment/deleteRDV/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAppointment(data.rdv);
+        console.log(data.rdv);
+      });
+  };
+
   useEffect(() => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments")
       .then((response) => response.json())
@@ -28,6 +38,7 @@ export default function AgendaScreen() {
           <FontAwesome name={"calendar"} size={30} color="white" />
           <TouchableOpacity
             onPress={() => {
+              handleClic(e._id);
               console.log("clic");
             }}
           >
