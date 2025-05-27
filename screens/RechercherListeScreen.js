@@ -18,7 +18,6 @@ export default function RechercherListeScreen({ navigation, route }) {
   const { profession, animal, address } = route.params;
 
   console.log(route.params);
-  const adresse = route.params?.adresse;
 
   const [store, setStore] = useState([]);
   const time = "10h00";
@@ -26,12 +25,12 @@ export default function RechercherListeScreen({ navigation, route }) {
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
 
-  // récupération des vétérinaires fictifs autour d'une adresse
+  // récupération des vétérinaires fictifs autour d'une address
   useEffect(() => {
-    if (adresse) {
+    if (address) {
       fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
-          adresse
+        `https://api-address.data.gouv.fr/search/?q=${encodeURIComponent(
+          address
         )}&limit=5`
       )
         .then((res) => res.json())
@@ -82,7 +81,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         },
       ]);
     }
-  }, [adresse]);
+  }, [address]);
 
   // récupération des praticiens depuis la BDD
   useEffect(() => {
@@ -104,13 +103,13 @@ export default function RechercherListeScreen({ navigation, route }) {
           );
         }
         if (address) {
-          filteredStores = filteredStores.filter(
-            (store) => store.adress.city.toLowerCase() === adresse.toLowerCase()
+          filteredStores = filteredStores.filter((store) =>
+            store.address.city.toLowerCase().includes(address.toLowerCase())
           );
         }
         setStore(filteredStores);
       });
-  }, [profession]);
+  }, [profession, address, animal]);
 
   //envoie vers la page 3 pour la recherche de pro rdv
   const handleNavigation = (elem) => {

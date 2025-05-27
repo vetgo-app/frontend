@@ -25,7 +25,7 @@ export default function HomeScreen() {
     { label: "Ostéopathe", value: "ostéopathe" },
     { label: "Toiletteur", value: "toiletteur" },
     { label: "Educateur", value: "educateur" },
-    { label: "Physiothérapeute", value: "physiothérapeute" },
+    { label: "Physiothérapeute", value: "physiothrapeute" },
   ]);
 
   // Animaux
@@ -182,7 +182,7 @@ export default function HomeScreen() {
             // récupérer le filtre profession, animal et lieux pour la page suivante rechercher
             profession: selectedProfession,
             animal: selectedAnimal,
-            adresse: selectedLieu,
+            address: selectedLieu,
           })
         }
       >
