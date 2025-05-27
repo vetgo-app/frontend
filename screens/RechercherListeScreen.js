@@ -12,23 +12,28 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import vetgologo from '../assets/vetgologo.png';
+import vetgologo from "../assets/vetgologo.png";
 
-export default function RechercherListeScreen() {
-  const route = useRoute();
-  const navigation = useNavigation();
+export default function RechercherListeScreen({ navigation, route }) {
+  const { profession, animal, address } = route.params;
+
+  console.log(route.params);
   const adresse = route.params?.adresse;
 
   const [store, setStore] = useState([]);
   const time = "10h00";
-  const [region, setRegion] = useState(null);  //Stocke la zone à afficher sur la carte (latitude, longitude)
+  const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
 
   // récupération des vétérinaires fictifs autour d'une adresse
   useEffect(() => {
     if (adresse) {
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=5`)
+      fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+          adresse
+        )}&limit=5`
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {
@@ -84,11 +89,30 @@ export default function RechercherListeScreen() {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
-        setStore(data.data);
-      });
-  }, []);
+        let filteredStores = data.data;
 
+        if (profession) {
+          filteredStores = filteredStores.filter(
+            (store) =>
+              store.occupation.toLowerCase() === profession.toLowerCase()
+          );
+        }
+        if (animal) {
+          filteredStores = filteredStores.filter(
+            (store) =>
+              store.specialization.toLowerCase() === animal.toLowerCase()
+          );
+        }
+        if (address) {
+          filteredStores = filteredStores.filter(
+            (store) => store.adress.city.toLowerCase() === adresse.toLowerCase()
+          );
+        }
+        setStore(filteredStores);
+      });
+  }, [profession]);
+
+  //envoie vers la page 3 pour la recherche de pro rdv
   const handleNavigation = (elem) => {
     navigation.navigate("InfoProScreen", {
       firstname: elem.user?.firstname,
@@ -122,7 +146,10 @@ export default function RechercherListeScreen() {
           </View>
         </View>
         <View style={styles.dispo}>
-          <Text>Prochaine disponibilité : <Text style={styles.span}>mardi 6 mai</Text></Text>
+          <Text>
+            Prochaine disponibilité :{" "}
+            <Text style={styles.span}>mardi 6 mai</Text>
+          </Text>
         </View>
         <View style={styles.date}>
           <TouchableOpacity
@@ -136,7 +163,7 @@ export default function RechercherListeScreen() {
           <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
         </View>
       </View>
-    ); 
+    );
   });
 
   return (
@@ -177,7 +204,6 @@ export default function RechercherListeScreen() {
 }
 
 // console.log(card?.length);
-
 
 const styles = StyleSheet.create({
   container: {
@@ -278,3 +304,5 @@ const styles = StyleSheet.create({
     color: "#1472AE",
   },
 });
+
+//timestemp

@@ -21,11 +21,11 @@ export default function HomeScreen() {
   const [openProfession, setOpenProfession] = useState(false);
   const [selectedProfession, setSelectedProfession] = useState(null);
   const [professionItems, setProfessionItems] = useState([
-    { label: "Vétérinaire", value: "veterinaire" },
-    { label: "Ostéopathe", value: "osteopathe" },
+    { label: "Vétérinaire", value: "vétérinaire" },
+    { label: "Ostéopathe", value: "ostéopathe" },
     { label: "Toiletteur", value: "toiletteur" },
     { label: "Educateur", value: "educateur" },
-    { label: "Physiothérapeute", value: "physiotherapeute" },
+    { label: "Physiothérapeute", value: "physiothérapeute" },
   ]);
 
   // Animaux
@@ -44,6 +44,10 @@ export default function HomeScreen() {
   // Lieu avec suggestions API
   const [selectedLieu, setSelectedLieu] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+
+  console.log(selectedProfession);
+  console.log(selectedAnimal);
+  console.log(selectedLieu);
 
   const handleLieuChange = async (text) => {
     setSelectedLieu(text);
@@ -173,7 +177,14 @@ export default function HomeScreen() {
       {/* Rechercher */}
       <TouchableOpacity
         style={styles.searchButton}
-        onPress={() => navigation.navigate("Recherche", { adresse: selectedLieu })}
+        onPress={() =>
+          navigation.navigate("Recherche", {
+            // récupérer le filtre profession, animal et lieux pour la page suivante rechercher
+            profession: selectedProfession,
+            animal: selectedAnimal,
+            adresse: selectedLieu,
+          })
+        }
       >
         <Text style={styles.searchText}>Rechercher</Text>
       </TouchableOpacity>

@@ -34,12 +34,6 @@ export default function ProfileProScreen() {
   const [specialization, setSpecialization] = useState("");
   const [occupation, setOccupation] = useState("");
 
-  // fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users")
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     console.log("route user:", data.data[0].name);
-  //   });
-
   const user = useSelector((state) => state.user.value);
 
   const handleSubmit = () => {
