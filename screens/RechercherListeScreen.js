@@ -16,41 +16,21 @@ import vetgologo from '../assets/vetgologo.png';
 import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 
 export default function RechercherListeScreen({ navigation, route }) {
-
+  const { profession, animal, address } = route.params;
   const [store, setStore] = useState([]);
   const time = "10h00";
-  const [region, setRegion] = useState(null);  //Stocke la zone à afficher sur la carte (latitude, longitude)
+  const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
-  const [address, setAddress] = useState(null)
 
-  // récupération des praticiens depuis la BDD
-  useEffect(() => {
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        setStore(data.data);
-        setAddress(data.data.address)
-      });
-  }, []);
-
-  const handleNavigation = (elem) => {
-    navigation.navigate("InfoProScreen", {
-      firstname: elem.user?.firstname,
-      lastname: elem.user?.lastname,
-      occupation: elem.occupation,
-      address: elem.address,
-      price: elem.price,
-      time,
-    });
-
-  };
-
-  // récupération des vétérinaires fictifs autour d'une adresse
+  // récupération des vétérinaires fictifs autour d'une address
   useEffect(() => {
     if (address) {
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
+      fetch(
+        `https://api-address.data.gouv.fr/search/?q=${encodeURIComponent(
+          address
+        )}&limit=5`
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {
@@ -101,7 +81,45 @@ export default function RechercherListeScreen({ navigation, route }) {
     }
   }, [address]);
 
+  // récupération des praticiens depuis la BDD
+  useEffect(() => {
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
+      .then((response) => response.json())
+      .then((data) => {
+        let filteredStores = data.data;
 
+        if (profession) {
+          filteredStores = filteredStores.filter(
+            (store) =>
+              store.occupation.toLowerCase() === profession.toLowerCase()
+          );
+        }
+        if (animal) {
+          filteredStores = filteredStores.filter(
+            (store) =>
+              store.specialization.toLowerCase() === animal.toLowerCase()
+          );
+        }
+        if (address) {
+          filteredStores = filteredStores.filter((store) =>
+            store.address.city.toLowerCase().includes(address.toLowerCase())
+          );
+        }
+        setStore(filteredStores);
+      });
+  }, [profession, address, animal]);
+
+  //envoie vers la page 3 pour la recherche de pro rdv
+  const handleNavigation = (elem) => {
+    navigation.navigate("InfoProScreen", {
+      firstname: elem.user?.firstname,
+      lastname: elem.user?.lastname,
+      occupation: elem.occupation,
+      address: elem.address,
+      price: elem.price,
+      time,
+    });
+  };
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store?.map((e, i) => {
@@ -124,7 +142,10 @@ export default function RechercherListeScreen({ navigation, route }) {
           </View>
         </View>
         <View style={styles.dispo}>
-          <Text>Prochaine disponibilité : <Text style={styles.span}>mardi 6 mai</Text></Text>
+          <Text>
+            Prochaine disponibilité :{" "}
+            <Text style={styles.span}>mardi 6 mai</Text>
+          </Text>
         </View>
         <View style={styles.date}>
           <TouchableOpacity
@@ -179,7 +200,6 @@ export default function RechercherListeScreen({ navigation, route }) {
 }
 
 // console.log(card?.length);
-
 
 const styles = StyleSheet.create({
   container: {
@@ -280,3 +300,5 @@ const styles = StyleSheet.create({
     color: "#1472AE",
   },
 });
+
+//timestemp
