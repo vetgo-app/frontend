@@ -78,9 +78,17 @@ function MainTabs() {
           } else if (route.name === "AgendaPro") {
             iconName = "star";
           }
-          return <FontAwesome name={iconName} size={35} color={color} solid />;
+          return (
+            <FontAwesome
+              name={iconName}
+              size={35}
+              color={color}
+              solid
+              style={{ alignItems: "center" }}
+            />
+          );
         },
-        tabBarStyle: { height: 90 }, // modifier la hauteur de la tab
+        tabBarStyle: { height: 80 }, // modifier la hauteur de la tab
         tabBarActiveTintColor: "#0D2C56",
         tabBarInactiveTintColor: "#1477AE",
         headerShown: false,
