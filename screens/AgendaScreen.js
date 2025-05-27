@@ -35,19 +35,20 @@ export default function AgendaScreen() {
           </TouchableOpacity>
         </View>
         <Text style={styles.date}>{e.appointmentDate}</Text>
-        <Text style={styles.date}></Text>
-        <Text style={styles.date}></Text>
+        <Text style={styles.date}>{e.type}</Text>
+        <Text style={styles.date}>{e.reason}</Text>
+        <Text style={styles.date}>{e.userName}</Text>
       </View>
     );
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView>
-        <View style={styles.styleContainer}>
+        <View style={styles.container}>
           <Text style={styles.title}>Mes rendez vous</Text>
           <Text style={styles.text}>Prochaines rendez-vous</Text>
+          {appointmentList}
         </View>
-        {appointmentList}
       </ScrollView>
     </SafeAreaView>
   );
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
   card: {
     marginTop: 20,
     borderWidth: 1,
-    width: "100%",
+    width: "80%",
     padding: 50,
     backgroundColor: "#0D2C56",
     borderRadius: 10,
