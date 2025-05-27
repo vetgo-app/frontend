@@ -123,18 +123,14 @@ export default function App() {
             component={MainTabs}
             options={{ headerShown: false }}
           />
-
-          {/* <Stack.Screen name="Urgences" component={EmergencyScreen} /> */}
           <Stack.Screen name="Recherche" component={RechercherListeScreen} />
-          <Stack.Screen
-            name="Professionnel"
-            component={ProfessionnelLoginScreen}
-          />
-
           <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
           <Stack.Screen name="LienQuestion" component={QuestionScreen} />
           <Stack.Screen name="LienFaq" component={FaqScreen} />
           <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
+          <Stack.Screen name="TakeRdv" component={TakeRdvScreen} />
+          <Stack.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

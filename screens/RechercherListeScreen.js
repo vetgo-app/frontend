@@ -18,7 +18,7 @@ import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 export default function RechercherListeScreen({ navigation, route }) {
   const { profession, animal, address } = route.params;
   const [store, setStore] = useState([]);
-  const time = "10h00";
+  const time = "10:00";
   const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)

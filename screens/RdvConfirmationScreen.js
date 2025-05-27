@@ -11,10 +11,12 @@ import React, { useState, useMemo, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // ou react-native-vector-icons
 
-export default function RdvConfirmationScreen({ navigation, route }) {
+export default function RdvConfirmationScreen({ navigation, route, formData }) {
 
   const [confirmed, setConfirmed] = useState(false);
-  // const appointment = route.params.formData;
+  const appointment = route.params.formData ?? formData;
+  console.log(appointment);
+
 
   const onClick = () => {
     setConfirmed(true)
@@ -22,11 +24,11 @@ export default function RdvConfirmationScreen({ navigation, route }) {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({
-        address: appointment.address,
-        date: appointment.time,
-        reason: appointment.selectedReason,
-        myPet: appointment.isMyAnimal,
-        firstRdv: appointment.isFirstRdv
+        address: appointment?.address,
+        date: appointment?.time,
+        reason: appointment?.selectedReason,
+        myPet: appointment?.isMyAnimal,
+        firstRdv: appointment?.isFirstRdv
       }),
     })
       .then((res) => res.json())
@@ -66,9 +68,9 @@ export default function RdvConfirmationScreen({ navigation, route }) {
             />
             {/* <View style={styles.proInfo}>
               <Text style={styles.text}>
-                {appointment.firstname} {appointment.lastname}
+                {appointment?.firstname} {appointment?.lastname}
               </Text>
-              <Text style={styles.text}>{appointment.occupation}</Text>
+              <Text style={styles.text}>{appointment?.occupation}</Text>
             </View> */}
             {/* ------------------------------------------------- DONNEES DU RDV */}
           </View>
@@ -80,7 +82,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 8 }}
               />
-              <Text>appointment.time</Text>
+              <Text>{appointment?.time}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialCommunityIcons
@@ -89,7 +91,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 8 }}
               />
-              <Text>appointment.address</Text>
+              <Text>{appointment?.address?.street}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialCommunityIcons
@@ -98,7 +100,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 8 }}
               />
-              <Text>appointment.price</Text>
+              <Text>{appointment?.price}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialCommunityIcons
@@ -107,7 +109,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 8 }}
               />
-              <Text>appointment.selectedReason</Text>
+              <Text>{appointment?.selectedReason}</Text>
             </View>
           </View>
 

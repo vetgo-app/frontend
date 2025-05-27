@@ -33,6 +33,8 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   const user = useSelector((state) => state.user.value);
   const { firstname, lastname, occupation, price, address, time } = route.params;
+  console.log({ firstname, lastname, occupation, price, address, time });
+
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
@@ -58,17 +60,7 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
   const handleBookRdvkClick = () => {
-    navigation.navigate('RdvConfirmation', {
-      firstname,
-      lastname,
-      occupation,
-      price,
-      address,
-      selectedReason,
-      isFirstRdv,
-      isMyAnimal,
-      time,
-    });
+    navigation.navigate('RdvConfirmation', { formData: { firstname, lastname, occupation, price, address, time } });
   }
 
   return (
