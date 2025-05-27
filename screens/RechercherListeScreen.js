@@ -16,9 +16,6 @@ import vetgologo from "../assets/vetgologo.png";
 
 export default function RechercherListeScreen({ navigation, route }) {
   const { profession, animal, address } = route.params;
-
-  console.log(route.params);
-
   const [store, setStore] = useState([]);
   const time = "10h00";
   const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
