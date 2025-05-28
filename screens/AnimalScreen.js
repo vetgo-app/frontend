@@ -1,13 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
@@ -40,6 +31,8 @@ export default function AnimalScreen({ navigation }) {
   const [newIdentification, setNewIdentification] = useState("");
   const [newWeight, setNewWeight] = useState("");
   const [newType, setNewType] = useState("");
+
+  // Used to add an empty array to add documents
   const [newDocument, setNewDocument] = useState([]);
 
   // Animal's ObjectId
@@ -52,7 +45,7 @@ export default function AnimalScreen({ navigation }) {
   // Send the data to DB and display the added animal
   const handleSendData = () => {
     setNewAnimalInput(false);
-    Alert.alert("Animal ajouté !");
+    // Alert.alert("Animal ajouté !");
 
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/", {
       method: "post",
@@ -78,6 +71,7 @@ export default function AnimalScreen({ navigation }) {
           setPetId(data.data._id);
           setAnimalTopIsVisible(true);
         }
+        navigation.navigate("HealthJournal", { petId: data.data._id })
       });
   };
 
@@ -97,6 +91,8 @@ export default function AnimalScreen({ navigation }) {
   }, [petId]);
 
   return (
+
+    // Connection's modal
     <View style={styles.mainDiv}>
       <Modal visible={modalSignInVisible} animationType="none">
         <SignIn
@@ -176,23 +172,22 @@ export default function AnimalScreen({ navigation }) {
 
       {/* Body Part  */}
       <View style={styles.body}>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity
-            style={styles.btnAddAnimal}
-            onPress={() => addAnimal()}
-          >
-            <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
-          </TouchableOpacity>
-        </View>
+        {user.token && (
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={styles.btnAddAnimal}
+              onPress={() => addAnimal()}
+            >
+              <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Add Animal Part */}
-        <View
-          style={[
-            styles.containerNewAnimal,
-            { display: newAnimalInput ? "flex" : "none" },
-          ]}
-        >
-          <Text style={styles.titleNewAnimal}>🦁 Animal</Text>
+        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container} >
+          <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" > */}
+        <View style={[styles.containerNewAnimal, { display: newAnimalInput ? "flex" : "none" },]}>
+          <Text style={styles.titleNewAnimal}>Animal</Text>
           <View style={styles.nameAndAge}>
             <TextInput
               placeholder="Nom"
@@ -260,15 +255,14 @@ export default function AnimalScreen({ navigation }) {
 
           {user.token && (
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.btnAddAnimal}
-                onPress={() => handleSendData()}
-              >
+              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => handleSendData()} >
                 <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
+        {/* </ScrollView>
+        </KeyboardAvoidingView> */}
       </View>
     </View>
   );
@@ -385,8 +379,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnContainer: {
-    width: "45%",
+    width: "100%",
     marginTop: 30,
+    alignItems: "center",
   },
   btnAddAnimal: {
     padding: 12,
