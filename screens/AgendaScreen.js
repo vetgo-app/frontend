@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   StyleSheet,
   Text,
@@ -15,11 +14,15 @@ export default function AgendaScreen() {
   const [appointment, setAppointment] = useState([]);
 
   const handleClic = (id) => {
-    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/appointment/deleteRDV/${id}`)
+    console.log("test2");
+    fetch(
+      `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
+    )
       .then((res) => res.json())
       .then((data) => {
-        setAppointment(data.rdv);
-        console.log(data.rdv);
+        console.log("test3");
+        setAppointment(data);
+        console.log("test");
       });
   };
 
@@ -28,7 +31,6 @@ export default function AgendaScreen() {
       .then((response) => response.json())
       .then((data) => {
         setAppointment(data.data);
-        console.log("test1", data.data);
       });
   }, []);
   const appointmentList = appointment?.map((e) => {

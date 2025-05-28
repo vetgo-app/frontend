@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   welcomingContainer: {
     width: '80%',
     borderWidth: 1, 
-    height: 200,
+    height: 220,
     justifyContent: 'space-between',
     alignItems: 'center'
   },

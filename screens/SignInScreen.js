@@ -5,14 +5,20 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../reducers/user";
 
-export default function SignInScreen({ navigation, route, setModalSignInVisible, modalSignInVisible, formData }) {
+export default function SignInScreen({
+  navigation,
+  route,
+  setModalSignInVisible,
+  modalSignInVisible,
+  formData,
+}) {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -54,17 +60,21 @@ export default function SignInScreen({ navigation, route, setModalSignInVisible,
       })
   };
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <FontAwesome name='paw' size='30' color='#1472AE' solid></FontAwesome>
+        <FontAwesome name="paw" size={16} color="#1472AE" solid></FontAwesome>
         <Text style={styles.pageTitle}>Se connecter</Text>
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.signinInputs}>
           <Text
-            style={{ fontSize: 16, fontWeight: 500, textAlign: "center", marginBottom: 30 }}
+            style={{
+              fontSize: 16,
+              fontWeight: 500,
+              textAlign: "center",
+              marginBottom: 30,
+            }}
           >
             Veuillez entrer vos identifiants de connexion :
           </Text>
@@ -99,25 +109,25 @@ export default function SignInScreen({ navigation, route, setModalSignInVisible,
             <Text style={{ color: "#ffff", fontSize: 16 }}>Se connecter</Text>
           </TouchableOpacity>
         </View>
-        {
-          modalSignInVisible ? (
-            <>
-              <TouchableOpacity onPress={() => setModalSignInVisible(false)}><Text style={{ fontWeight: 'bold' }}>Fermer</Text></TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('SignUp')}
-                style={styles.signUpPage}
-              >
-                <Text style={{ width: "100%", fontSize: 16, color: "#1472AE" }}>
-                  Vous n'avez pas de compte ?{" "}
-                  <Text style={{ fontWeight: "bold" }}>S'inscrire</Text>
-                </Text>
-              </TouchableOpacity>
-            </>
-          )
-        }
+        {modalSignInVisible ? (
+          <>
+            <TouchableOpacity onPress={() => setModalSignInVisible(false)}>
+              <Text style={{ fontWeight: "bold" }}>Fermer</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SignUp")}
+              style={styles.signUpPage}
+            >
+              <Text style={{ width: "100%", fontSize: 16, color: "#1472AE" }}>
+                Vous n'avez pas de compte ?{" "}
+                <Text style={{ fontWeight: "bold" }}>S'inscrire</Text>
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     borderRadius: 10,
     alignItems: "center",
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
     marginBottom: 30,
   },
 
