@@ -33,12 +33,14 @@ export default function TakeRdvScreen({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
   const { firstname, lastname, occupation, price, address, time } =
     route.params;
-  console.log("test1", route.params);
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
     setIsSelectedReason(!isSelectedReason);
-    console.log("value", value);
+  };
+
+  const handlePressPet = (value) => {
+    setPet(value);
   };
 
   const RadioButtons = useMemo(
@@ -181,6 +183,7 @@ export default function TakeRdvScreen({ navigation, route }) {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
+
         <View style={{ width: "70%", alignItems: "center" }}>
           <Text style={{ fontWeight: 700 }}>
             Est-ce votre premier rendez-vous ?

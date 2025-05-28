@@ -9,14 +9,14 @@ import {
   TextInput,
   FlatList,
   Modal,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import vetgologo from "../assets/vetgologo.png";
 import { useSelector } from "react-redux";
-import SignIn from "../screens/SignInScreen"
-import SignUp from "../screens/SignUpScreen"
+import SignIn from "../screens/SignInScreen";
+import SignUp from "../screens/SignUpScreen";
 
 export default function HomeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
@@ -50,10 +50,6 @@ export default function HomeScreen({ navigation }) {
   // Lieu avec suggestions API
   const [selectedLieu, setSelectedLieu] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-
-  console.log('profession =>', selectedProfession);
-  console.log('anamial =>', selectedAnimal);
-  console.log('lieu =>', selectedLieu);
 
   const handleLieuChange = async (text) => {
     setSelectedLieu(text);
@@ -181,7 +177,6 @@ export default function HomeScreen({ navigation }) {
           />
         </View>
 
-
         {/* Rechercher */}
         <TouchableOpacity
           style={styles.searchButton}
@@ -197,18 +192,48 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.searchText}>Rechercher</Text>
         </TouchableOpacity>
       </View>
-      {!user.token && (<View style={styles.signInUpContainer}>
-        <Text style={{ fontSize: 15, fontWeight: 700, color: '#1472AE', }}>Vous ne semblez pas connecté.e !</Text>
-        <View style={styles.SignInUpButtons}>
-          {!user.token && (<TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>)}
-          {!user.token && (<TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>)}
+      {!user.token && (
+        <View style={styles.signInUpContainer}>
+          <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
+            Vous ne semblez pas connecté.e !
+          </Text>
+          <View style={styles.SignInUpButtons}>
+            {!user.token && (
+              <TouchableOpacity
+                onPress={() => setModalSignInVisible(true)}
+                style={styles.buttonStyle}
+              >
+                <Text style={{ fontWeight: 700, color: "#fff" }}>
+                  Se connecter
+                </Text>
+              </TouchableOpacity>
+            )}
+            {!user.token && (
+              <TouchableOpacity
+                onPress={() => setModalSignUpVisible(true)}
+                style={styles.buttonStyle}
+              >
+                <Text style={{ fontWeight: 700, color: "#fff" }}>
+                  S'inscrire
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-      </View>)}
+      )}
       <Modal visible={modalSignInVisible} animationType="none">
-        <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} />
+        <SignIn
+          setModalSignInVisible={setModalSignInVisible}
+          modalSignInVisible={modalSignInVisible}
+          navigation={navigation}
+        />
       </Modal>
       <Modal visible={modalSignUpVisible} animationType="none">
-        <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} />
+        <SignUp
+          setModalSignUpVisible={setModalSignUpVisible}
+          modalSignUpVisible={modalSignUpVisible}
+          navigation={navigation}
+        />
       </Modal>
 
       {/* Lien pro */}
@@ -224,7 +249,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C2E7F7",
     alignItems: "center",
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
   },
   logoEmergency: {
     position: "absolute",
@@ -237,8 +262,8 @@ const styles = StyleSheet.create({
   },
 
   searchSettings: {
-    width: '80%',
-    alignItems: 'center',
+    width: "80%",
+    alignItems: "center",
   },
 
   logoImage: {
@@ -320,21 +345,21 @@ const styles = StyleSheet.create({
   },
 
   signInUpContainer: {
-    width: '100%',
+    width: "100%",
     height: 80,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   SignInUpButtons: {
-    width: '75%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: "75%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   buttonStyle: {
     width: 140,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 15,
     backgroundColor: "#0D2C56",
     borderRadius: 10,
