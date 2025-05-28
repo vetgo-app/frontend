@@ -178,7 +178,6 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* Rechercher */}
-
       </View>
       <TouchableOpacity
         style={styles.searchButton}
@@ -264,14 +263,8 @@ const styles = StyleSheet.create({
   },
 
   searchSettings: {
-<<<<<<< HEAD
-    width: '80%',
-    height: 200,
-    alignItems: 'center',
-=======
     width: "80%",
     alignItems: "center",
->>>>>>> ddbe5ecc9b7d0dbb22f1f7e5e5055dc9d4a250d9
   },
 
   logoImage: {
@@ -327,7 +320,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
   },
-  
+
   suggestionItem: {
     padding: 10,
     borderBottomColor: "#ccc",
