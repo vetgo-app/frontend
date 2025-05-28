@@ -4,21 +4,21 @@ import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from 'expo-document-picker';
 
-export default function HealthJournal() {
-    const petId = "6831ca6e1bdf6463fe893433"
+export default function HealthJournal({ route }) {
+    const { petId } = route.params;
     const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
     const [petInfo, setPetInfo] = useState(null);
-    
+
     const [documentName, setDocumentName] = useState("")
     const [modalVisible, setModalVisible] = useState(false)
     const [previsualisationModalVisible, setPrevisualisationModalVisible] = useState(false)
     const [selectedDoc, setSelectedDoc] = useState(null)
 
     const fetchData = async () => {
-        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId );
+        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byPet/" + petId);
         const data = await response.json();
 
-        if (data.result) {                
+        if (data.result) {
             setPetInfo(data.petInfo)
         } else {
             Alert.alert(data.error)
@@ -38,7 +38,7 @@ export default function HealthJournal() {
 
     const dataDocuments = petInfo?.documents.map((e) => {
         return { label: `Nom : ${e.docName}`, value: `${e.file}` }
-    }) || []    
+    }) || []
 
     const handleAddDocuments = async (docName) => {
         const doc = await DocumentPicker.getDocumentAsync({ type: ["application/pdf"] });
@@ -85,14 +85,14 @@ export default function HealthJournal() {
                         <TouchableOpacity style={styles.searchBtn} onPress={() => {
                             setDocumentName("")
                             setModalVisible(false)
-                            }}>
+                        }}>
                             <Text style={styles.searchBtnTxt}>Annuler</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.searchBtn} onPress={() => documentName.length > 0 && handleAddDocuments(documentName)}>
                             <Text style={styles.searchBtnTxt}>Enregistrer</Text>
                         </TouchableOpacity>
                     </View>
-                    
+
                 </View>
             </Modal>
 
@@ -103,11 +103,11 @@ export default function HealthJournal() {
                         <TouchableOpacity style={styles.searchBtn} onPress={() => {
                             setSelectedDoc(null)
                             setPrevisualisationModalVisible(false)
-                            }}>
+                        }}>
                             <Text style={styles.searchBtnTxt}>Annuler</Text>
                         </TouchableOpacity>
                     </View>
-                    
+
                 </View>
             </Modal>}
 
@@ -136,7 +136,7 @@ export default function HealthJournal() {
                                         <Text style={styles.animalBirth}>{petInfo?.age} ans, né le {petInfo?.dateOfBirth}</Text>
                                     </View>
                                     <View style={styles.bottomHeaderInformationRace}>
-                                        <Text style={styles.animalRace}>{petInfo?.race}</Text>
+                                        <Text style={styles.animalRace}>{petInfo?.breed}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     searchBtnTxt: {
         height: "100%",
         padding: 10,
-        textAlign: "center", 
+        textAlign: "center",
         color: "white",
         backgroundColor: "#0D2C56",
         borderRadius: 10,

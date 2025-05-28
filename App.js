@@ -132,6 +132,7 @@ export default function App() {
           <Stack.Screen name="RetourHomeScreen" component={HomeScreen} />
           <Stack.Screen name="Urgences" component={EmergencyScreen} />
 
+          <Stack.Screen name="HealthJournal" component={HealthJournal} />
 
         </Stack.Navigator>
       </NavigationContainer>

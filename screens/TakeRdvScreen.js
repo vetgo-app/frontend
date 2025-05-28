@@ -48,7 +48,7 @@ export default function TakeRdvScreen({ navigation, route }) {
   useEffect(() => {
     if (!user.token) return;
     fetch(
-      process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + user.token
+      process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + user.token
     ).then((response) => response.json().then((data) => setPet(data.data)));
   }, []);
 
