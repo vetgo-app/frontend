@@ -166,4 +166,21 @@ const styles = StyleSheet.create({
     width: "60%",
     alignItems: "center",
   },
+  nextButton: {
+    backgroundColor: "#0D2C56",
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    width: "60%",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  
+
+  searchText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+
 });

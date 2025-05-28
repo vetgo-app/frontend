@@ -98,6 +98,7 @@ function MainTabs() {
       <Tab.Screen name="HealthCard" component={HealthJournal} />
       <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
       <Tab.Screen name="AgendaPro" component={AgendaProScreen} />
+      <Tab.Screen name="RetourHomeScreen" component={HomeScreen} />
     </Tab.Navigator>
   );
 }
@@ -133,6 +134,7 @@ export default function App() {
           <Stack.Screen name="LienQuestion" component={QuestionScreen} />
           <Stack.Screen name="LienFaq" component={FaqScreen} />
           <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
+          <Stack.Screen name="LienFaqEmergency" component={FaqScreen} />
 
         </Stack.Navigator>
 
