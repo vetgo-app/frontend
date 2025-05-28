@@ -11,30 +11,30 @@ import React, { useState, useMemo, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // ou react-native-vector-icons
 
-export default function RdvConfirmationScreen({ navigation, route, formData }) {
-
+export default function RdvConfirmationScreen({ navigation, route }) {
   const [confirmed, setConfirmed] = useState(false);
-  const appointment = route.params.formData ?? formData;
-  console.log(appointment);
-
+  const appointment = route.params;
+  console.log("test4", appointment);
 
   const onClick = () => {
-    setConfirmed(true)
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments", {
-      method: "POST",
-      headers: { "Content-Type": "Application/json" },
-      body: JSON.stringify({
-        address: appointment?.address,
-        date: appointment?.time,
-        reason: appointment?.selectedReason,
-        myPet: appointment?.isMyAnimal,
-        firstRdv: appointment?.isFirstRdv
-      }),
-    })
-      .then((res) => res.json())
-      .exec();
-  }
-
+    setConfirmed(true);
+    fetch(
+      process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/addAppointment",
+      {
+        method: "POST",
+        headers: { "Content-Type": "Application/json" },
+        body: JSON.stringify({
+          user: appointment?._id, // pour generer la relation de user avec store
+          store: appointment?.address,
+          pet: appointment.isMyAnimal,
+          date: appointment?.time,
+          price: appointment?.price,
+          reason: appointment?.selectedReason,
+          firstRdv: appointment?.isFirstRdv,
+        }),
+      }
+    ).then((res) => res.json());
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,7 +75,7 @@ export default function RdvConfirmationScreen({ navigation, route, formData }) {
             {/* ------------------------------------------------- DONNEES DU RDV */}
           </View>
           <View style={styles.rdvInfo}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
                 name="calendar-month"
                 size={40}
@@ -84,7 +84,7 @@ export default function RdvConfirmationScreen({ navigation, route, formData }) {
               />
               <Text>{appointment?.time}</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
                 name="map"
                 size={40}
@@ -93,7 +93,7 @@ export default function RdvConfirmationScreen({ navigation, route, formData }) {
               />
               <Text>{appointment?.address?.street}</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
                 name="currency-eur"
                 size={40}
@@ -102,7 +102,7 @@ export default function RdvConfirmationScreen({ navigation, route, formData }) {
               />
               <Text>{appointment?.price}</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
                 name="medical-bag"
                 size={40}
@@ -112,7 +112,6 @@ export default function RdvConfirmationScreen({ navigation, route, formData }) {
               <Text>{appointment?.selectedReason}</Text>
             </View>
           </View>
-
         </View>
         <View
           style={{
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
   },
 
   rdvInfo: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     borderWidth: 1,
     height: 240,
   },

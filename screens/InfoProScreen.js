@@ -10,15 +10,15 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function InfoProScreen({ navigation, route }) {
+  const { storeId, firstname, lastname, address, occupation, price, time } =
+    route.params;
 
-  const { storeId, firstname, lastname, address, occupation, price, time } = route.params;
-
-  useEffect(() => {
-    // use Effect permet d'afficher les elements a chaque re render
-    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
-      .then((response) => response.json())
-      .then((data) => { });
-  }, []);
+  // useEffect(() => {
+  //   // use Effect permet d'afficher les elements a chaque re render
+  //   fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {});
+  // }, []);
 
   // const fullAddress = address.map((e) => {
   // return (<Text key={e} style={styles.adresse}>{e.street}, {e.zipCode} {e.city}</Text>);
@@ -41,9 +41,13 @@ export default function InfoProScreen({ navigation, route }) {
       <View style={styles.card}>
         <Image source={{ uri: "test" }} style={styles.profileImage} />
         <View>
-          <Text style={styles.name}>{firstname} {lastname}</Text>
+          <Text style={styles.name}>
+            {firstname} {lastname}
+          </Text>
           <Text style={styles.specialite}>{occupation}</Text>
-          <Text style={styles.adresse}>{address.street}, {address.zipCode} {address.city}</Text>
+          <Text style={styles.adresse}>
+            {address.street}, {address.zipCode} {address.city}
+          </Text>
         </View>
       </View>
 
