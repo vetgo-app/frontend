@@ -24,7 +24,7 @@ export default function SignInScreen({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log(navigation, route);
+  console.log(navigation, route, modalSignInVisible, setModalSignInVisible);
 
   const handleSignIn = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signin", {
@@ -34,18 +34,13 @@ export default function SignInScreen({
         email: email,
         password: password,
       }),
-    })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((data) => {
-        console.log(data);
-
         if (data.result) {
-          console.log(data);
-
           dispatch(
-            login({ ...data })
+            login({ firstname: data.user.firstname, lastname: data.user.lastname, email: data.user.email, token: data.user.token })
           );
-          console.log('redux login', ...data, data)
+          console.log('token is', data.user.token)
           setEmail("");
           setPassword("");
           if (modalSignInVisible) {

@@ -1,14 +1,21 @@
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Modal } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import SignIn from "../screens/SignInScreen"
 import SignUp from "../screens/SignUpScreen"
+import { logout } from "../reducers/user";
 
-export default function ProfilScreen(navigation) {
+export default function ProfilScreen({ navigation }) {
+  
   const user = useSelector((state) => state.user.value)
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const handleDisconnectClick = () => {
+    dispatch(logout())
+  }
 
   return (
 
@@ -53,7 +60,7 @@ const styles = StyleSheet.create({
   },
   welcomingContainer: {
     width: '80%',
-    borderWidth: 1, 
+
     height: 220,
     justifyContent: 'space-between',
     alignItems: 'center'
