@@ -12,7 +12,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import vetgologo from '../assets/vetgologo.png';
+import vetgologo from "../assets/vetgologo.png";
 import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 
 export default function RechercherListeScreen({ navigation, route }) {
@@ -198,8 +198,6 @@ export default function RechercherListeScreen({ navigation, route }) {
     </SafeAreaProvider>
   );
 }
-
-// console.log(card?.length);
 
 const styles = StyleSheet.create({
   container: {
