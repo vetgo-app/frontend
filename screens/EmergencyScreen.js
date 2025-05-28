@@ -287,12 +287,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#C00',
+    color: '#FA3034',
     textAlign: 'center',
   },
   modalText: {
     fontSize: 14,
-    color: '#333',
+    color: '#000000',
     marginBottom: 20,
   },
   closeButton: {

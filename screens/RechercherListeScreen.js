@@ -37,13 +37,15 @@ export default function RechercherListeScreen({ navigation, route }) {
             const longitude = coords[0];
             const latitude = coords[1];
 
+            //on centre la carte sur cette adresse, avec un certain zoom delta
             setRegion({
               latitude,
               longitude,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             });
-
+ 
+            //professionnels qui se filtrent en fonction de l'adresse
             setVeterinaires([
               {
                 nom: "Isabelle Veto",
@@ -57,9 +59,11 @@ export default function RechercherListeScreen({ navigation, route }) {
           }
         });
     } else {
+      // Sinon affiche Paris par défaut:
       const latitude = 48.866667;
       const longitude = 2.333333;
 
+      //on centre la carte 
       setRegion({
         latitude,
         longitude,
@@ -67,6 +71,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         longitudeDelta: 0.01,
       });
 
+       //tous les professionnels s'affichent
       setVeterinaires([
         {
           nom: "Isabelle Veto",
@@ -167,7 +172,7 @@ export default function RechercherListeScreen({ navigation, route }) {
       </TouchableOpacity>
 
       <View style={styles.dispo}>
-        <Text>Prochaine disponibilité : <Text style={styles.span}>mardi 6 mai</Text></Text>
+        <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
       </View>
       </View>
     );

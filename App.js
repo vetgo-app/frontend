@@ -130,6 +130,8 @@ export default function App() {
           <Stack.Screen name="TakeRdv" component={TakeRdvScreen} />
           <Stack.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
           <Stack.Screen name="RetourHomeScreen" component={HomeScreen} />
+          <Stack.Screen name="Urgences" component={EmergencyScreen} />
+
 
         </Stack.Navigator>
       </NavigationContainer>
