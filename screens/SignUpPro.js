@@ -58,6 +58,7 @@ export default function SignUpPro({ navigation }) {
     setModalVisible(false);
     setProfilPicture(photo.uri);
   };
+
   const handleSignUp = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signUpPro", {
       method: "POST",
@@ -80,6 +81,7 @@ export default function SignUpPro({ navigation }) {
           setEmail("");
           setPassword("");
           setProfilPicture(null);
+          navigation.navigate('ProfilePro')
         }
       });
   };
@@ -173,6 +175,8 @@ export default function SignUpPro({ navigation }) {
         <TextInput
           textContentType="password"
           secureTextEntry={true}
+          autoCapitalize="none"
+          autoComplete="password"
           style={styles.passwordInput}
           placeholder="mot de passe"
           onChangeText={(value) => setPassword(value)}
@@ -235,33 +239,41 @@ const styles = StyleSheet.create({
   firstnameInput: {
     width: "40%",
     height: 40,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginRight: 38,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   lastnameInput: {
     width: "60%",
     height: 40,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginBottom: 20,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   emailInput: {
     width: "60%",
     height: 40,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginBottom: 20,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   passwordInput: {
     width: "60%",
     height: 40,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginBottom: 40,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   signUpButton: {
@@ -271,6 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+
   },
 
   camera: {

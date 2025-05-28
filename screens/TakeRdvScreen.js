@@ -15,6 +15,7 @@ import RadioGroup from "react-native-radio-buttons-group";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen"
+import SignUp from "../screens/SignUpScreen"
 
 const data = [
   { value: "Soins préventifs", label: "Soins préventifs" },
@@ -27,10 +28,13 @@ export default function TakeRdvScreen({ navigation, route }) {
   const [isSelectedReason, setIsSelectedReason] = useState(false)
   const [isFirstRdv, setIsFirstRdv] = useState()
   const [isMyAnimal, setIsMyAnimal] = useState()
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalSignInVisible, setModalSignInVisible] = useState(false);
+  const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
   const user = useSelector((state) => state.user.value);
-  const { firstname, lastname, occupation, price, address } = route.params;
+  const { firstname, lastname, occupation, price, address, time } = route.params;
+  console.log({ firstname, lastname, occupation, price, address, time });
+
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
@@ -56,33 +60,18 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
   const handleBookRdvkClick = () => {
-    if (!user.token) {
-      return setModalVisible(true);
-    }
-
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + `/users/canBookRdv/${user.token}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.result) {
-          navigation.navigate('RdvConfirmation', {
-            firstname: firstname,
-            lastname: lastname,
-            occupation: occupation,
-            price: price,
-            address: address,
-            reason: selectedReason,
-            isFirstRdv: isFirstRdv,
-            isMyAnimal: isMyAnimal
-          });
-        }
-      });
-
+    navigation.navigate('RdvConfirmation', { formData: { firstname, lastname, occupation, price, address, time } });
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <Modal visible={modalVisible} animationType="none">
-        <SignIn setModalVisible={setModalVisible} />
+      <Modal visible={modalSignInVisible} animationType="none">
+        <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} formData={{
+          firstname, lastname, occupation, price, address, time, selectedReason, isFirstRdv, isMyAnimal
+        }} />
+      </Modal>
+      <Modal visible={modalSignUpVisible} animationType="none">
+        <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} formData={{ firstname, lastname, occupation, price, address, time, selectedReason, isFirstRdv, isMyAnimal }} />
       </Modal>
       <View style={styles.headerContainer}>
         <FontAwesome name="arrow-left" size={15} color="#1472AE" style={{ color: '#1472AE', marginLeft: 30 }} />
@@ -100,8 +89,8 @@ export default function TakeRdvScreen({ navigation, route }) {
             <Text style={styles.address}>{address.street} {address.zipCode} {address.city}</Text>
           </View>
         </View>
-        <Text style={styles.selectReason} >Selectionner un motif</Text>
         <View style={styles.reasons}>
+          <Text style={{ fontWeight: 700, marginBottom: 20 }} >Selectionner un motif</Text>
           <FlatList horizontal={true}
             style={{
               borderWidth: 1,
@@ -125,27 +114,42 @@ export default function TakeRdvScreen({ navigation, route }) {
             )}
           />
         </View>
-        <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
-        <View style={styles.checkboxContainer}>
-          <RadioGroup
-            radioButtons={RadioButtons}
-            onPress={setIsFirstRdv}
-            selectedId={isFirstRdv}
-            layout='row'
-            containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
-          />
+        <View style={{ width: '70%', alignItems: 'center', }}>
+          <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
+          <View style={styles.checkboxContainer}>
+            <RadioGroup
+              radioButtons={RadioButtons}
+              onPress={setIsFirstRdv}
+              selectedId={isFirstRdv}
+              layout='row'
+              containerStyle={{ width: '70%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+            />
+          </View>
         </View>
-        <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
-        <View style={styles.checkboxContainer}>
-          <RadioGroup
-            radioButtons={RadioButtons}
-            onPress={setIsMyAnimal}
-            selectedId={isMyAnimal}
-            layout='row'
-            containerStyle={{ width: '50%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
-          />
+        <View style={{ width: '70%', alignItems: 'center', }}>
+          <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
+          <View style={styles.checkboxContainer}>
+            <RadioGroup
+              radioButtons={RadioButtons}
+              onPress={setIsMyAnimal}
+              selectedId={isMyAnimal}
+              layout='row'
+              containerStyle={{ width: '70%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+            />
+          </View>
         </View>
-        <TouchableOpacity onPress={() => handleBookRdvkClick()} style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>
+
+        {
+          user.token ?
+            (<TouchableOpacity onPress={() => handleBookRdvkClick()} style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>)
+            :
+            (<View style={{ height: 85, justifyContent: 'space-between', alignItems: 'center', }}>
+              <Text>Pour valider votre rendez-vous, veuillez vous connecter :</Text>
+              <View style={styles.SignInUpButtons}>
+                {!user.token && (<TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>)}
+                {!user.token && (<TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>)}
+              </View>
+            </View>)}
       </View>
     </SafeAreaView>
   )
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
 
   headerContainer: {
     width: "100%",
-    height: "13%",
+    height: "7%",
     backgroundColor: "#ffff",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",
@@ -183,11 +187,11 @@ const styles = StyleSheet.create({
   },
 
   bodyContainer: {
-    height: "87%",
+    height: "93%",
     width: "100%",
     backgroundColor: "#ffff",
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: 'space-around'
   },
 
   proContainer: {
@@ -199,7 +203,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",
-    marginBottom: 20,
   },
 
   image: {
@@ -234,19 +237,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  selectReason: {
-    flexDirection: "row",
-    textAlign: "center",
-    width: "80%",
-    fontWeight: 700,
-  },
-
   reasons: {
     // padding: 10,
-    height: 60,
+    height: 100,
     // marginTop: 20,
-    marginBottom: 20,
     width: "70%",
+    alignItems: 'center',
   },
 
   takeRdvButton: {
@@ -256,5 +252,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  SignInUpButtons: {
+    width: '70%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+  },
+
+  buttonStyle: {
+    borderWidth: 1,
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    backgroundColor: "#0D2C56",
+    borderRadius: 10,
   },
 });
