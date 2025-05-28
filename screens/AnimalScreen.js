@@ -90,6 +90,11 @@ export default function AnimalScreen({ navigation }) {
     fetchData();
   }, [petId]);
 
+  // Navigation to the Journal when press to the Animal
+  const navigationToJournal = () => {
+    navigation.navigate("HealthJournal", { petId })
+  }
+
   return (
 
     // Connection's modal
@@ -140,33 +145,35 @@ export default function AnimalScreen({ navigation }) {
         )}
 
         {animalTopIsVisible && animalData?.name && (
-          <View style={styles.bottomHeader}>
-            <View style={styles.bottomHeaderProfile}>
-              <View style={styles.bottomHeaderInformationContainer}>
-                <View style={styles.bottomHeaderPictureProfile}>
-                  <Image
-                    source={require("../assets/dogImg.png")}
-                    style={styles.animalImg}
-                  />
-                </View>
-                <View style={styles.bottomHeaderInformation}>
-                  <View style={styles.bottomHeaderInformationName}>
-                    <Text style={styles.animalName}>{animalData?.name}</Text>
+          <TouchableOpacity style={styles.bottomHeaderBtn} onPress={() => navigationToJournal()} >
+            <View style={styles.bottomHeader}>
+              <View style={styles.bottomHeaderProfile}>
+                <View style={styles.bottomHeaderInformationContainer}>
+                  <View style={styles.bottomHeaderPictureProfile}>
+                    <Image
+                      source={require("../assets/dogImg.png")}
+                      style={styles.animalImg}
+                    />
                   </View>
-                  <View style={styles.bottomHeaderInformationGeneral}>
-                    <View style={styles.bottomHeaderInformationBirth}>
-                      <Text style={styles.animalBirth}>
-                        {animalData?.age} ans, né le {animalData?.dateOfBirth}
-                      </Text>
+                  <View style={styles.bottomHeaderInformation}>
+                    <View style={styles.bottomHeaderInformationName}>
+                      <Text style={styles.animalName}>{animalData?.name}</Text>
                     </View>
-                    <View style={styles.bottomHeaderInformationRace}>
-                      <Text style={styles.animalRace}>{animalData?.breed}</Text>
+                    <View style={styles.bottomHeaderInformationGeneral}>
+                      <View style={styles.bottomHeaderInformationBirth}>
+                        <Text style={styles.animalBirth}>
+                          {animalData?.age} ans, né le {animalData?.dateOfBirth}
+                        </Text>
+                      </View>
+                      <View style={styles.bottomHeaderInformationRace}>
+                        <Text style={styles.animalRace}>{animalData?.breed}</Text>
+                      </View>
                     </View>
                   </View>
                 </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       </View>
 
@@ -295,6 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "800",
     color: "#1472AE",
+    marginTop: 17
   },
   topHeaderIcon: {
     height: "40%",
@@ -302,6 +310,9 @@ const styles = StyleSheet.create({
   },
   modifyingIcon: {
     color: "#1472AE",
+  },
+  bottomHeaderBtn: {
+    height: "80%"
   },
   bottomHeader: {
     marginTop: 25,
@@ -332,7 +343,7 @@ const styles = StyleSheet.create({
   },
   animalImg: {
     height: "90%",
-    width: "80%",
+    width: "66%",
     borderRadius: 50,
   },
   bottomHeaderInformation: {
