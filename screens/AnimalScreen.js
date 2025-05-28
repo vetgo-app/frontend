@@ -81,7 +81,7 @@ export default function AnimalScreen({ navigation }) {
 
     const fetchData = async () => {
       const response = await fetch(
-        process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId
+        process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byPet/" + petId
       );
       const data = await response.json();
       setAnimalData(data.petInfo);

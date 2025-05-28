@@ -15,7 +15,7 @@ export default function HealthJournal({ route }) {
     const [selectedDoc, setSelectedDoc] = useState(null)
 
     const fetchData = async () => {
-        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId);
+        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byPet/" + petId);
         const data = await response.json();
 
         if (data.result) {
