@@ -24,10 +24,8 @@ import TakeRdvScreen from "./screens/TakeRdvScreen";
 import RdvConfirmationScreen from "./screens/RdvConfirmationScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignUpPro from "./screens/SignUpPro";
-
 import SignInScreen from "./screens/SignInScreen";
 import SignInPro from "./screens/SignInPro";
-
 import AgendaProScreen from "./screens/AgendaProScreen";
 import HealthJournal from "./screens/HealthJournal";
 import ProfileProScreen from "./screens/ProfileProScreen";
