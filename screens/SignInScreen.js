@@ -39,18 +39,19 @@ export default function SignInScreen({ navigation, route, setModalSignInVisible,
           dispatch(
             login({ ...data })
           );
+          console.log('redux login', ...data, data)
           setEmail("");
           setPassword("");
-
           if (modalSignInVisible) {
-            setModalSignInVisible(false)
-            navigation.navigate("RdvConfirmation", formData)
+            console.log('je suis entré')
+            if (route?.params?.origin === "TakeRdv") {
+              navigation.navigate("RdvConfirmation");
+            } else {
+              setModalSignInVisible(false)
+            }
           }
         }
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
   };
 
 

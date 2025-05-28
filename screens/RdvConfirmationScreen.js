@@ -24,6 +24,7 @@ export default function RdvConfirmationScreen({ navigation, route, formData }) {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({
+        user: _id,
         address: appointment?.address,
         date: appointment?.time,
         reason: appointment?.selectedReason,

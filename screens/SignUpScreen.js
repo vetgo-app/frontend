@@ -27,6 +27,7 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
   const [profilPicture, setProfilPicture] = useState(null);
 
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
     (async () => {
@@ -64,17 +65,21 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
-          dispatch(login({ firstname, lastname, email, photo: profilPicture }));
-          console.log(data);
+        console.log('ici', data);
+        if (data.result) {
+          dispatch(login({ token: data.token, firstname, lastname, email, photo: profilPicture }));
           setFirstname("");
           setLastname("");
           setEmail("");
           setPassword("");
           setProfilPicture(null);
           if (modalSignUpVisible) {
-            setModalSignUpVisible(false)
-            navigation.navigate("RdvConfirmation", formData)
+            console.log('je suis entré')
+            if (route?.params?.origin === "TakeRdv") {
+              navigation.navigate("RdvConfirmation");
+            } else {
+              setModalSignUpVisible(false)
+            }
           }
         }
       });
