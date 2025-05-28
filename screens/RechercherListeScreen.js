@@ -13,12 +13,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import vetgologo from "../assets/vetgologo.png";
-import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 
 export default function RechercherListeScreen({ navigation, route }) {
   const { profession, animal, address } = route.params;
   const [store, setStore] = useState([]);
-  const time = "10:00";
+  const time = "10h00";
   const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
@@ -134,7 +133,8 @@ export default function RechercherListeScreen({ navigation, route }) {
           </View>
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {e?.user?.firstname} {e?.user?.lastname}
+              {e?.user?.firstname}
+              {e?.user?.lastname}
             </Text>
             <Text style={styles.text}>{e.occupation}</Text>
             <Text style={styles.text}>{e.address.street}</Text>
@@ -198,6 +198,8 @@ export default function RechercherListeScreen({ navigation, route }) {
     </SafeAreaProvider>
   );
 }
+
+// console.log(card?.length);
 
 const styles = StyleSheet.create({
   container: {

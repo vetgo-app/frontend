@@ -10,30 +10,31 @@ import {
 import React, { useState, useMemo, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // ou react-native-vector-icons
+import { useSelector } from "react-redux";
 
 export default function RdvConfirmationScreen({ navigation, route }) {
+  const user = useSelector((state) => state.user.value);
   const [confirmed, setConfirmed] = useState(false);
   const appointment = route.params;
-  console.log("test4", appointment);
+  console.log("Appointement =>", appointment);
+  console.log("user", user);
 
   const onClick = () => {
     setConfirmed(true);
-    fetch(
-      process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/addAppointment",
-      {
-        method: "POST",
-        headers: { "Content-Type": "Application/json" },
-        body: JSON.stringify({
-          user: appointment?._id, // pour generer la relation de user avec store
-          store: appointment?.address,
-          pet: appointment.isMyAnimal,
-          date: appointment?.time,
-          price: appointment?.price,
-          reason: appointment?.selectedReason,
-          firstRdv: appointment?.isFirstRdv,
-        }),
-      }
-    ).then((res) => res.json());
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/add", {
+      method: "POST",
+      headers: { "Content-Type": "Application/json" },
+      body: JSON.stringify({
+        user: user._id, // pour generer la relation de user avec store
+        store: appointment.address._id,
+        pet: appointment.isMyAnimal,
+        date: appointment.time,
+        price: appointment.price,
+        reason: appointment.selectedReason,
+        firstRdv: appointment.isFirstRdv,
+        isMyAnimal: appointment.isMyAnimal,
+      }),
+    }).then((res) => res.json());
   };
 
   return (

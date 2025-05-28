@@ -12,6 +12,7 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function InfoProScreen({ navigation, route }) {
   const { storeId, firstname, lastname, address, occupation, price, time } =
     route.params;
+  console.log("test2", route.params);
 
   // useEffect(() => {
   //   // use Effect permet d'afficher les elements a chaque re render
