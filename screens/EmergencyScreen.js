@@ -6,6 +6,7 @@ import {
   View,
   TextInput,
   FlatList,
+  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -13,6 +14,9 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 export default function EmergencyScreen() {
   const navigation = useNavigation();
+
+  // Modal
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Animaux
   const [openAnimal, setOpenAnimal] = useState(false);
@@ -27,14 +31,10 @@ export default function EmergencyScreen() {
     { label: "Bovin", value: "bovin" },
   ]);
 
-  //   // Lieu (saisie + suggestions)
-  const [openLieu, setOpenLieu] = useState(false);
+  // Lieu (saisie + suggestions)
+
   const [selectedLieu, setSelectedLieu] = useState(null);
-  const [lieuItems, setLieuItems] = useState([
-    { label: "Paris", value: "paris" },
-    { label: "Lyon", value: "lyon" },
-    { label: "Marseille", value: "marseille" },
-  ]);
+
   const [suggestions, setSuggestions] = useState([]);
 
   const handleLieuChange = async (text) => {
@@ -57,172 +57,101 @@ export default function EmergencyScreen() {
     }
   };
 
+
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
-      {/* Header */}
+      {/* MODAL */}
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Qu'est-ce qu'une urgence ?</Text>
+            <Text style={styles.modalText}>
+              Une urgence vétérinaire correspond à une situation critique mettant la vie de l'animal en danger immédiat. Cela inclut par exemple : un saignement important, un os cassé, un empoisonnement, un accident ou une détresse respiratoire.{"\n\n"}
+              ⚠️ Utiliser abusivement ce service peut entraîner des sanctions. Merci de réserver cette option aux cas réellement graves.
+            </Text>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Titre + logo */}
       <Text style={styles.title}>URGENCES</Text>
-      <FontAwesome
-        name="ambulance"
-        size={50}
-        color="#FA3034"
-        style={{ transform: [{ scaleX: -1 }] }}
-      />
-      return (
-      <View style={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>URGENCES</Text>
-
-        <View style={styles.logoEmergency}>
-          <FontAwesome
-            name="ambulance"
-            size={50}
-            color="#FA3034"
-            style={{ transform: [{ scaleX: -1 }] }}
-          />
-        </View>
-
-        {/* Animaux */}
-        <View>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              position: "absolute",
-              zIndex: 2001,
-              justifyContent: "center",
-              alignItems: "center",
-              marginLeft: 10,
-            }}
-          >
-            <FontAwesome name="paw" size={30} color="#1472AE" />
-          </View>
-          <DropDownPicker
-            open={openAnimal}
-            value={selectedAnimal}
-            items={animalItems}
-            setOpen={() => {
-              setOpenAnimal(!openAnimal);
-              setOpenLieu(false);
-            }}
-            setValue={setSelectedAnimal}
-            setItems={setAnimalItems}
-            placeholder="Animaux"
-            textStyle={styles.dropdownText}
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-            listItemContainerStyle={{
-              borderBottomWidth: 1,
-              borderBlockColor: "#1472AE",
-            }}
-            zIndex={2000}
-            zIndexInverse={2000}
-          />
-        </View>
-        {/* Animaux */}
-        <View>
-          <View style={styles.iconLeft}>
-            <FontAwesome name="paw" size={30} color="#1472AE" />
-          </View>
-          <DropDownPicker
-            open={openAnimal}
-            value={selectedAnimal}
-            items={animalItems}
-            setOpen={() => {
-              setOpenAnimal(!openAnimal);
-            }}
-            setValue={setSelectedAnimal}
-            setItems={setAnimalItems}
-            placeholder="Animaux"
-            textStyle={styles.dropdownText}
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-            listItemContainerStyle={{
-              borderBottomWidth: 1,
-              borderBlockColor: "#1472AE",
-            }}
-            zIndex={2000}
-            zIndexInverse={2000}
-          />
-        </View>
-
-        {/* Lieu */}
-        <View>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              position: "absolute",
-              zIndex: 1001,
-              justifyContent: "center",
-              alignItems: "center",
-              marginLeft: 10,
-            }}
-          >
-            <FontAwesome name="map-marker" size={30} color="#1472AE" />
-          </View>
-          {/* Lieu */}
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View style={[styles.iconLeft, { zIndex: 1001, left: "7%" }]}>
-              <FontAwesome name="map-marker" size={30} color="#1472AE" />
-            </View>
-
-            <DropDownPicker
-              open={openLieu}
-              value={selectedLieu}
-              items={lieuItems}
-              setOpen={() => {
-                setOpenAnimal(false);
-                setOpenLieu(!openLieu);
-              }}
-              setValue={setSelectedLieu}
-              setItems={setLieuItems}
-              placeholder="Lieu"
-              textStyle={styles.dropdownText}
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainer}
-              listItemContainerStyle={{
-                borderBottomWidth: 1,
-                borderBlockColor: "#1472AE",
-              }}
-              zIndex={1000}
-              zIndexInverse={3000}
-            />
-          </View>
-          <TextInput
-            placeholder="Lieu"
-            value={selectedLieu}
-            onChangeText={handleLieuChange}
-            style={styles.textInputLieu}
-            placeholderTextColor="#999"
-          />
-
-          {/* Suggestions d'adresses */}
-          <FlatList
-            data={suggestions}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedLieu(item);
-                  setSuggestions([]);
-                }}
-                style={styles.suggestionItem}
-              >
-                <Text>{item}</Text>
-              </TouchableOpacity>
-            )}
-            style={styles.suggestionList}
-          />
-        </View>
-
-        {/* Bouton Rechercher */}
-        <TouchableOpacity
-          style={styles.searchButton}
-          onPress={() => navigation.navigate("RechercherUrgence")}
-        >
-          <Text style={styles.searchText}>Rechercher</Text>
-        </TouchableOpacity>
+      <View style={styles.logoEmergency}>
+        <FontAwesome
+          name="ambulance"
+          size={50}
+          color="#FA3034"
+          style={{ transform: [{ scaleX: -1 }] }}
+        />
       </View>
-      );
+
+      {/* Sélecteur Animaux */}
+      <View>
+        <View style={styles.iconLeft}>
+          <FontAwesome name="paw" size={30} color="#1472AE" />
+        </View>
+        <DropDownPicker
+          open={openAnimal}
+          value={selectedAnimal}
+          items={animalItems}
+          setOpen={() => {
+            setOpenAnimal(!openAnimal);
+            setOpenLieu(false);
+          }}
+          setValue={setSelectedAnimal}
+          setItems={setAnimalItems}
+          placeholder="Animaux"
+          textStyle={styles.dropdownText}
+          style={styles.dropdown}
+          dropDownContainerStyle={styles.dropdownContainer}
+          listItemContainerStyle={{
+            borderBottomWidth: 1,
+            borderBlockColor: "#1472AE",
+          }}
+          zIndex={2000}
+          zIndexInverse={2000}
+        />
+      </View>
+
+      {/* Champ Lieu */}
+      <View style={{ width: "100%", alignItems: "center" }}>
+        <View style={[styles.iconLeft, { zIndex: 1001, left: "7%" }]}>
+          <FontAwesome name="map-marker" size={30} color="#1472AE" />
+        </View>
+
+        <TextInput
+          placeholder="Lieu"
+          value={selectedLieu}
+          onChangeText={handleLieuChange}
+          style={styles.textInputLieu}
+          placeholderTextColor="#999"
+        />
+
+        <FlatList
+          data={suggestions}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLieu(item);
+                setSuggestions([]);
+              }}
+              style={styles.suggestionItem}
+            >
+              <Text>{item}</Text>
+            </TouchableOpacity>
+          )}
+          style={styles.suggestionList}
+        />
+      </View>
+
       {/* Bouton Rechercher */}
       <TouchableOpacity
         style={styles.searchButton}
@@ -232,11 +161,13 @@ export default function EmergencyScreen() {
       >
         <Text style={styles.searchText}>Rechercher</Text>
       </TouchableOpacity>
+
       {/* Liens bas */}
-      <TouchableOpacity onPress={() => navigation.navigate("LienQuestion")}>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
         <Text style={styles.linkQuestion}>Qu'est-ce qu'une urgence ?</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("LienFaq")}>
+
+      <TouchableOpacity onPress={() => navigation.navigate("LienFaqEmergency")}>
         <Text style={styles.linkFaq}>FAQ</Text>
       </TouchableOpacity>
     </View>
@@ -292,7 +223,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 55,
     width: "85%",
-    paddingLeft: 100, // ajusté pour alignement avec "Animaux"
+    paddingLeft: 100,
     fontSize: 18,
     backgroundColor: "white",
     color: "#000",
@@ -338,5 +269,40 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     color: "#0D2C56",
     fontWeight: "bold",
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '85%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#FA3034',
+    textAlign: 'center',
+  },
+  modalText: {
+    fontSize: 14,
+    color: '#000000',
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: '#0D2C56',
+    padding: 10,
+    borderRadius: 8,
+    alignSelf: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

@@ -9,27 +9,46 @@ import {
 } from "react-native";
 import { useState } from "react";
 import Checkbox from "expo-checkbox";
-import RNPickerSelect from "react-native-picker-select";
-import { width } from "@fortawesome/free-solid-svg-icons/fa0";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function ProfileProScreen() {
+  const [openProfession, setOpenProfession] = useState(false);
+  const [selectedProfession, setSelectedProfession] = useState(null);
+  const [professionItems, setProfessionItems] = useState([
+    { label: "Vétérinaire", value: "Vétérinaire" },
+    { label: "Ostéopathe", value: "Ostéopathe" },
+    { label: "Toiletteur", value: "Toiletteur" },
+    { label: "Educateur", value: "Educateur" },
+    { label: "Physiothérapeute", value: "Physiothérapeute" },
+  ]);
+
+  const [openSpecialization, setOpenSpecialization] = useState(false);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
+  const [specializationItems, setSpecializationItems] = useState([
+    { label: "Chien", value: "chien" },
+    { label: "Chat", value: "chat" },
+    { label: "Cheval", value: "cheval" },
+    { label: "Rongeur", value: "rongeur" },
+    { label: "Oiseaux", value: "oiseaux" },
+    { label: "Bovin", value: "bovin" },
+  ]);
+
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [price, setPrice] = useState("");
+
   const [isSelectedL, setSelectionL] = useState(false);
   const [isSelectedM, setSelectionM] = useState(false);
   const [isSelectedMe, setSelectionMe] = useState(false);
   const [isSelectedJ, setSelectionJ] = useState(false);
   const [isSelectedV, setSelectionV] = useState(false);
   const [isSelectedS, setSelectionS] = useState(false);
-
   const [isSelectedDom, setSelectionDom] = useState(false);
   const [isSelectedVisio, setSelectionVisio] = useState(false);
   const [isSelectedUrgence, setSelectionUrgence] = useState(false);
-
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [price, setPrice] = useState("");
 
   const [specialization, setSpecialization] = useState("");
   const [occupation, setOccupation] = useState("");
@@ -41,9 +60,9 @@ export default function ProfileProScreen() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        user: user._id, // pour generer la relation de user avec store
-        specialization,
-        occupation,
+        user: user._id,
+        specialization: selectedSpecialization,
+        occupation: selectedProfession,
         price,
         address: {
           street,
@@ -79,108 +98,108 @@ export default function ProfileProScreen() {
             <Text style={styles.titleText}>Mon profil</Text>
           </View>
 
-          <View style={styles.name}>
-            <TextInput style={styles.nameText}>{user.firstname}</TextInput>
-            <TextInput style={styles.nameText}>{user.lastname}</TextInput>
-          </View>
-          <View style={styles.email}>
-            <Text style={styles.emailText}>{user.email}</Text>
+          <View style={styles.nameColumn}>
+            <TextInput
+              style={styles.nameText}
+              placeholder="Prénom"
+              value={user.firstname}
+            />
+            <TextInput
+              style={styles.nameText}
+              placeholder="Nom"
+              value={user.lastname}
+            />
           </View>
 
           <View style={styles.input}>
-            <RNPickerSelect
-              placeholder={{ label: "Profession", value: null }} // valeur par defaut du placeholder
-              onValueChange={(value) => setOccupation(value)}
-              items={[
-                { label: "vétérinaire", value: "Vétérinaire" },
-                { label: "ostéopathe", value: "Ostéopathe" },
-                { label: "toiletteur", value: "Toiletteur" },
-                { label: "éducateur", value: "Educateur" },
-                { label: "physiothérapeute", value: "Physiothérapeute" },
-              ]}
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email"
+              value={user.email}
+              editable={false}
             />
-            <RNPickerSelect
-              placeholder={{ label: "Spécialisation", value: null }} // valeur par defaut du placeholder
-              onValueChange={(value) => setSpecialization(value)}
-              items={[
-                { label: "chien", value: "chien" },
-                { label: "chat", value: "chat" },
-                { label: "cheval", value: "cheval" },
-                { label: "rongeur", value: "rongeur" },
-                { label: "oiseaux", value: "oiseaux" },
-                { label: "bovin", value: "bovin" },
-              ]}
+
+            <DropDownPicker
+              open={openProfession}
+              value={selectedProfession}
+              items={professionItems}
+              setOpen={() => {
+                setOpenProfession(!openProfession);
+                setOpenSpecialization(false);
+              }}
+              setValue={setSelectedProfession}
+              setItems={setProfessionItems}
+              placeholder="Profession"
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              containerStyle={{ marginBottom: 10 }}
+              zIndex={3000}
+              zIndexInverse={1000}
+              textStyle={{ fontSize: 15, textAlign: "center" }}
             />
+
+            <DropDownPicker
+              open={openSpecialization}
+              value={selectedSpecialization}
+              items={specializationItems}
+              setOpen={() => {
+                setOpenSpecialization(!openSpecialization);
+                setOpenProfession(false);
+              }}
+              setValue={setSelectedSpecialization}
+              setItems={setSpecializationItems}
+              placeholder="Spécialisation"
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              containerStyle={{ marginBottom: 10 }}
+              zIndex={2000}
+              zIndexInverse={2000}
+              textStyle={{ fontSize: 15, textAlign: "center" }}
+            />
+
             <TextInput
               style={styles.textInput}
               placeholder="Adresse"
-              onChangeText={(value) => setStreet(value)}
+              onChangeText={setStreet}
               value={street}
             />
             <TextInput
               style={styles.textInput}
               placeholder="Ville"
-              onChangeText={(value) => setCity(value)}
+              onChangeText={setCity}
               value={city}
             />
             <TextInput
               style={styles.textInput}
               placeholder="Code postal"
-              onChangeText={(value) => setZipCode(value)}
+              onChangeText={setZipCode}
               value={zipCode}
             />
             <TextInput
               style={styles.textInput}
-              placeholder="Tarif consultatinon"
-              onChangeText={(value) => setPrice(value)}
+              placeholder="Tarif consultation"
+              onChangeText={setPrice}
               value={price}
             />
           </View>
+
           <View style={styles.consultation}>
-            <Text style={styles.consultationText}>Jour de consultation</Text>
+            <Text style={styles.consultationText}>Jours de consultation</Text>
             <View style={styles.box}>
-              <View style={styles.firstCheckbox}>
-                <Checkbox
-                  value={isSelectedL}
-                  onValueChange={setSelectionL}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.label}>Lundi</Text>
-                <Checkbox
-                  value={isSelectedM}
-                  onValueChange={setSelectionM}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.label}>Mardi</Text>
-                <Checkbox
-                  value={isSelectedMe}
-                  onValueChange={setSelectionMe}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.label}>Mercredi</Text>
+              <View>
+                <View style={styles.checkboxRow}><Checkbox value={isSelectedL} onValueChange={setSelectionL} style={styles.checkbox} /><Text style={styles.label}>Lundi</Text></View>
+                <View style={styles.checkboxRow}><Checkbox value={isSelectedM} onValueChange={setSelectionM} style={styles.checkbox} /><Text style={styles.label}>Mardi</Text></View>
+                <View style={styles.checkboxRow}><Checkbox value={isSelectedMe} onValueChange={setSelectionMe} style={styles.checkbox} /><Text style={styles.label}>Mercredi</Text></View>
               </View>
-              <View style={styles.lastCheckbox}>
-                <Checkbox
-                  value={isSelectedJ}
-                  onValueChange={setSelectionJ}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.label}>Jeudi</Text>
-                <Checkbox
-                  value={isSelectedV}
-                  onValueChange={setSelectionV}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.label}>Vendredi</Text>
-                <Checkbox
-                  value={isSelectedS}
-                  onValueChange={setSelectionS}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.label}>Samedi</Text>
+              <View style={styles.rightColumn}>
+                <View style={styles.checkboxRow}><Checkbox value={isSelectedJ} onValueChange={setSelectionJ} style={styles.checkbox} /><Text style={styles.label}>Jeudi</Text></View>
+                <View style={styles.checkboxRow}><Checkbox value={isSelectedV} onValueChange={setSelectionV} style={styles.checkbox} /><Text style={styles.label}>Vendredi</Text></View>
+                <View style={styles.checkboxRow}><Checkbox value={isSelectedS} onValueChange={setSelectionS} style={styles.checkbox} /><Text style={styles.label}>Samedi</Text></View>
               </View>
             </View>
           </View>
+
+
           <View style={styles.option}>
             <Text style={styles.optionText}>Options</Text>
             <View style={styles.optionBox}>
@@ -191,25 +210,23 @@ export default function ProfileProScreen() {
               />
               <Text style={styles.label}>A domicile</Text>
               <Checkbox
-                value={isSelectedVisio}
-                onValueChange={setSelectionVisio}
-                style={styles.checkbox}
-              />
-              <Text style={styles.label}>Visio</Text>
-              <Checkbox
                 value={isSelectedUrgence}
                 onValueChange={setSelectionUrgence}
                 style={styles.checkbox}
               />
               <Text style={styles.label}>Urgences</Text>
+              <Checkbox
+                value={isSelectedVisio}
+                onValueChange={setSelectionVisio}
+                style={styles.checkbox}
+              />
+              <Text style={styles.label}>Visio</Text>
             </View>
           </View>
         </View>
+
         <View style={styles.viewButton}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleSubmit()}
-          >
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Valider les modifications</Text>
           </TouchableOpacity>
         </View>
@@ -222,35 +239,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#C2E7F7",
-    overflow: "scroll",
   },
-
   title: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
     marginBottom: 20,
   },
-
   titleText: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#1472AE",
   },
-
   image: {
-    borderWidth: 1,
     width: 100,
     height: 100,
     borderRadius: 250,
   },
-
-  name: {
-    marginTop: 20,
-    flexDirection: "row",
-    justifyContent: "center",
+  nameColumn: {
+    alignItems: "center",
   },
-
   nameText: {
     fontSize: 16,
     backgroundColor: "white",
@@ -258,33 +266,16 @@ const styles = StyleSheet.create({
     borderColor: "#3884BB",
     borderRadius: 10,
     textAlign: "center",
-    width: "37%",
-    margin: 10,
-  },
-
-  email: {
-    alignItems: "center",
-  },
-
-  emailText: {
-    backgroundColor: "white",
-    textAlignVertical: "center",
-    height: "40",
-    fontSize: 16,
-    marginTop: 20,
     width: "80%",
-    padding: "20px",
-    borderWidth: 1,
-    borderColor: "#3884BB",
-    textAlign: "center",
-    borderRadius: 10,
+    marginVertical: 10,
+    padding: 10,
   },
-
   input: {
     width: "100%",
     alignItems: "center",
+    marginTop: 10,
+    zIndex: 3000,
   },
-
   textInput: {
     fontSize: 16,
     backgroundColor: "white",
@@ -293,36 +284,49 @@ const styles = StyleSheet.create({
     borderColor: "#3884BB",
     textAlign: "center",
     width: "80%",
-    margin: 10,
+    marginBottom: 10,
+    padding: 10,
+  },
+  dropdown: {
+    width: "80%",
+    alignSelf: "center",
+    borderColor: "#3884BB",
+    justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50, //même intervalle que les autres
   },
 
+  dropdownContainer: {
+    width: "80%",
+    alignSelf: "center",
+    borderColor: "#3884BB",
+    zIndex: 2000,
+
+  },
+  consultation: {
+    marginTop: 10,
+  },
   consultationText: {
     marginLeft: 50,
     marginTop: 10,
     marginBottom: 10,
     fontWeight: "bold",
   },
-
   box: {
     flexDirection: "row",
     justifyContent: "space-around",
   },
-
-  optionText: {
-    width: "80%",
-    marginLeft: 35,
-    marginTop: 10,
-    marginBottom: 10,
-    justifyContent: "start",
-    marginTop: 10,
-    marginBottom: 10,
-    fontWeight: "bold",
-  },
-
   option: {
     alignItems: "center",
   },
-
+  optionText: {
+    width: "80%",
+    marginLeft: 35,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
   optionBox: {
     width: "80%",
     flexDirection: "row",
@@ -330,9 +334,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 40,
   },
-
   checkbox: {
-    borderRadius: 5,
+    width: 22,
+    height: 22,
+    borderRadius: 5, // coins légèrement arrondis
+    borderWidth: 2,
+    borderColor: "#3884BB",
+    marginRight: 6,
+  },
+
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+
+  label: {
+    marginRight: 10,
+
   },
 
   viewButton: {
@@ -340,19 +359,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
-
   button: {
     alignItems: "center",
     backgroundColor: "#0d2c56",
     padding: 10,
-    color: "white",
     width: "80%",
     borderRadius: 10,
   },
-
   buttonText: {
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
   },
+
 });

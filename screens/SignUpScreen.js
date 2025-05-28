@@ -142,6 +142,7 @@ export default function SignUpScreen({
       </Modal>
 
       <View style={styles.headerContainer}>
+        <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
         <Text style={styles.pageTitle}>S'inscrire</Text>
       </View>
       <View
@@ -212,14 +213,14 @@ export default function SignUpScreen({
         {modalSignUpVisible ? (
           <>
             <TouchableOpacity onPress={() => setModalSignUpVisible(false)}>
-              <Text style={{ fontWeight: "bold" }}>Fermer</Text>
+              <Text style={{ fontWeight: "bold",padding:25 }}>Fermer</Text>
             </TouchableOpacity>
           </>
         ) : (
           <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
             <Text style={{ fontSize: 16, color: "#1472AE" }}>
               Vous avez déjà un compte ?
-              <Text style={{ fontWeight: "bold" }}>Se connecter</Text>
+              <Text style={{ fontWeight: "bold", borderWidth:1 }}>Se connecter</Text>
             </Text>
           </TouchableOpacity>
         )}
@@ -243,9 +244,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+  },
+
+  logoImage: {
+    width: 100,
+    height: 40,
   },
 
   pageTitle: {

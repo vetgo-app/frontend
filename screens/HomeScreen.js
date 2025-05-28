@@ -38,13 +38,14 @@ export default function HomeScreen({ navigation }) {
   const [openAnimal, setOpenAnimal] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [animalItems, setAnimalItems] = useState([
-    { label: "Chien", value: "chien" },
-    { label: "Chat", value: "chat" },
-    { label: "Lapin", value: "lapin" },
-    { label: "Cheval", value: "cheval" },
-    { label: "Rongeur", value: "rongeur" },
-    { label: "Oiseaux", value: "oiseaux" },
-    { label: "Bovin", value: "bovin" },
+    { label: "Non spécifié", value: null},
+    { label: "Chien 🐶", value: "chien" },
+    { label: "Chat 🐈", value: "chat" },
+    { label: "Lapin 🐰", value: "lapin" },
+    { label: "Cheval 🐎", value: "cheval" },
+    { label: "Rongeur 🐭", value: "rongeur" },
+    { label: "Oiseaux 🦜", value: "oiseaux" },
+    { label: "Bovin 🐮", value: "bovin" },
   ]);
 
   // Lieu avec suggestions API
@@ -74,7 +75,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Ambulance button */}
-      {/* <View style={styles.logoEmergency}>
+      <View style={styles.logoEmergency}>
         <TouchableOpacity onPress={() => navigation.navigate("Urgences")}>
           <FontAwesome
             name="ambulance"
@@ -83,163 +84,168 @@ export default function HomeScreen({ navigation }) {
             style={{ transform: [{ scaleX: -1 }] }}
           />
         </TouchableOpacity>
-      </View> */}
+      </View>
 
       {/* Logo */}
-      <View style={styles.logo}>
+      <View style={styles.header}>
         <Image source={vetgologo} style={styles.logoImage} />
       </View>
 
       {/* Profession */}
-      <View style={styles.searchSettings}>
-        <View>
-          <View style={styles.iconPosition(3001)}>
-            <FontAwesome name="user-md" size={30} color="#1472AE" />
+      <View style={styles.body}>
+        <View style={styles.searchSettings}>
+          <View>
+            <View style={styles.iconPosition(3001)}>
+              <FontAwesome name="user-md" size={30} color="#1472AE" />
+            </View>
+            <DropDownPicker
+              open={openProfession}
+              value={selectedProfession}
+              items={professionItems}
+              setOpen={() => {
+                setOpenProfession(!openProfession);
+                setOpenAnimal(false);
+              }}
+              setValue={setSelectedProfession}
+              setItems={setProfessionItems}
+              placeholder="Profession"
+              textStyle={styles.dropdownText}
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              listItemContainerStyle={{
+                borderBottomWidth: 1,
+                borderBlockColor: "#1472AE",
+              }}
+              zIndex={3000}
+              zIndexInverse={1000}
+            />
           </View>
-          <DropDownPicker
-            open={openProfession}
-            value={selectedProfession}
-            items={professionItems}
-            setOpen={() => {
-              setOpenProfession(!openProfession);
-              setOpenAnimal(false);
-            }}
-            setValue={setSelectedProfession}
-            setItems={setProfessionItems}
-            placeholder="Profession"
-            textStyle={styles.dropdownText}
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-            listItemContainerStyle={{
-              borderBottomWidth: 1,
-              borderBlockColor: "#1472AE",
-            }}
-            zIndex={3000}
-            zIndexInverse={1000}
-          />
-        </View>
 
-        {/* Animaux */}
-        <View>
-          <View style={styles.iconPosition(2001)}>
-            <FontAwesome name="paw" size={30} color="#1472AE" />
+          {/* Animaux */}
+          <View>
+            <View style={styles.iconPosition(2001)}>
+              <FontAwesome name="paw" size={30} color="#1472AE" />
+            </View>
+            <DropDownPicker
+              open={openAnimal}
+              value={selectedAnimal}
+              items={animalItems}
+              setOpen={() => {
+                setOpenProfession(false);
+                setOpenAnimal(!openAnimal);
+              }}
+              setValue={setSelectedAnimal}
+              setItems={setAnimalItems}
+              placeholder="Animaux"
+              textStyle={styles.dropdownText}
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              listItemContainerStyle={{
+                borderBottomWidth: 1,
+                borderBlockColor: "#1472AE",
+              }}
+              zIndex={2000}
+              zIndexInverse={2000}
+            />
           </View>
-          <DropDownPicker
-            open={openAnimal}
-            value={selectedAnimal}
-            items={animalItems}
-            setOpen={() => {
-              setOpenProfession(false);
-              setOpenAnimal(!openAnimal);
-            }}
-            setValue={setSelectedAnimal}
-            setItems={setAnimalItems}
-            placeholder="Animaux"
-            textStyle={styles.dropdownText}
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-            listItemContainerStyle={{
-              borderBottomWidth: 1,
-              borderBlockColor: "#1472AE",
-            }}
-            zIndex={2000}
-            zIndexInverse={2000}
-          />
-        </View>
 
-        {/* Lieu */}
-        <View style={{ width: "100%", alignItems: "center" }}>
-          <View style={[styles.iconPosition(1001), { left: "7%" }]}>
-            <FontAwesome name="map-marker" size={30} color="#1472AE" />
+          {/* Lieu */}
+          <View style={{ width: "100%", alignItems: "center" }}>
+            <View style={[styles.iconPosition(1001), { left: "7%" }]}>
+              <FontAwesome name="map-marker" size={30} color="#1472AE" />
+            </View>
+            <TextInput
+              placeholder="Lieu"
+              value={selectedLieu}
+              onChangeText={handleLieuChange}
+              style={styles.textInputLieu}
+              placeholderTextColor="#999"
+            />
+            <FlatList
+              data={suggestions}
+              zIndex={1000}
+              zIndexInverse={2000}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedLieu(item);
+                    setSuggestions([]);
+                  }}
+                  style={styles.suggestionItem}
+                >
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              )}
+              style={styles.suggestionList}
+            />
           </View>
-          <TextInput
-            placeholder="Lieu"
-            value={selectedLieu}
-            onChangeText={handleLieuChange}
-            style={styles.textInputLieu}
-            placeholderTextColor="#999"
-          />
-          <FlatList
-            data={suggestions}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedLieu(item);
-                  setSuggestions([]);
-                }}
-                style={styles.suggestionItem}
-              >
-                <Text>{item}</Text>
-              </TouchableOpacity>
-            )}
-            style={styles.suggestionList}
-          />
-        </View>
 
-        {/* Rechercher */}
-      </View>
-      <TouchableOpacity
-        style={styles.searchButton}
-        onPress={() =>
-          navigation.navigate("Recherche", {
-            // récupérer le filtre profession, animal et lieux pour la page suivante rechercher
-            profession: selectedProfession,
-            animal: selectedAnimal,
-            address: selectedLieu,
-          })
-        }
-      >
-        <Text style={styles.searchText}>Rechercher</Text>
-      </TouchableOpacity>
-      {!user.token && (
-        <View style={styles.signInUpContainer}>
-          <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
-            Vous ne semblez pas connecté.e !
-          </Text>
-          <View style={styles.SignInUpButtons}>
-            {!user.token && (
-              <TouchableOpacity
-                onPress={() => setModalSignInVisible(true)}
-                style={styles.buttonStyle}
-              >
-                <Text style={{ fontWeight: 700, color: "#fff" }}>
-                  Se connecter
-                </Text>
-              </TouchableOpacity>
-            )}
-            {!user.token && (
-              <TouchableOpacity
-                onPress={() => setModalSignUpVisible(true)}
-                style={styles.buttonStyle}
-              >
-                <Text style={{ fontWeight: 700, color: "#fff" }}>
-                  S'inscrire
-                </Text>
-              </TouchableOpacity>
-            )}
+          {/* Rechercher */}
+
+        </View>
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={() =>
+            navigation.navigate("Recherche", {
+              // récupérer le filtre profession, animal et lieux pour la page suivante rechercher
+              profession: selectedProfession,
+              animal: selectedAnimal,
+              address: selectedLieu,
+            })
+          }
+        >
+          <Text style={styles.searchText}>Rechercher</Text>
+        </TouchableOpacity>
+        {!user.token && (
+          <View style={styles.signInUpContainer}>
+            <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
+              Vous ne semblez pas connecté.e !
+            </Text>
+            <View style={styles.SignInUpButtons}>
+              {!user.token && (
+                <TouchableOpacity
+                  onPress={() => setModalSignInVisible(true)}
+                  style={styles.buttonStyle}
+                >
+                  <Text style={{ fontWeight: 700, color: "#fff" }}>
+                    Se connecter
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {!user.token && (
+                <TouchableOpacity
+                  onPress={() => setModalSignUpVisible(true)}
+                  style={styles.buttonStyle}
+                >
+                  <Text style={{ fontWeight: 700, color: "#fff" }}>
+                    S'inscrire
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        </View>
-      )}
-      <Modal visible={modalSignInVisible} animationType="none">
-        <SignIn
-          setModalSignInVisible={setModalSignInVisible}
-          modalSignInVisible={modalSignInVisible}
-          navigation={navigation}
-        />
-      </Modal>
-      <Modal visible={modalSignUpVisible} animationType="none">
-        <SignUp
-          setModalSignUpVisible={setModalSignUpVisible}
-          modalSignUpVisible={modalSignUpVisible}
-          navigation={navigation}
-        />
-      </Modal>
+        )}
+        <Modal visible={modalSignInVisible} animationType="none">
+          <SignIn
+            setModalSignInVisible={setModalSignInVisible}
+            modalSignInVisible={modalSignInVisible}
+            navigation={navigation}
+          />
+        </Modal>
+        <Modal visible={modalSignUpVisible} animationType="none">
+          <SignUp
+            setModalSignUpVisible={setModalSignUpVisible}
+            modalSignUpVisible={modalSignUpVisible}
+            navigation={navigation}
+          />
+        </Modal>
 
-      {/* Lien pro */}
-      {/* <TouchableOpacity onPress={() => navigation.navigate("Professionnel")}>
+        {/* Lien pro */}
+        {/* <TouchableOpacity onPress={() => navigation.navigate("Professionnel")}>
         <Text style={styles.proLink}>Professionnel ?</Text>
       </TouchableOpacity> */}
+      </View>
     </SafeAreaView>
   );
 }
@@ -249,7 +255,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C2E7F7",
     alignItems: "center",
-    justifyContent: "space-evenly",
   },
 
   logoEmergency: {
@@ -258,13 +263,28 @@ const styles = StyleSheet.create({
     right: 20,
   },
 
+  header: {
+    width: '100%',
+    height: '20%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+
+  body: {
+    width: '100%',
+    height: '80%',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+
   logo: {
-    alignItems: "center",
+    borderWidth: 1,
   },
 
   searchSettings: {
-    width: "80%",
-    alignItems: "center",
+    width: '80%',
+    height: 200,
+    alignItems: 'center',
   },
 
   logoImage: {
@@ -299,7 +319,6 @@ const styles = StyleSheet.create({
   }),
 
   textInputLieu: {
-    marginBottom: 10,
     borderRadius: 10,
     borderColor: "#1472AE",
     borderWidth: 1,
@@ -315,16 +334,14 @@ const styles = StyleSheet.create({
 
   suggestionList: {
     width: "85%",
-    maxHeight: 150,
+    maxHeight: 100,
     backgroundColor: "white",
-    borderRadius: 5,
-    marginTop: 5,
   },
 
   suggestionItem: {
     padding: 10,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
+    borderColor: "#1472AE",
+    borderWidth: 1,
   },
 
   searchButton: {
