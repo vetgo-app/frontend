@@ -12,7 +12,6 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import vetgologo from "../assets/vetgologo.png";
 
 export default function RechercherListeScreen({ navigation, route }) {
   const { profession, animal, address } = route.params;
@@ -105,6 +104,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           );
         }
         setStore(filteredStores);
+        console.log('store est ici :', store)
       });
   }, [profession, address, animal]);
 

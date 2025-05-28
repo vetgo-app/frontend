@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Image
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
@@ -63,7 +64,7 @@ export default function SignInScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <FontAwesome name="paw" size={16} color="#1472AE" solid></FontAwesome>
+        <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
         <Text style={styles.pageTitle}>Se connecter</Text>
       </View>
       <View style={styles.bodyContainer}>
@@ -112,7 +113,7 @@ export default function SignInScreen({
         {modalSignInVisible ? (
           <>
             <TouchableOpacity onPress={() => setModalSignInVisible(false)}>
-              <Text style={{ fontWeight: "bold" }}>Fermer</Text>
+              <Text style={{ fontWeight: "bold", padding: 25 }}>Fermer</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -148,9 +149,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+  },
+
+  logoImage: {
+    width: 100,
+    height: 40,
   },
 
   pageTitle: {

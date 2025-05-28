@@ -78,7 +78,7 @@ function MainTabs() {
           return (
             <FontAwesome
               name={iconName}
-              size={35}
+              size={30}
               color={color}
               solid
               style={{ alignItems: "center" }}

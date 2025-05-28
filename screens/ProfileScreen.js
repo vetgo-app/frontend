@@ -26,16 +26,16 @@ export default function ProfilScreen({ navigation }) {
       <Modal visible={modalSignUpVisible} animationType="none">
         <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} />
       </Modal>
-      <View style={styles.welcomingContainer}>
-        <View>
-          <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
-        </View>
-        <Text style={{ fontSize: 32, fontWeight: 800, textAlign: 'center', color: '#0D2C56' }}>Bienvenue sur VetGo</Text>
+      <View style={styles.header}>
+        <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
+      </View>
+      <View style={styles.body}>
+        <Text style={{ fontSize: 32, fontWeight: 800, textAlign: 'center', color: '#0D2C56' }}>Bienvenue</Text>
         {user.token ?
           (
             <View style={styles.signInUpContainer}>
               <Text style={{ fontSize: 24, fontWeight: 700, textAlign: 'center', color: '#1472AE', marginBottom: 30 }}>{user.firstname} {user.lastname}</Text>
-              <TouchableOpacity style={styles.buttonStyle}><Text style={{ fontWeight: 700, color: '#fff' }}>Se déconnecter</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonStyle} onPress={() => handleDisconnectClick()}><Text style={{ fontWeight: 700, color: '#fff' }}>Se déconnecter</Text></TouchableOpacity>
             </View>)
           :
           (
@@ -57,9 +57,23 @@ export default function ProfilScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: "#C2E7F7",
+  },
+
+  header: {
+    width: '100%',
+    height: '20%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+
+  body: {
+    width: '100%',
+    height: '80%',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
 
   logoImage: {
@@ -67,17 +81,9 @@ const styles = StyleSheet.create({
     height: 70,
   },
 
-  welcomingContainer: {
-    width: '80%',
-    height: '66%',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-
   signInUpContainer: {
-    width: '90%',
+    width: '70%',
     height: 90,
-
     alignItems: 'center',
     justifyContent: 'space-between',
   },
