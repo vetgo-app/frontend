@@ -34,25 +34,30 @@ export default function SignInScreen({
         email: email,
         password: password,
       }),
-    }).then((response) => response.json())
+    })
+      .then((response) => response.json())
       .then((data) => {
         if (data.result) {
           dispatch(
-            login({ firstname: data.user.firstname, lastname: data.user.lastname, email: data.user.email, token: data.user.token })
+            login({
+              firstname: data.user.firstname,
+              lastname: data.user.lastname,
+              email: data.user.email,
+              token: data.user.token,
+            })
           );
-          console.log('token is', data.user.token)
           setEmail("");
           setPassword("");
           if (modalSignInVisible) {
-            console.log('je suis entré')
+            console.log("je suis entré");
             if (route?.params?.origin === "TakeRdv") {
               navigation.navigate("RdvConfirmation");
             } else {
-              setModalSignInVisible(false)
+              setModalSignInVisible(false);
             }
           }
         }
-      })
+      });
   };
 
   return (

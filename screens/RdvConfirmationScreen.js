@@ -27,7 +27,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
       body: JSON.stringify({
         user: user._id, // pour generer la relation de user avec store
         store: appointment.address._id,
-        pet: appointment.isMyAnimal,
+        pet: appointment.petId,
         date: appointment.time,
         price: appointment.price,
         reason: appointment.selectedReason,
@@ -67,12 +67,12 @@ export default function RdvConfirmationScreen({ navigation, route }) {
               source={require("../assets/doctorPicture.jpg")}
               style={styles.image}
             />
-            <View style={styles.proInfo}>
+            {/* <View style={styles.proInfo}>
               <Text style={styles.text}>
                 {appointment?.firstname} {appointment?.lastname}
               </Text>
               <Text style={styles.text}>{appointment?.occupation}</Text>
-            </View>
+            </View> */}
             {/* ------------------------------------------------- DONNEES DU RDV */}
           </View>
           <View style={styles.rdvInfo}>
@@ -92,7 +92,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 8 }}
               />
-              <Text>{appointment?.address?.street}, {appointment?.address?.city} {appointment?.address?.zipCode}</Text>
+              <Text>{appointment?.address?.street}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons

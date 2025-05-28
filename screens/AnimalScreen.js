@@ -1,23 +1,30 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TextInput,
+} from "react-native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
 
 export default function AnimalScreen({ navigation }) {
-
   // Initialize the useSelector
   const user = useSelector((state) => state.user.value);
 
   // Get the user's information
-  const userId = user?._id;
-
+  const token = user.token;
 
   // Display modal
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
-  // Display animal card 
+  // Display animal card
   const [newAnimalInput, setNewAnimalInput] = useState(false);
   const [animalTopIsVisible, setAnimalTopIsVisible] = useState(false);
 
@@ -38,7 +45,6 @@ export default function AnimalScreen({ navigation }) {
   // Animal's ObjectId
   const [petId, setPetId] = useState("");
 
-
   const addAnimal = () => {
     setNewAnimalInput(true);
   };
@@ -49,11 +55,22 @@ export default function AnimalScreen({ navigation }) {
     Alert.alert("Animal ajouté !");
 
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/", {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
+      method: "post",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        "animalInfo": { newName, newAge, newBirth, newType, newRace, newSexe, newIdentification, newWeight, newDocument, owner: userId, }
-      })
+        animalInfo: {
+          newName,
+          newAge,
+          newBirth,
+          newType,
+          newRace,
+          newSexe,
+          newIdentification,
+          newWeight,
+          newDocument,
+          token,
+        },
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -69,7 +86,9 @@ export default function AnimalScreen({ navigation }) {
     if (!petId) return;
 
     const fetchData = async () => {
-      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId);
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId
+      );
       const data = await response.json();
       setAnimalData(data.petInfo);
     };
@@ -79,18 +98,39 @@ export default function AnimalScreen({ navigation }) {
 
   return (
     <View style={styles.mainDiv}>
-
       <Modal visible={modalSignInVisible} animationType="none">
-        <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} />
+        <SignIn
+          setModalSignInVisible={setModalSignInVisible}
+          modalSignInVisible={modalSignInVisible}
+          navigation={navigation}
+        />
       </Modal>
       <Modal visible={modalSignUpVisible} animationType="none">
-        <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} />
+        <SignUp
+          setModalSignUpVisible={setModalSignUpVisible}
+          modalSignUpVisible={modalSignUpVisible}
+          navigation={navigation}
+        />
       </Modal>
 
       {/* SignIn / SignUp Button */}
       <View style={styles.SignInUpButtons}>
-        {!user.token && (<TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>)}
-        {!user.token && (<TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>)}
+        {!user.token && (
+          <TouchableOpacity
+            onPress={() => setModalSignInVisible(true)}
+            style={styles.buttonStyle}
+          >
+            <Text style={{ fontWeight: 700, color: "#fff" }}>Se connecter</Text>
+          </TouchableOpacity>
+        )}
+        {!user.token && (
+          <TouchableOpacity
+            onPress={() => setModalSignUpVisible(true)}
+            style={styles.buttonStyle}
+          >
+            <Text style={{ fontWeight: 700, color: "#fff" }}>S'inscrire</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Header Part */}
@@ -108,7 +148,10 @@ export default function AnimalScreen({ navigation }) {
             <View style={styles.bottomHeaderProfile}>
               <View style={styles.bottomHeaderInformationContainer}>
                 <View style={styles.bottomHeaderPictureProfile}>
-                  <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
+                  <Image
+                    source={require("../assets/dogImg.png")}
+                    style={styles.animalImg}
+                  />
                 </View>
                 <View style={styles.bottomHeaderInformation}>
                   <View style={styles.bottomHeaderInformationName}>
@@ -116,7 +159,9 @@ export default function AnimalScreen({ navigation }) {
                   </View>
                   <View style={styles.bottomHeaderInformationGeneral}>
                     <View style={styles.bottomHeaderInformationBirth}>
-                      <Text style={styles.animalBirth}>{animalData?.age} ans, né le {animalData?.dateOfBirth}</Text>
+                      <Text style={styles.animalBirth}>
+                        {animalData?.age} ans, né le {animalData?.dateOfBirth}
+                      </Text>
                     </View>
                     <View style={styles.bottomHeaderInformationRace}>
                       <Text style={styles.animalRace}>{animalData?.breed}</Text>
@@ -132,68 +177,125 @@ export default function AnimalScreen({ navigation }) {
       {/* Body Part  */}
       <View style={styles.body}>
         <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.btnAddAnimal} onPress={() => addAnimal()}>
+          <TouchableOpacity
+            style={styles.btnAddAnimal}
+            onPress={() => addAnimal()}
+          >
             <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
           </TouchableOpacity>
         </View>
 
-
         {/* Add Animal Part */}
-        <View style={[styles.containerNewAnimal, { display: newAnimalInput ? 'flex' : 'none' }]}>
+        <View
+          style={[
+            styles.containerNewAnimal,
+            { display: newAnimalInput ? "flex" : "none" },
+          ]}
+        >
           <Text style={styles.titleNewAnimal}>🦁 Animal</Text>
           <View style={styles.nameAndAge}>
-            <TextInput placeholder="Nom" placeholderTextColor="white" style={styles.name} value={newName} onChangeText={setNewName} />
-            <TextInput placeholder="Age" placeholderTextColor="white" style={styles.age} value={newAge} onChangeText={setNewAge} />
+            <TextInput
+              placeholder="Nom"
+              placeholderTextColor="white"
+              style={styles.name}
+              value={newName}
+              onChangeText={setNewName}
+            />
+            <TextInput
+              placeholder="Age"
+              placeholderTextColor="white"
+              style={styles.age}
+              value={newAge}
+              onChangeText={setNewAge}
+            />
           </View>
           <View style={styles.birthAndRace}>
-            <TextInput placeholder="Date de naissance" placeholderTextColor="white" style={styles.birth} value={newBirth} onChangeText={setNewBirth} />
-            <TextInput placeholder="Race" placeholderTextColor="white" style={styles.race} value={newRace} onChangeText={setNewRace} />
+            <TextInput
+              placeholder="Date de naissance"
+              placeholderTextColor="white"
+              style={styles.birth}
+              value={newBirth}
+              onChangeText={setNewBirth}
+            />
+            <TextInput
+              placeholder="Race"
+              placeholderTextColor="white"
+              style={styles.race}
+              value={newRace}
+              onChangeText={setNewRace}
+            />
           </View>
           <View style={styles.sexeAndIdentification}>
-            <TextInput placeholder="Sexe" placeholderTextColor="white" style={styles.sexe} value={newSexe} onChangeText={setNewSexe} />
-            <TextInput placeholder="Identification" placeholderTextColor="white" style={styles.identification} value={newIdentification} onChangeText={setNewIdentification} />
+            <TextInput
+              placeholder="Sexe"
+              placeholderTextColor="white"
+              style={styles.sexe}
+              value={newSexe}
+              onChangeText={setNewSexe}
+            />
+            <TextInput
+              placeholder="Identification"
+              placeholderTextColor="white"
+              style={styles.identification}
+              value={newIdentification}
+              onChangeText={setNewIdentification}
+            />
           </View>
           <View style={styles.weightAndColor}>
-            <TextInput placeholder="Poids" placeholderTextColor="white" style={styles.weight} value={newWeight} onChangeText={setNewWeight} />
-            <TextInput placeholder="Espèce" placeholderTextColor="white" style={styles.color} value={newType} onChangeText={setNewType} />
+            <TextInput
+              placeholder="Poids"
+              placeholderTextColor="white"
+              style={styles.weight}
+              value={newWeight}
+              onChangeText={setNewWeight}
+            />
+            <TextInput
+              placeholder="Espèce"
+              placeholderTextColor="white"
+              style={styles.color}
+              value={newType}
+              onChangeText={setNewType}
+            />
           </View>
-          
+
           {user.token && (
             <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => handleSendData()}>
+              <TouchableOpacity
+                style={styles.btnAddAnimal}
+                onPress={() => handleSendData()}
+              >
                 <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
               </TouchableOpacity>
             </View>
           )}
-
         </View>
       </View>
     </View>
-  )
-};
+  );
+}
 
 const styles = StyleSheet.create({
   mainDiv: {
     flex: 1,
-    fontFamily: 'Arial, Sans-Serif',
-    backgroundColor: "white"
+    fontFamily: "Arial, Sans-Serif",
+    backgroundColor: "white",
   },
   header: {
-    height: '30%',
-    alignItems: 'center',
-    justifyContent: 'center'
+    height: "30%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   topHeader: {
     height: "40%",
     width: "100%",
-    flexDirection: 'row',
-    alignItems: 'space-between',
-    justifyContent: 'center',
-    gap: 23
+    flexDirection: "row",
+    alignItems: "space-between",
+    justifyContent: "center",
+    gap: 23,
   },
   topHeaderTitle: {
     height: "40%",
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 26,
@@ -202,56 +304,56 @@ const styles = StyleSheet.create({
   },
   topHeaderIcon: {
     height: "40%",
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
   modifyingIcon: {
-    color: "#1472AE"
+    color: "#1472AE",
   },
   bottomHeader: {
     marginTop: 25,
     height: "60%",
     width: "100%",
-    alignItems: 'center'
+    alignItems: "center",
   },
   bottomHeaderProfile: {
     height: "100%",
     width: "90%",
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   bottomHeaderInformationContainer: {
     height: "90%",
     width: "100%",
     backgroundColor: "#0C2D56",
     borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   bottomHeaderPictureProfile: {
     height: "75%",
     width: "30%",
     borderRightWidth: 1,
-    borderRightColor: 'white',
-    alignItems: 'center',
+    borderRightColor: "white",
+    alignItems: "center",
   },
   animalImg: {
-    height: '90%',
-    width: '80%',
-    borderRadius: 50
+    height: "90%",
+    width: "80%",
+    borderRadius: 50,
   },
   bottomHeaderInformation: {
-    height: '75%',
-    width: '60%',
+    height: "75%",
+    width: "60%",
   },
   bottomHeaderInformationName: {
     height: "40%",
     width: "100%",
   },
   animalName: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
     fontWeight: 700,
-    marginLeft: 35
+    marginLeft: 35,
   },
   bottomHeaderInformationGeneral: {
     height: "60%",
@@ -264,7 +366,7 @@ const styles = StyleSheet.create({
   animalBirth: {
     color: "white",
     fontSize: 16,
-    marginLeft: 35
+    marginLeft: 35,
   },
   bottomHeaderInformationRace: {
     height: "50%",
@@ -273,14 +375,14 @@ const styles = StyleSheet.create({
   animalRace: {
     color: "white",
     fontSize: 16,
-    marginLeft: 35
+    marginLeft: 35,
   },
 
   // BODY PART
 
   body: {
-    height: '70%',
-    alignItems: 'center',
+    height: "70%",
+    alignItems: "center",
   },
   btnContainer: {
     width: "45%",
@@ -289,13 +391,13 @@ const styles = StyleSheet.create({
   btnAddAnimal: {
     padding: 12,
     backgroundColor: "#0C2D56",
-    borderRadius: 10
+    borderRadius: 10,
   },
   btnAddAnimalTxt: {
-    textAlign: 'center',
+    textAlign: "center",
     color: "white",
     fontSize: 16,
-    fontWeight: 600
+    fontWeight: 600,
   },
 
   // Add animal container
@@ -307,11 +409,11 @@ const styles = StyleSheet.create({
   titleNewAnimal: {
     fontSize: 20,
     textAlign: "center",
-    fontWeight: 600
+    fontWeight: 600,
   },
   nameAndAge: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
   name: {
     width: "40%",
@@ -320,7 +422,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   age: {
     width: "40%",
@@ -329,11 +431,11 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   birthAndRace: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
   birth: {
     width: "40%",
@@ -342,7 +444,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   race: {
     width: "40%",
@@ -351,11 +453,11 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   sexeAndIdentification: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
   sexe: {
     width: "40%",
@@ -364,7 +466,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   identification: {
     width: "40%",
@@ -373,7 +475,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   weightAndColor: {
     flexDirection: "row",
@@ -386,7 +488,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   color: {
     width: "40%",
@@ -395,29 +497,28 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    color: "white"
+    color: "white",
   },
   sendData: {
     marginTop: 45,
     height: "12%",
     width: "36%",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   sendDataBtn: {
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: "#0C2D56",
     borderRadius: 10,
-    height: '100%'
+    height: "100%",
   },
   sendDataTxt: {
-    textAlign: 'center',
-    color: "white"
+    textAlign: "center",
+    color: "white",
   },
   SignInUpButtons: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   buttonStyle: {
     borderWidth: 1,
@@ -425,6 +526,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: "#0D2C56",
     borderRadius: 10,
-    marginTop: 300
+    marginTop: 300,
   },
-})
+});
