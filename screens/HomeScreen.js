@@ -86,7 +86,7 @@ export default function HomeScreen({ navigation }) {
       </View> */}
 
       {/* Logo */}
-      <View style={styles.header}>
+      <View style={styles.logo}>
         <Image source={vetgologo} style={styles.logoImage} />
       </View>
 
@@ -178,20 +178,21 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* Rechercher */}
-        <TouchableOpacity
-          style={styles.searchButton}
-          onPress={() =>
-            navigation.navigate("Recherche", {
-              // récupérer le filtre profession, animal et lieux pour la page suivante rechercher
-              profession: selectedProfession,
-              animal: selectedAnimal,
-              address: selectedLieu,
-            })
-          }
-        >
-          <Text style={styles.searchText}>Rechercher</Text>
-        </TouchableOpacity>
+
       </View>
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() =>
+          navigation.navigate("Recherche", {
+            // récupérer le filtre profession, animal et lieux pour la page suivante rechercher
+            profession: selectedProfession,
+            animal: selectedAnimal,
+            address: selectedLieu,
+          })
+        }
+      >
+        <Text style={styles.searchText}>Rechercher</Text>
+      </TouchableOpacity>
       {!user.token && (
         <View style={styles.signInUpContainer}>
           <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
@@ -251,19 +252,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
   },
+
   logoEmergency: {
     position: "absolute",
     top: 50,
     right: 20,
   },
-  header: {
-    // marginBottom: 30,
+
+  logo: {
     alignItems: "center",
   },
 
   searchSettings: {
+<<<<<<< HEAD
+    width: '80%',
+    height: 200,
+    alignItems: 'center',
+=======
     width: "80%",
     alignItems: "center",
+>>>>>>> ddbe5ecc9b7d0dbb22f1f7e5e5055dc9d4a250d9
   },
 
   logoImage: {
@@ -319,19 +327,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
   },
+  
   suggestionItem: {
     padding: 10,
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
   },
+
   searchButton: {
     backgroundColor: "#0D2C56",
     paddingVertical: 15,
     borderRadius: 10,
-    width: "60%",
+    width: "70%",
     alignItems: "center",
-    marginTop: 30,
   },
+
   searchText: {
     color: "white",
     fontWeight: "bold",
