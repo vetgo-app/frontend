@@ -5,15 +5,20 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Alert
 } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../reducers/user";
-export default function SignInScreen({ navigation, route }) {
+
+export default function SignInScreen({ navigation, route, setModalSignInVisible, modalSignInVisible, formData }) {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  console.log(navigation, route);
 
   const handleSignIn = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signin", {
@@ -26,20 +31,21 @@ export default function SignInScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        console.log(data);
+
+        if (data.result) {
+          console.log(data);
+
           dispatch(
-            login({
-              firstname: data.firstname,
-              lastname: data.lastname,
-              email: data.email,
-              photo: data.photo,
-            })
+            login({ ...data })
           );
           setEmail("");
           setPassword("");
-        }
-        if (route?.params?.origin === "HomeScreen") {
-          navigation.navigate("HomeScreen");
+
+          if (modalSignInVisible) {
+            setModalSignInVisible(false)
+            navigation.navigate("RdvConfirmation", formData)
+          }
         }
       })
       .catch((error) => {
@@ -47,22 +53,18 @@ export default function SignInScreen({ navigation, route }) {
       });
   };
 
-  const handleSignUpClick = () => {
-    console.log("redirection");
-    navigation.navigate("SignUpScreen");
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.pageTitle}>Me connecter</Text>
+        <FontAwesome name='paw' size='30' color='#1472AE' solid></FontAwesome>
+        <Text style={styles.pageTitle}>Se connecter</Text>
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.signinInputs}>
           <Text
-            style={{ fontWeight: 500, textAlign: "center", marginBottom: 20 }}
+            style={{ fontSize: 16, fontWeight: 500, textAlign: "center", marginBottom: 30 }}
           >
-            {" "}
             Veuillez entrer vos identifiants de connexion :
           </Text>
           <TextInput
@@ -70,10 +72,15 @@ export default function SignInScreen({ navigation, route }) {
             placeholder="email"
             onChangeText={(value) => setEmail(value)}
             value={email}
+            autoCapitalize="none"
+            autoComplete="email"
           />
           <TextInput
             style={styles.passwordInput}
             placeholder="password"
+            autoCapitalize="none"
+            autoComplete="password"
+            secureTextEntry={true}
             onChangeText={(value) => setPassword(value)}
             value={password}
           />
@@ -91,15 +98,25 @@ export default function SignInScreen({ navigation, route }) {
             <Text style={{ color: "#ffff", fontSize: 16 }}>Se connecter</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => handleSignUpClick()}
-          style={styles.signUpPage}
-        >
-          <Text style={{ width: "100%", fontSize: 16, color: "#1472AE" }}>
-            Vous n'avez pas de compte ?{" "}
-            <Text style={{ fontWeight: "bold" }}>S'inscrire</Text>
-          </Text>
-        </TouchableOpacity>
+        {
+          modalSignInVisible ? (
+            <>
+              <TouchableOpacity onPress={() => setModalSignInVisible(false)}><Text style={{ fontWeight: 'bold' }}>Fermer</Text></TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SignUp')}
+                style={styles.signUpPage}
+              >
+                <Text style={{ width: "100%", fontSize: 16, color: "#1472AE" }}>
+                  Vous n'avez pas de compte ?{" "}
+                  <Text style={{ fontWeight: "bold" }}>S'inscrire</Text>
+                </Text>
+              </TouchableOpacity>
+            </>
+          )
+        }
       </View>
     </SafeAreaView>
   );
@@ -135,27 +152,27 @@ const styles = StyleSheet.create({
 
   bodyContainer: {
     height: "87%",
-    width: "80%",
+    width: "100%",
     backgroundColor: "#ffff",
     alignItems: "center",
     justifyContent: "space-evenly",
   },
 
   signinInputs: {
-    width: "80%",
-    height: 350,
+    width: "60%",
+    height: 250,
     backgroundColor: "#ffff",
     borderRadius: 10,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
     marginBottom: 30,
   },
 
   emailInput: {
     width: "100%",
     height: 40,
-    borderBottomWidth: 1,
-    borderBottomColor: "#1472AE",
+    borderWidth: 1,
+    borderColor: "#1472AE",
     borderRadius: 10,
     paddingLeft: 10,
     marginBottom: 20,
@@ -164,8 +181,8 @@ const styles = StyleSheet.create({
   passwordInput: {
     width: "100%",
     height: 40,
-    borderBottomWidth: 1,
-    borderBottomColor: "#1472AE",
+    borderWidth: 1,
+    borderColor: "#1472AE",
     borderRadius: 10,
     paddingLeft: 10,
     marginBottom: 40,

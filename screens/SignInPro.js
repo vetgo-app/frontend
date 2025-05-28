@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { login } from "../reducers/user";
 import { useDispatch } from "react-redux";
 
-export default function SignInPro() {
+export default function SignInPro({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -38,6 +38,7 @@ export default function SignInPro() {
           );
           setEmail("");
           setPassword("");
+          navigation.navigate('ProfilePro')
         }
       })
       .catch((error) => {
@@ -51,7 +52,13 @@ export default function SignInPro() {
         <Text style={styles.pageTitle}>Se connecter</Text>
       </View>
       <View style={styles.bodyContainer}>
+
         <View style={styles.signinInputs}>
+          <Text
+            style={{ fontWeight: 500, textAlign: "center", marginBottom: 30 }}
+          >
+            Veuillez entrer vos identifiants de connexion :
+          </Text>
           <TextInput
             style={styles.emailInput}
             placeholder="email"
@@ -61,6 +68,8 @@ export default function SignInPro() {
           <TextInput
             style={styles.passwordInput}
             placeholder="password"
+            autoCapitalize="none"
+            autoComplete="password"
             onChangeText={(value) => setPassword(value)}
             value={password}
           />
@@ -122,33 +131,34 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "#ffff",
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly'
   },
 
   signinInputs: {
     width: "80%",
-    height: 200,
+    height: 250,
     backgroundColor: "#ffff",
     borderRadius: 10,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
     marginBottom: 30,
   },
 
   emailInput: {
     width: "100%",
-    height: 50,
-    borderBottomWidth: 1,
-    borderBottomColor: "#1472AE",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#1472AE",
     borderRadius: 10,
     paddingLeft: 10,
+    marginBottom: 20,
   },
 
   passwordInput: {
     width: "100%",
-    height: 50,
-    borderBottomWidth: 1,
-    borderBottomColor: "#1472AE",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#1472AE",
     borderRadius: 10,
     paddingLeft: 10,
     marginBottom: 40,

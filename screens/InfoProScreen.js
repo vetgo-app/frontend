@@ -8,11 +8,10 @@ import {
   ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useRoute, useNavigation } from "@react-navigation/native";
 
-export default function InfoProScreen({ navigation }) {
-  const route = useRoute();
-  const { storeId, firstname, lastname, address, occupation, price } = route.params;
+export default function InfoProScreen({ navigation, route }) {
+
+  const { storeId, firstname, lastname, address, occupation, price, time } = route.params;
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
@@ -71,7 +70,6 @@ export default function InfoProScreen({ navigation }) {
           </TouchableOpacity>
         ))}
       </View>
-<Text>{price}</Text>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("TakeRdv", {
@@ -80,6 +78,7 @@ export default function InfoProScreen({ navigation }) {
             occupation,
             address,
             price,
+            time,
           });
         }}
         style={styles.nextButton}

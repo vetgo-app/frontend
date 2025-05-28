@@ -1,144 +1,195 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from 'expo-document-picker';
 
 export default function HealthJournal() {
+    const petId = "6831ca6e1bdf6463fe893433"
     const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
-    const formData = new formData();
-    const [animalInformation, setAnimalInformation] = useState([]);
+    const [petInfo, setPetInfo] = useState(null);
+    
+    const [documentName, setDocumentName] = useState("")
+    const [modalVisible, setModalVisible] = useState(false)
+    const [previsualisationModalVisible, setPrevisualisationModalVisible] = useState(false)
+    const [selectedDoc, setSelectedDoc] = useState(null)
+
+    const fetchData = async () => {
+        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/" + petId );
+        const data = await response.json();
+
+        if (data.result) {                
+            setPetInfo(data.petInfo)
+        } else {
+            Alert.alert(data.error)
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     // dataInformation's variables
     const dataInformation = [
-        { label: `Sexe : ${animalInformation.sexe}`, value: `${animalInformation.sexe}` },
-        { label: `Identification: ${animalInformation.identification}`, value: `${animalInformation.identification}` },
-        { label: `Poids : ${animalInformation.weight}`, value: `${animalInformation.weight}` },
+        { label: `Sexe : ${petInfo?.sexe}`, value: `${petInfo?.sexe}` },
+        { label: `Identification: ${petInfo?.identification}`, value: `${petInfo?.identification}` },
+        { label: `Poids : ${petInfo?.weight}`, value: `${petInfo?.weight}` },
     ];
 
-    // dataDoucments' variables
-    const adoptionCertificate = "Contrat d'adoption (17/01/24)";
+    const dataDocuments = petInfo?.documents.map((e) => {
+        return { label: `Nom : ${e.docName}`, value: `${e.file}` }
+    }) || []    
 
-    const dataDocuments = [
-        { label: `${adoptionCertificate}` }
-    ];
+    const handleAddDocuments = async (docName) => {
+        const doc = await DocumentPicker.getDocumentAsync({ type: ["application/pdf"] });
 
-    useEffect(() => {
-
-        const fetchedData = async () => {
-
-            const response = await fetch("http://localhost:3000/healthJournal");
-            const data = await response.json();
-
-            setAnimalInformation(data.animalInformations[0])
+        if (doc.canceled) {
+            Alert.alert("Chargement du document annulé !")
+            return;
         }
-        fetchedData();
-    }, []);
 
+        const formData = new FormData();
 
-    const handleAddDocuments = () => {
-        const selecDoc = async () => {
-            const doc = await DocumentPicker.getDocumentAsync()
-            console.log(doc)
+        formData.append('animalNewDocument', {
+            uri: doc.assets[0].uri,
+            name: `${docName}.pdf`,
+            type: 'application/pdf',
+        });
 
-            // formData.append('animalNewDocument', {
-            //     uri: 'file://...',
-            //     name: 'photo.jpg',
-            //     type: 'image/jpeg',
-            // });
-            // fetch('http://.../upload', {
-            //     method: 'POST',
-            //     body: formData,
-            // }).then((response) => response.json())
-            //     .then((data) => {
-            //         console.log(data)
-            // });
+        const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + '/petDocuments/' + petId, {
+            method: 'POST',
+            body: formData,
+        })
 
+        const data = await response.json()
+
+        if (data.result) {
+            setDocumentName("")
+            setModalVisible(false)
+            fetchData()
+            Alert.alert("Document chargé avec succès !")
+        }
     }
 
-    selecDoc()
-    // Alert.alert("Document ajouté !")
-}
-
-return (
-    <View style={styles.mainDiv}>
-
-        {/* Header Part */}
-        <View style={styles.header}>
-            <View style={styles.topHeader}>
-                <View style={styles.topHeaderTitle}>
-                    <Text style={styles.title}>Carnet de Santé de</Text>
+    return (
+        <View style={styles.mainDiv}>
+            <Modal visible={modalVisible} animationType="fade">
+                <View style={styles.informationContainer}>
+                    <TextInput
+                        style={styles.inpuText}
+                        placeholder="Nommez votre document"
+                        onChangeText={(value) => setDocumentName(value)}
+                        value={documentName}
+                    />
+                    <View style={{ flexDirection: "row", columnGap: 20 }}>
+                        <TouchableOpacity style={styles.searchBtn} onPress={() => {
+                            setDocumentName("")
+                            setModalVisible(false)
+                            }}>
+                            <Text style={styles.searchBtnTxt}>Annuler</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.searchBtn} onPress={() => documentName.length > 0 && handleAddDocuments(documentName)}>
+                            <Text style={styles.searchBtnTxt}>Enregistrer</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
                 </View>
-                <View style={styles.topHeaderIcon}>
-                    {modifyIcon}
+            </Modal>
+
+            {selectedDoc && <Modal visible={previsualisationModalVisible} animationType="fade">
+                <View style={styles.informationContainer}>
+                    <Image source={{ uri: selectedDoc }} style={styles.docImg} />
+                    <View style={{ flexDirection: "row", columnGap: 20, justifyContent: "center", alignItems: "center" }}>
+                        <TouchableOpacity style={styles.searchBtn} onPress={() => {
+                            setSelectedDoc(null)
+                            setPrevisualisationModalVisible(false)
+                            }}>
+                            <Text style={styles.searchBtnTxt}>Annuler</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
                 </View>
-            </View>
-            <View style={styles.bottomHeader}>
-                <View style={styles.bottomHeaderProfile}>
-                    <View style={styles.bottomHeaderInformationContainer}>
-                        <View style={styles.bottomHeaderPictureProfile}>
-                            <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
-                        </View>
-                        <View style={styles.bottomHeaderInformation}>
-                            <View style={styles.bottomHeaderInformationName}>
-                                <Text style={styles.animalName}>{animalInformation.name}</Text>
+            </Modal>}
+
+            {/* Header Part */}
+            <View style={styles.header}>
+                <View style={styles.topHeader}>
+                    <View style={styles.topHeaderTitle}>
+                        <Text style={styles.title}>Carnet de Santé de</Text>
+                    </View>
+                    <View style={styles.topHeaderIcon}>
+                        {modifyIcon}
+                    </View>
+                </View>
+                <View style={styles.bottomHeader}>
+                    <View style={styles.bottomHeaderProfile}>
+                        <View style={styles.bottomHeaderInformationContainer}>
+                            <View style={styles.bottomHeaderPictureProfile}>
+                                <Image source={require('../assets/dogImg.png')} style={styles.animalImg} />
                             </View>
-                            <View style={styles.bottomHeaderInformationGeneral}>
-                                <View style={styles.bottomHeaderInformationBirth}>
-                                    <Text style={styles.animalBirth}>{animalInformation.age} ans, né le {animalInformation.dateOfBirth}</Text>
+                            <View style={styles.bottomHeaderInformation}>
+                                <View style={styles.bottomHeaderInformationName}>
+                                    <Text style={styles.animalName}>{petInfo?.name}</Text>
                                 </View>
-                                <View style={styles.bottomHeaderInformationRace}>
-                                    <Text style={styles.animalRace}>{animalInformation.race}</Text>
+                                <View style={styles.bottomHeaderInformationGeneral}>
+                                    <View style={styles.bottomHeaderInformationBirth}>
+                                        <Text style={styles.animalBirth}>{petInfo?.age} ans, né le {petInfo?.dateOfBirth}</Text>
+                                    </View>
+                                    <View style={styles.bottomHeaderInformationRace}>
+                                        <Text style={styles.animalRace}>{petInfo?.race}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </View>
             </View>
+
+            {/* Body Part */}
+            <View style={styles.body}>
+
+                {/* Informations Container */}
+                <View style={styles.bodyInformationContainer}>
+                    <Dropdown
+                        style={styles.dropdown}
+                        itemTextStyle={styles.itemTextStyle}
+                        placeholderStyle={styles.placeholderStyle}
+                        iconStyle={styles.iconStyle}
+                        data={dataInformation}
+                        labelField="label"
+                        valueField="value"
+                        placeholder="Information de l'animal"
+                        itemContainerStyle={styles.itemContainerStyles}
+                        containerStyle={styles.containerStyles}
+                    />
+                </View>
+
+                {/* Documents Container */}
+                <View style={styles.bodyDocumentContainer}>
+                    <Dropdown
+                        style={styles.dropdown}
+                        itemTextStyle={styles.itemTextStyle}
+                        placeholderStyle={styles.placeholderStyle}
+                        iconStyle={styles.iconStyle}
+                        data={dataDocuments}
+                        labelField="label"
+                        valueField="value"
+                        onChange={(doc) => {
+                            setSelectedDoc(doc.value)
+                            setPrevisualisationModalVisible(true)
+                        }}
+                        placeholder="Documents de l'animal"
+                    />
+                </View>
+                {/* Added documents */}
+                <View style={styles.addDocumentContainer}>
+                    <TouchableOpacity style={styles.addDocumentBtn} onPress={() => setModalVisible(true)}>
+                        <Text style={styles.addDocumentBtnTxt}>Ajouter un document</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
-
-        {/* Body Part */}
-        <View style={styles.body}>
-
-            {/* Informations Container */}
-            <View style={styles.bodyInformationContainer}>
-                <Dropdown
-                    style={styles.dropdown}
-                    itemTextStyle={styles.itemTextStyle}
-                    placeholderStyle={styles.placeholderStyle}
-                    iconStyle={styles.iconStyle}
-                    data={dataInformation}
-                    labelField="label"
-                    valueField="value"
-                    placeholder="Information de l'animal"
-                    itemContainerStyle={styles.itemContainerStyles}
-                    containerStyle={styles.containerStyles}
-                />
-            </View>
-
-            {/* Documents Container */}
-            <View style={styles.bodyDocumentContainer}>
-                <Dropdown
-                    style={styles.dropdown}
-                    itemTextStyle={styles.itemTextStyle}
-                    placeholderStyle={styles.placeholderStyle}
-                    iconStyle={styles.iconStyle}
-                    data={dataDocuments}
-                    labelField="label"
-                    valueField="label"
-                    value="null"
-                    placeholder="Documents"
-                />
-            </View>
-            {/* Added documents */}
-            <View style={styles.addDocumentContainer}>
-                <TouchableOpacity style={styles.addDocumentBtn} onPress={() => handleAddDocuments()}>
-                    <Text style={styles.addDocumentBtnTxt}>Ajouter un document</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    </View>
-)
+    )
 }
 
 const styles = StyleSheet.create({
@@ -147,9 +198,46 @@ const styles = StyleSheet.create({
         fontFamily: 'Arial, Sans-Serif',
         backgroundColor: "white"
     },
+    docImg: {
+        width: "100%",
+        height: "80%",
+        objectFit: "contain"
+    },
 
     // HEADER PART
-
+    informationContainer: {
+        height: "100%",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        rowGap: 20
+    },
+    inpuText: {
+        backgroundColor: "white",
+        height: 50,
+        width: "87%",
+        padding: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#3884BB",
+        textAlign: "center",
+    },
+    searchBtn: {
+        borderWidth: 1,
+        height: 50,
+        width: 150,
+        borderRadius: 10,
+    },
+    searchBtnTxt: {
+        height: "100%",
+        padding: 10,
+        textAlign: "center", 
+        color: "white",
+        backgroundColor: "#0D2C56",
+        borderRadius: 10,
+        fontWeight: 600,
+        fontSize: 16,
+    },
     header: {
         height: '30%',
         alignItems: 'center',

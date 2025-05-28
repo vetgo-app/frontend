@@ -7,7 +7,6 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
-  KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
@@ -16,7 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { login } from "../reducers/user";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function SignUpScreen({ navigation, route }) {
+export default function SignUpScreen({ navigation, route, setModalSignUpVisible, modalSignUpVisible, formData }) {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -28,7 +27,6 @@ export default function SignUpScreen({ navigation, route }) {
   const [profilPicture, setProfilPicture] = useState(null);
 
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     (async () => {
@@ -74,13 +72,12 @@ export default function SignUpScreen({ navigation, route }) {
           setEmail("");
           setPassword("");
           setProfilPicture(null);
+          if (modalSignUpVisible) {
+            setModalSignUpVisible(false)
+            navigation.navigate("RdvConfirmation", formData)
+          }
         }
       });
-    if (route?.params?.origin === "HomeScreen") {
-      navigation.navigate("HomeScreen");
-    } else if (route?.params?.origin === "TakeRdvScreen") {
-      navigation.navigate("ConfirmationRdvScreen");
-    }
   };
 
   const takePicture = async () => {
@@ -129,76 +126,84 @@ export default function SignUpScreen({ navigation, route }) {
       <View style={styles.headerContainer}>
         <Text style={styles.pageTitle}>S'inscrire</Text>
       </View>
-      <KeyboardAvoidingView
+      <View
         style={styles.bodyContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View
-          style={{
+          style={styles.signUpInputs}
+        >
+          <View style={{
             alignItems: "center",
             justifyContent: "space-between",
             width: "80%",
             height: 50,
             flexDirection: "row",
-            marginBottom: 30,
-          }}
-        >
-          <TouchableOpacity onPress={() => handlePressProfilPhoto()}>
-            <Image
-              source={
-                profilPicture
-                  ? { uri: profilPicture }
-                  : require("../assets/add-profile-picture.jpg")
-              }
-              style={{ height: 70, width: 70, borderRadius: 100 }}
-              height={profilPicture ? 70 : 140}
-              width={profilPicture ? 70 : 140}
+            marginBottom: 30
+          }}>
+            <TouchableOpacity onPress={() => handlePressProfilPhoto()}>
+              <Image
+                source={
+                  profilPicture
+                    ? { uri: profilPicture }
+                    : require("../assets/add-profile-picture.jpg")
+                }
+                style={{ height: 70, width: 70, borderRadius: 100 }}
+                height={profilPicture ? 70 : 140}
+                width={profilPicture ? 70 : 140}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.firstnameInput}
+              placeholder="Marine"
+              onChangeText={(value) => setFirstname(value)}
+              value={firstname}
             />
-          </TouchableOpacity>
+          </View>
           <TextInput
-            style={styles.firstnameInput}
-            placeholder="Marine"
-            onChangeText={(value) => setFirstname(value)}
-            value={firstname}
+            textContentType="name"
+            style={styles.lastnameInput}
+            placeholder="Durand"
+            onChangeText={(value) => setLastname(value)}
+            value={lastname}
           />
+          <TextInput
+            textContentType="emailAddress"
+            autoCapitalize="none"
+            style={styles.emailInput}
+            placeholder="email"
+            onChangeText={(value) => setEmail(value)}
+            value={email}
+          />
+          <TextInput
+            textContentType="password"
+            secureTextEntry={true}
+            autoCapitalize="none"
+            style={styles.passwordInput}
+            placeholder="mot de passe"
+            onChangeText={(value) => setPassword(value)}
+            value={password}
+          />
+          <TouchableOpacity
+            style={styles.signUpButton}
+            onPress={() => handleSignUp()}>
+            <Text style={{ color: "#ffff", fontSize: 16 }}>S'inscrire</Text>
+          </TouchableOpacity>
         </View>
-        <TextInput
-          textContentType="name"
-          style={styles.lastnameInput}
-          placeholder="Durand"
-          onChangeText={(value) => setLastname(value)}
-          value={lastname}
-        />
-        <TextInput
-          textContentType="emailAddress"
-          autoCapitalize="none"
-          style={styles.emailInput}
-          placeholder="email"
-          onChangeText={(value) => setEmail(value)}
-          value={email}
-        />
-        <TextInput
-          textContentType="password"
-          secureTextEntry={true}
-          style={styles.passwordInput}
-          placeholder="mot de passe"
-          onChangeText={(value) => setPassword(value)}
-          value={password}
-        />
-        <TouchableOpacity
-          style={styles.signUpButton}
-          onPress={() => handleSignUp()}
-        >
-          <Text style={{ color: "#ffff", fontSize: 16 }}>S'inscrire</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-      <TouchableOpacity>
-        {/* onPress={() => navigation.navigate('SignInScreen')} */}
-        <Text style={{ fontSize: 16, color: "#1472AE" }}>
-          Vous avez déjà un compte ?{" "}
-          <Text style={{ fontWeight: "bold" }}>Se connecter</Text>
-        </Text>
-      </TouchableOpacity>
+        {
+          modalSignUpVisible ? (
+            <>
+              <TouchableOpacity onPress={() => setModalSignUpVisible(false)}><Text style={{ fontWeight: 'bold' }}>Fermer</Text></TouchableOpacity>
+            </>
+          ) : (<TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+            <Text style={{ fontSize: 16, color: "#1472AE" }}>
+              Vous avez déjà un compte ?
+              <Text style={{ fontWeight: "bold" }}>Se connecter</Text>
+            </Text>
+          </TouchableOpacity>)
+        }
+
+      </View>
     </SafeAreaView>
   );
 }
@@ -221,7 +226,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 60,
   },
 
   pageTitle: {
@@ -237,44 +241,59 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#ffff",
     alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+
+  signUpInputs: {
+    alignItems: "center",
+    width: "100%",
+    height: 350,
   },
 
   firstnameInput: {
     width: "40%",
-    height: 30,
-    borderBottomWidth: 1,
+    height: 40,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginRight: 38,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   lastnameInput: {
     width: "60%",
-    height: 30,
-    borderBottomWidth: 1,
+    height: 40,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginBottom: 20,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   emailInput: {
     width: "60%",
-    height: 30,
-    borderBottomWidth: 1,
+    height: 40,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginBottom: 20,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   passwordInput: {
     width: "60%",
-    height: 30,
-    borderBottomWidth: 1,
+    height: 40,
+    borderWidth: 1,
     borderColor: "#1472AE",
     marginBottom: 40,
+    borderRadius: 10,
+    paddingLeft: 10,
   },
 
   signUpButton: {
     backgroundColor: "#1472AE",
     width: "60%",
-    height: 50,
+    height: 40,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",

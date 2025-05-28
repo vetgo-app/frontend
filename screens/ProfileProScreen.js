@@ -50,6 +50,9 @@ export default function ProfileProScreen() {
   const [isSelectedVisio, setSelectionVisio] = useState(false);
   const [isSelectedUrgence, setSelectionUrgence] = useState(false);
 
+  const [specialization, setSpecialization] = useState("");
+  const [occupation, setOccupation] = useState("");
+
   const user = useSelector((state) => state.user.value);
 
   const handleSubmit = () => {
