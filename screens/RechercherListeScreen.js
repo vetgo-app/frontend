@@ -238,7 +238,7 @@ export default function RechercherListeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F4F4",
+    backgroundColor: "#FFFFFF",
   },
   header: {
     flexDirection: "row",

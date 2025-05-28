@@ -11,7 +11,8 @@ import { FontAwesome } from "@expo/vector-icons";
 
 export default function InfoProScreen({ navigation, route }) {
 
-  const { storeId, firstname, lastname, address, occupation, price, time } = route.params;
+  const { storeId, firstname, lastname, address, occupation, price, time, specialization } = route.params;
+  console.log(route.params)
 
   useEffect(() => {
     // use Effect permet d'afficher les elements a chaque re render
@@ -27,19 +28,18 @@ export default function InfoProScreen({ navigation, route }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Flèche retour */}
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backArrow}
-      >
-        <FontAwesome name="chevron-left" size={20} color="#0D2C56" />
-      </TouchableOpacity>
-
-      {/* Titre */}
-      <Text style={styles.title}>Fiche de profil</Text>
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome name="arrow-left" size={20} color="#1472AE" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Fiche de profil</Text>
+      </View>
 
       {/* Carte identité */}
       <View style={styles.card}>
-        <Image source={{ uri: "test" }} style={styles.profileImage} />
+        <Image style={styles.profileImage}
+          source={require("../assets/doctorPicture.jpg")}
+        />
         <View>
           <Text style={styles.name}>{firstname} {lastname}</Text>
           <Text style={styles.specialite}>{occupation}</Text>
@@ -47,30 +47,40 @@ export default function InfoProScreen({ navigation, route }) {
         </View>
       </View>
 
+
       {/* Photo enseigne */}
-      <Text style={styles.sectionTitle}>Photos de l’enseigne</Text>
+      <Text style={styles.sectionTitle}>Photos de l'enseigne</Text>
       {/* <Image
         source={{ uri: photoClinique }}
         style={styles.cliniqueImage}
         resizeMode="cover"
       /> */}
+      <Image
+        source={require("../assets/cliniqueveterinaire.jpg")}
+        style={styles.cliniqueImage}
+        resizeMode="cover"
+      />
 
       {/* Informations */}
       <Text style={styles.sectionTitle}>Informations</Text>
       <View style={styles.infoBox}>
-        {[
-          "Jours d’ouverture",
-          "Prix de la consultation",
-          "Spécialisation",
-          "Options",
-        ].map((item, index) => (
-          <TouchableOpacity key={index} style={styles.infoRow}>
-            <Text style={styles.infoText}>{item}</Text>
-            <FontAwesome name="chevron-down" size={16} color="#0D2C56" />
-          </TouchableOpacity>
-        ))}
+        <View>
+          <Text style={styles.titleBox}>Jours d'ouverture</Text>
+          <Text style={styles.time}>{time} h </Text>
+        </View>
+        <View>
+          <Text style={styles.titleBox}>Prix de la consultation</Text>
+          <Text style={styles.price}>{price} € </Text>
+
+        </View>
+        <View>
+          <Text style={styles.titleBox}>Spécialisation</Text>
+          <Text style={styles.specialization}>{specialization} </Text>
+        </View>
+
       </View>
       <TouchableOpacity
+        style={styles.nextButton}
         onPress={() => {
           navigation.navigate("TakeRdv", {
             firstname,
@@ -79,32 +89,47 @@ export default function InfoProScreen({ navigation, route }) {
             address,
             price,
             time,
+
+            // isSelectedUrgence,
+            // isSelectedVisio,
+            // isSelectedDom,
+            // appointmentDate,
+            // appointmentHour
           });
         }}
-        style={styles.nextButton}
+
       >
-        <Text>Suivant</Text>
+        <Text style={styles.textNextButton}>Suivant</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
   },
-  backArrow: {
-    alignSelf: "flex-start",
-    marginBottom: 10,
+
+  //Place du titre FIche de profil
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 10,
   },
+
+  //Fiche de profil
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#0D2C56",
-    textAlign: "center",
-    marginBottom: 20,
+    color: "#1472AE",
+    alignItems: "right",
+
   },
+
+  //Encart Professionnel
   card: {
     backgroundColor: "#0D2C56",
     flexDirection: "row",
@@ -113,12 +138,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 25,
   },
+
+  //Dimensions photo du professionnel
   profileImage: {
     width: 60,
     height: 60,
     borderRadius: 30,
     marginRight: 15,
   },
+
+  //Police de l'encart professionnel
   name: {
     color: "white",
     fontWeight: "bold",
@@ -133,38 +162,40 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 12,
   },
+
+  //Police et emplacement des titres Photos de l'enseigne + Informations
   sectionTitle: {
     fontWeight: "bold",
-    color: "#0D2C56",
-    fontSize: 16,
+    color: "#1472AE",
+    fontSize: 20,
     marginBottom: 10,
+
   },
+
+  //Photo enseigne
   cliniqueImage: {
     width: "100%",
     height: 160,
     borderRadius: 10,
     marginBottom: 25,
   },
+
+  //Encart des Informations
   infoBox: {
     backgroundColor: "#F2F9FF",
     borderRadius: 10,
     padding: 15,
     gap: 10,
   },
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  infoText: {
-    color: "#0D2C56",
+
+  //Police des titres dans Informations
+  titleBox: {
+    color: "#000000",
     fontWeight: "bold",
+    fontSize: 15,
   },
-  nextButton: {
-    borderWidth: 1,
-    width: "60%",
-    alignItems: "center",
-  },
+
+  //Bouton suivant
   nextButton: {
     backgroundColor: "#0D2C56",
     paddingVertical: 15,
@@ -173,13 +204,14 @@ const styles = StyleSheet.create({
     width: "60%",
     alignItems: "center",
     marginTop: 20,
+    marginHorizontal: 65,
   },
-  
 
-  searchText: {
+  //Texte bouton suivant
+  textNextButton: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 15,
   },
 
 });
