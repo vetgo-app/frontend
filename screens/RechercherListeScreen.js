@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   Image,
-  StatusBar,
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -36,13 +35,15 @@ export default function RechercherListeScreen({ navigation, route }) {
             const longitude = coords[0];
             const latitude = coords[1];
 
+            //on centre la carte sur cette adresse, avec un certain zoom delta
             setRegion({
               latitude,
               longitude,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             });
-
+ 
+            //professionnels qui se filtrent en fonction de l'adresse
             setVeterinaires([
               {
                 nom: "Isabelle Veto",
@@ -56,9 +57,11 @@ export default function RechercherListeScreen({ navigation, route }) {
           }
         });
     } else {
+      // Sinon affiche Paris par défaut:
       const latitude = 48.866667;
       const longitude = 2.333333;
 
+      //on centre la carte 
       setRegion({
         latitude,
         longitude,
@@ -66,6 +69,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         longitudeDelta: 0.01,
       });
 
+       //tous les professionnels s'affichent
       setVeterinaires([
         {
           nom: "Isabelle Veto",
@@ -120,8 +124,15 @@ export default function RechercherListeScreen({ navigation, route }) {
     });
   };
 
+
+  //permet de déselectionner un filtre actif en cliquant à nouveau dessus:
+  const handleFilterPress = (filter) => {
+    setActiveFilter((prev) => (prev === filter ? null : filter));
+  };
+
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store?.map((e, i) => {
+    console.log("test firstname", card);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
@@ -155,9 +166,15 @@ export default function RechercherListeScreen({ navigation, route }) {
             <Text>{time}</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity>
         <View style={styles.dispoLink}>
           <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
         </View>
+      </TouchableOpacity>
+
+      <View style={styles.dispo}>
+        <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
+      </View>
       </View>
     );
   });
@@ -166,31 +183,54 @@ export default function RechercherListeScreen({ navigation, route }) {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
         <ScrollView>
-          <View style={styles.styleContainer}>
-            {/* Filtres */}
-            <View style={styles.filtre}>
-              <Text style={styles.filtreText}>Au + tôt</Text>
-              <Text style={styles.filtreText}>À domicile</Text>
-              <Text style={styles.filtreText}>Visio</Text>
-            </View>
+          {/* Header avec bouton retour */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.navigate("RetourHomeScreen")}>
+              <FontAwesome name="arrow-left" size={24} color="#1472AE" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Trouver un professionnel</Text>
+          </View>
 
-            {/* Carte */}
-            {region && (
-              <MapView style={styles.map} region={region}>
-                {veterinaires.map((vet, index) => (
-                  <Marker
-                    key={index}
-                    coordinate={{ latitude: vet.lat, longitude: vet.lon }}
-                    title={vet.nom}
-                    description={vet.specialite}
-                  >
-                    <FontAwesome name="paw" size={30} color="#1472AE" />
-                  </Marker>
-                ))}
-              </MapView>
-            )}
+          {/* Carte */}
+          {region && (
+            <MapView style={styles.map} region={region}>
+              {veterinaires.map((vet, index) => (
+                <Marker
+                  key={index}
+                  coordinate={{ latitude: vet.lat, longitude: vet.lon }}
+                  title={vet.nom}
+                  description={vet.specialite}
+                >
+                  <FontAwesome name="paw" size={30} color="#1472AE" />
+                </Marker>
+              ))}
+            </MapView>
+          )}
 
-            {/* Affichage des cards */}
+          {/* Filtres */}
+          <View style={styles.filtre}>
+            <Text style={styles.filtreLabel}>Filtres :</Text>
+            {['Au + tôt', 'À domicile', 'Visio'].map((filter) => (
+              <TouchableOpacity
+                key={filter}
+                onPress={() => handleFilterPress(filter)}
+                style={[
+                  styles.filtreButton,
+                  activeFilter === filter && styles.filtreButtonActive
+                ]}
+              >
+                <Text style={[
+                  styles.filtreText,
+                  activeFilter === filter && styles.filtreTextActive
+                ]}>
+                  {filter}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Affichage des cartes professionnelles */}
+          <View style={{ alignItems: "center", paddingBottom: 40 }}>
             {card}
           </View>
         </ScrollView>
@@ -204,77 +244,94 @@ export default function RechercherListeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFFFFF",
   },
-  styleContainer: {
+  header: {
+    flexDirection: "row",
     alignItems: "center",
+    padding: 15,
+    gap: 20,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1472AE",
+    alignItems: "right",
+  },
+  map: {
+    width: "100%",
+    height: 260,
   },
   filtre: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
     width: "100%",
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 15,
+  },
+  filtreLabel: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 16,
+    marginRight: 10,
+    alignSelf: 'center',
+  },
+
+  filtreButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: "#C2E7F7",
+  },
+  filtreButtonActive: {
+    backgroundColor: "#0D2C56",
   },
   filtreText: {
-    color: "#1472AE",
+    color: "#0D2C56",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "regular",
   },
-  map: {
-    width: "90%",
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 20,
+  filtreTextActive: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
   },
   card: {
     borderWidth: 1,
     borderColor: "#1472AE",
-    width: "80%",
-    alignItems: "center",
+    width: "90%",
     borderRadius: 10,
     marginTop: 20,
+    overflow: "hidden",
+    backgroundColor: "#fff",
   },
   coordonnees: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: "#0D2C56",
-    width: "100%",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
     padding: 10,
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 250,
-  },
-  h2: {
-    fontSize: 20,
-    color: "white",
-  },
-
-  btnDate: {
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 5,
-    backgroundColor: "lightgrey",
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   coordonneesText: {
-    alignItems: "center",
     marginLeft: 10,
+  },
+  h2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
   },
   text: {
     color: "white",
+    fontSize: 14,
   },
   dispo: {
-    width: "100%",
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
     borderColor: "#1472AE",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
     padding: 10,
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   span: {
     fontWeight: "bold",
@@ -282,22 +339,25 @@ const styles = StyleSheet.create({
   date: {
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    borderBottomWidth: 1,
-    borderColor: "#1472AE",
     padding: 10,
     gap: 10,
-    flexWrap: "wrap",
+    backgroundColor: "#fff",
+  },
+  btnDate: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 8,
+    paddingHorizontal: 14,
+    backgroundColor: "lightgrey",
   },
   dispoLink: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
     padding: 10,
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   dispoLinkText: {
     color: "#1472AE",
+    textDecorationLine: "underline",
   },
 });
 

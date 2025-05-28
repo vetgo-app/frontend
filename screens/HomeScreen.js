@@ -75,7 +75,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Ambulance button */}
-      {/* <View style={styles.logoEmergency}>
+      <View style={styles.logoEmergency}>
         <TouchableOpacity onPress={() => navigation.navigate("Urgences")}>
           <FontAwesome
             name="ambulance"
@@ -84,7 +84,7 @@ export default function HomeScreen({ navigation }) {
             style={{ transform: [{ scaleX: -1 }] }}
           />
         </TouchableOpacity>
-      </View> */}
+      </View>
 
       {/* Logo */}
       <View style={styles.header}>

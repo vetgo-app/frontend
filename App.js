@@ -126,8 +126,13 @@ export default function App() {
           <Stack.Screen name="LienQuestion" component={QuestionScreen} />
           <Stack.Screen name="LienFaq" component={FaqScreen} />
           <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
+          <Stack.Screen name="LienFaqEmergency" component={FaqScreen} />
           <Stack.Screen name="TakeRdv" component={TakeRdvScreen} />
           <Stack.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
+          <Stack.Screen name="RetourHomeScreen" component={HomeScreen} />
+          <Stack.Screen name="Urgences" component={EmergencyScreen} />
+
+          <Stack.Screen name="HealthJournal" component={HealthJournal} />
 
         </Stack.Navigator>
       </NavigationContainer>

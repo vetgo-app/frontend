@@ -13,6 +13,7 @@ import React, { useState, useMemo } from "react";
 import RadioGroup from "react-native-radio-buttons-group";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
 
@@ -30,9 +31,26 @@ export default function TakeRdvScreen({ navigation, route }) {
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
+  const [pet, setPet] = useState();
+  console.log("test2", pet);
+  const myPet = pet?.map((e, i) => {
+    return (
+      <View key={i}>
+        <Text>{e.name}</Text>
+      </View>
+    );
+  });
+
   const user = useSelector((state) => state.user.value);
   const { firstname, lastname, occupation, price, address, time } =
     route.params;
+
+  useEffect(() => {
+    if (!user.token) return;
+    fetch(
+      process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + user.token
+    ).then((response) => response.json().then((data) => setPet(data.data)));
+  }, []);
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
@@ -182,6 +200,10 @@ export default function TakeRdvScreen({ navigation, route }) {
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
+        </View>
+
+        <View>
+          <Text>Animal : {myPet}</Text>
         </View>
 
         <View style={{ width: "70%", alignItems: "center" }}>
