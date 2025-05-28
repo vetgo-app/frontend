@@ -10,16 +10,15 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function InfoProScreen({ navigation, route }) {
+  const { storeId, firstname, lastname, address, occupation, price, time } =
+    route.params;
 
-  const { storeId, firstname, lastname, address, occupation, price, time, specialization } = route.params;
-  console.log(route.params)
-
-  useEffect(() => {
-    // use Effect permet d'afficher les elements a chaque re render
-    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
-      .then((response) => response.json())
-      .then((data) => { });
-  }, []);
+  // useEffect(() => {
+  //   // use Effect permet d'afficher les elements a chaque re render
+  //   fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/${storeId}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {});
+  // }, []);
 
   // const fullAddress = address.map((e) => {
   // return (<Text key={e} style={styles.adresse}>{e.street}, {e.zipCode} {e.city}</Text>);
@@ -41,9 +40,13 @@ export default function InfoProScreen({ navigation, route }) {
           source={require("../assets/doctorPicture.jpg")}
         />
         <View>
-          <Text style={styles.name}>{firstname} {lastname}</Text>
+          <Text style={styles.name}>
+            {firstname} {lastname}
+          </Text>
           <Text style={styles.specialite}>{occupation}</Text>
-          <Text style={styles.adresse}>{address.street}, {address.zipCode} {address.city}</Text>
+          <Text style={styles.adresse}>
+            {address.street}, {address.zipCode} {address.city}
+          </Text>
         </View>
       </View>
 
@@ -73,10 +76,10 @@ export default function InfoProScreen({ navigation, route }) {
           <Text style={styles.price}>{price} € </Text>
 
         </View>
-        <View>
+        {/* <View>
           <Text style={styles.titleBox}>Spécialisation</Text>
           <Text style={styles.specialization}>{specialization} </Text>
-        </View>
+        </View> */}
 
       </View>
       <TouchableOpacity

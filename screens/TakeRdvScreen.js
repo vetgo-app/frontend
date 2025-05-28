@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   CheckBox,
   Modal,
-
 } from "react-native";
 import React, { useState, useMemo } from "react";
 import RadioGroup from "react-native-radio-buttons-group";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
-import SignIn from "../screens/SignInScreen"
-import SignUp from "../screens/SignUpScreen"
+import { useEffect } from "react";
+import SignIn from "../screens/SignInScreen";
+import SignUp from "../screens/SignUpScreen";
 
 const data = [
   { value: "Soins préventifs", label: "Soins préventifs" },
@@ -25,21 +25,40 @@ const data = [
 
 export default function TakeRdvScreen({ navigation, route }) {
   const [selectedReason, setSelectedReason] = useState(null);
-  const [isSelectedReason, setIsSelectedReason] = useState(false)
-  const [isFirstRdv, setIsFirstRdv] = useState()
-  const [isMyAnimal, setIsMyAnimal] = useState()
+  const [isSelectedReason, setIsSelectedReason] = useState(false);
+  const [isFirstRdv, setIsFirstRdv] = useState();
+  const [isMyAnimal, setIsMyAnimal] = useState();
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
-  const user = useSelector((state) => state.user.value);
-  const { firstname, lastname, occupation, price, address, time } = route.params;
-  console.log({ firstname, lastname, occupation, price, address, time });
+  const [pet, setPet] = useState();
+  console.log("test2", pet);
+  const myPet = pet?.map((e, i) => {
+    return (
+      <View key={i}>
+        <Text>{e.name}</Text>
+      </View>
+    );
+  });
 
+  const user = useSelector((state) => state.user.value);
+  const { firstname, lastname, occupation, price, address, time } =
+    route.params;
+
+  useEffect(() => {
+    if (!user.token) return;
+    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/ownerById").then(
+      (response) => response.json().then((data) => setPet(data.data))
+    );
+  }, []);
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
     setIsSelectedReason(!isSelectedReason);
-    console.log("value", value);
+  };
+
+  const handlePressPet = (value) => {
+    setPet(value);
   };
 
   const RadioButtons = useMemo(
@@ -60,41 +79,103 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
   const handleBookRdvkClick = () => {
-    navigation.navigate('RdvConfirmation', { formData: { firstname, lastname, occupation, price, address, time } });
-  }
+    navigation.navigate("RdvConfirmation", {
+      firstname,
+      lastname,
+      occupation,
+      price,
+      address,
+      time,
+      selectedReason,
+      isFirstRdv,
+      isMyAnimal,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Modal visible={modalSignInVisible} animationType="none">
-        <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} formData={{
-          firstname, lastname, occupation, price, address, time, selectedReason, isFirstRdv, isMyAnimal
-        }} />
+        <SignIn
+          setModalSignInVisible={setModalSignInVisible}
+          modalSignInVisible={modalSignInVisible}
+          navigation={navigation}
+          formData={{
+            firstname,
+            lastname,
+            occupation,
+            price,
+            address,
+            time,
+            selectedReason,
+            isFirstRdv,
+            isMyAnimal,
+          }}
+        />
       </Modal>
       <Modal visible={modalSignUpVisible} animationType="none">
-        <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} formData={{ firstname, lastname, occupation, price, address, time, selectedReason, isFirstRdv, isMyAnimal }} />
+        <SignUp
+          setModalSignUpVisible={setModalSignUpVisible}
+          modalSignUpVisible={modalSignUpVisible}
+          navigation={navigation}
+          formData={{
+            firstname,
+            lastname,
+            occupation,
+            price,
+            address,
+            time,
+            selectedReason,
+            isFirstRdv,
+            isMyAnimal,
+          }}
+        />
       </Modal>
       <View style={styles.headerContainer}>
-        <FontAwesome name="arrow-left" size={15} color="#1472AE" style={{ color: '#1472AE', marginLeft: 30 }} />
+        <FontAwesome
+          name="arrow-left"
+          size={15}
+          color="#1472AE"
+          style={{ color: "#1472AE", marginLeft: 30 }}
+        />
         {/* //-------------------------------------------------TITRE DE LA PAGE */}
         <Text style={styles.pageTitle}>Votre rendez-vous</Text>
-        <Text style={{ fontSize: 20, frontWeight: 'bold', color: '#1472AE', marginRight: 30 }}>1/2</Text>
+        <Text
+          style={{
+            fontSize: 20,
+            frontWeight: "bold",
+            color: "#1472AE",
+            marginRight: 30,
+          }}
+        >
+          1/2
+        </Text>
       </View>
       {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
       <View style={styles.bodyContainer}>
         <View style={styles.proContainer}>
-          <Image source={require('../assets/doctorPicture.jpg')} style={styles.image} />
+          <Image
+            source={require("../assets/doctorPicture.jpg")}
+            style={styles.image}
+          />
           <View style={styles.proInfo}>
-            <Text style={styles.name}>{firstname} {lastname}</Text>
+            <Text style={styles.name}>
+              {firstname} {lastname}
+            </Text>
             <Text style={styles.occupation}>{occupation}</Text>
-            <Text style={styles.address}>{address.street} {address.zipCode} {address.city}</Text>
+            <Text style={styles.address}>
+              {address.street} {address.zipCode} {address.city}
+            </Text>
           </View>
         </View>
         <View style={styles.reasons}>
-          <Text style={{ fontWeight: 700, marginBottom: 20 }} >Selectionner un motif</Text>
-          <FlatList horizontal={true}
+          <Text style={{ fontWeight: 700, marginBottom: 20 }}>
+            Selectionner un motif
+          </Text>
+          <FlatList
+            horizontal={true}
             style={{
               borderWidth: 1,
-              borderColor: 'lightgray',
+              borderColor: "lightgray",
               padding: (5, 15),
               borderRadius: 15,
             }}
@@ -104,55 +185,111 @@ export default function TakeRdvScreen({ navigation, route }) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handlePressReason(item.value)}
-                style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center', width: 180, backgroundColor: (selectedReason === item.value) ? '#C2E7F7' : '#F0F0F0', borderRadius: 10 }}
+                style={{
+                  marginLeft: 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 180,
+                  backgroundColor:
+                    selectedReason === item.value ? "#C2E7F7" : "#F0F0F0",
+                  borderRadius: 10,
+                }}
               >
                 <Text>{item.label}</Text>
               </TouchableOpacity>
             )}
-            ItemSeparatorComponent={() => (
-              <View style={styles.separator} />
-            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
-        <View style={{ width: '70%', alignItems: 'center', }}>
-          <Text style={{ fontWeight: 700 }}>Est-ce votre premier rendez-vous ?</Text>
+
+        <View>
+          <Text>Animal : {myPet}</Text>
+        </View>
+
+        <View style={{ width: "70%", alignItems: "center" }}>
+          <Text style={{ fontWeight: 700 }}>
+            Est-ce votre premier rendez-vous ?
+          </Text>
           <View style={styles.checkboxContainer}>
             <RadioGroup
               radioButtons={RadioButtons}
               onPress={setIsFirstRdv}
               selectedId={isFirstRdv}
-              layout='row'
-              containerStyle={{ width: '70%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+              layout="row"
+              containerStyle={{
+                width: "70%",
+                justifyContent: "space-between",
+                borderRadius: 10,
+                borderColor: "lightgray",
+                padding: (5, 10),
+              }}
             />
           </View>
         </View>
-        <View style={{ width: '70%', alignItems: 'center', }}>
+        <View style={{ width: "70%", alignItems: "center" }}>
           <Text style={{ fontWeight: 700 }}>S'agit-il de votre animal ?</Text>
           <View style={styles.checkboxContainer}>
             <RadioGroup
               radioButtons={RadioButtons}
               onPress={setIsMyAnimal}
               selectedId={isMyAnimal}
-              layout='row'
-              containerStyle={{ width: '70%', justifyContent: 'space-between', borderRadius: 10, borderColor: 'lightgray', padding: (5, 10) }}
+              layout="row"
+              containerStyle={{
+                width: "70%",
+                justifyContent: "space-between",
+                borderRadius: 10,
+                borderColor: "lightgray",
+                padding: (5, 10),
+              }}
             />
           </View>
         </View>
 
-        {
-          user.token ?
-            (<TouchableOpacity onPress={() => handleBookRdvkClick()} style={styles.takeRdvButton} ><Text style={{ fontWeight: 700, color: 'white' }}>Prendre RDV</Text></TouchableOpacity>)
-            :
-            (<View style={{ height: 85, justifyContent: 'space-between', alignItems: 'center', }}>
-              <Text>Pour valider votre rendez-vous, veuillez vous connecter :</Text>
-              <View style={styles.SignInUpButtons}>
-                {!user.token && (<TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>)}
-                {!user.token && (<TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>)}
-              </View>
-            </View>)}
+        {user.token ? (
+          <TouchableOpacity
+            onPress={() => handleBookRdvkClick()}
+            style={styles.takeRdvButton}
+          >
+            <Text style={{ fontWeight: 700, color: "white" }}>Prendre RDV</Text>
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={{
+              height: 85,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text>
+              Pour valider votre rendez-vous, veuillez vous connecter :
+            </Text>
+            <View style={styles.SignInUpButtons}>
+              {!user.token && (
+                <TouchableOpacity
+                  onPress={() => setModalSignInVisible(true)}
+                  style={styles.buttonStyle}
+                >
+                  <Text style={{ fontWeight: 700, color: "#fff" }}>
+                    Se connecter
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {!user.token && (
+                <TouchableOpacity
+                  onPress={() => setModalSignUpVisible(true)}
+                  style={styles.buttonStyle}
+                >
+                  <Text style={{ fontWeight: 700, color: "#fff" }}>
+                    S'inscrire
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -191,7 +328,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#ffff",
     alignItems: "center",
-    justifyContent: 'space-around'
+    justifyContent: "space-around",
   },
 
   proContainer: {
@@ -230,8 +367,8 @@ const styles = StyleSheet.create({
   },
 
   address: {
-    flexDirection: 'row',
-    textAlign: 'center',
+    flexDirection: "row",
+    textAlign: "center",
     color: "#ffff",
     fontSize: 16,
     justifyContent: "center",
@@ -242,7 +379,7 @@ const styles = StyleSheet.create({
     height: 100,
     // marginTop: 20,
     width: "70%",
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   takeRdvButton: {
@@ -255,14 +392,12 @@ const styles = StyleSheet.create({
   },
 
   SignInUpButtons: {
-    width: '70%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-
+    width: "70%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   buttonStyle: {
-    borderWidth: 1,
     paddingHorizontal: 25,
     paddingVertical: 15,
     backgroundColor: "#0D2C56",

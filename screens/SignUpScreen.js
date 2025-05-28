@@ -15,7 +15,13 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { login } from "../reducers/user";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function SignUpScreen({ navigation, route, setModalSignUpVisible, modalSignUpVisible, formData }) {
+export default function SignUpScreen({
+  navigation,
+  route,
+  setModalSignUpVisible,
+  modalSignUpVisible,
+  formData,
+}) {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -27,6 +33,7 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
   const [profilPicture, setProfilPicture] = useState(null);
 
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
 
   useEffect(() => {
     (async () => {
@@ -64,17 +71,28 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
-          dispatch(login({ firstname, lastname, email, photo: profilPicture }));
-          console.log(data);
+        console.log("je suis dans SIGN UP SCREEN");
+        if (data.result) {
+          dispatch(
+            login({
+              firstname: data.user.firstname,
+              lastname: data.user.lastname,
+              email: data.user.email,
+              token: data.user.token,
+            })
+          );
           setFirstname("");
           setLastname("");
           setEmail("");
           setPassword("");
           setProfilPicture(null);
           if (modalSignUpVisible) {
-            setModalSignUpVisible(false)
-            navigation.navigate("RdvConfirmation", formData)
+            console.log("je suis entré");
+            if (route?.params?.origin === "TakeRdv") {
+              navigation.navigate("RdvConfirmation");
+            } else {
+              setModalSignUpVisible(false);
+            }
           }
         }
       });
@@ -130,17 +148,17 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
         style={styles.bodyContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View
-          style={styles.signUpInputs}
-        >
-          <View style={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "80%",
-            height: 50,
-            flexDirection: "row",
-            marginBottom: 30
-          }}>
+        <View style={styles.signUpInputs}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "80%",
+              height: 50,
+              flexDirection: "row",
+              marginBottom: 30,
+            }}
+          >
             <TouchableOpacity onPress={() => handlePressProfilPhoto()}>
               <Image
                 source={
@@ -186,23 +204,25 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
           />
           <TouchableOpacity
             style={styles.signUpButton}
-            onPress={() => handleSignUp()}>
+            onPress={() => handleSignUp()}
+          >
             <Text style={{ color: "#ffff", fontSize: 16 }}>S'inscrire</Text>
           </TouchableOpacity>
         </View>
-        {
-          modalSignUpVisible ? (
-            <>
-              <TouchableOpacity onPress={() => setModalSignUpVisible(false)}><Text style={{ fontWeight: 'bold' }}>Fermer</Text></TouchableOpacity>
-            </>
-          ) : (<TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+        {modalSignUpVisible ? (
+          <>
+            <TouchableOpacity onPress={() => setModalSignUpVisible(false)}>
+              <Text style={{ fontWeight: "bold" }}>Fermer</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
             <Text style={{ fontSize: 16, color: "#1472AE" }}>
               Vous avez déjà un compte ?
               <Text style={{ fontWeight: "bold" }}>Se connecter</Text>
             </Text>
-          </TouchableOpacity>)
-        }
-
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
