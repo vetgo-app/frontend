@@ -19,9 +19,10 @@ import SignIn from "../screens/SignInScreen"
 import SignUp from "../screens/SignUpScreen"
 
 export default function HomeScreen({ navigation }) {
-  const user = useSelector((state) => state.user.value);
+
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
+  const user = useSelector((state) => state.user.value);
 
   // Profession
   const [openProfession, setOpenProfession] = useState(false);
@@ -197,13 +198,14 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.searchText}>Rechercher</Text>
         </TouchableOpacity>
       </View>
-      {!user.token && (<View style={styles.signInUpContainer}>
-        <Text style={{ fontSize: 15, fontWeight: 700, color: '#1472AE', }}>Vous ne semblez pas connecté.e !</Text>
-        <View style={styles.SignInUpButtons}>
-          {!user.token && (<TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>)}
-          {!user.token && (<TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>)}
-        </View>
-      </View>)}
+      {!user.token && (
+        <View style={styles.signInUpContainer}>
+          <Text style={{ fontSize: 15, fontWeight: 700, color: '#1472AE', }}>Vous ne semblez pas connecté.e !</Text>
+          <View style={styles.SignInUpButtons}>
+            <TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>
+          </View>
+        </View>)}
       <Modal visible={modalSignInVisible} animationType="none">
         <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} />
       </Modal>
