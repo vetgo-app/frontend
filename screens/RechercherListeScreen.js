@@ -122,6 +122,7 @@ export default function RechercherListeScreen({ navigation, route }) {
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store?.map((e, i) => {
+    console.log("test firstname", card);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
