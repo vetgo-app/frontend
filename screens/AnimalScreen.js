@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "800",
     color: "#1472AE",
-    marginTop: 17
+    marginTop: 10
   },
   topHeaderIcon: {
     height: "40%",
