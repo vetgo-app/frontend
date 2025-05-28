@@ -1,13 +1,29 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput } from "react-native";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import SignIn from "../screens/SignInScreen";
+import SignUp from "../screens/SignUpScreen";
 
-export default function AnimalScreen() {
+export default function AnimalScreen({ navigation }) {
 
-  // const petId = "6835dc0d606dbedcf1aa35af";
-  const [petId, setPetId] = useState("");
-  const [animalData, setAnimalData] = useState([]);
+  // Initialize the useSelector
+  const user = useSelector((state) => state.user.value);
+
+  // Get the user's information
+  const userId = user?.token;
+  
+
+
+  // Display modal
+  const [modalSignInVisible, setModalSignInVisible] = useState(false);
+  const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
+
+  // Display animal card 
   const [newAnimalInput, setNewAnimalInput] = useState(false);
   const [animalTopIsVisible, setAnimalTopIsVisible] = useState(false);
+
+  // Fetch's information
+  const [animalData, setAnimalData] = useState([]);
 
   // Hooks used in the POST
   const [newName, setNewName] = useState("");
@@ -20,11 +36,15 @@ export default function AnimalScreen() {
   const [newType, setNewType] = useState("");
   const [newDocument, setNewDocument] = useState([]);
 
+  // Animal's ObjectId
+  const [petId, setPetId] = useState("");
+
 
   const addAnimal = () => {
     setNewAnimalInput(true);
   };
 
+  // Send the data to DB and display the added animal
   const handleSendData = () => {
     setNewAnimalInput(false);
     Alert.alert("Animal ajouté !");
@@ -33,7 +53,7 @@ export default function AnimalScreen() {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        "animalInfo": { newName, newAge, newBirth, newType, newRace, newSexe, newIdentification, newWeight, newDocument }
+        "animalInfo": { newName, newAge, newBirth, newType, newRace, newSexe, newIdentification, newWeight, newDocument, user: userId, }
       })
     })
       .then((res) => res.json())
@@ -45,7 +65,7 @@ export default function AnimalScreen() {
       });
   };
 
-  // Ce useEffect déclenche une requête GET dès que petId change
+  // Triggers a GET request when petId changes
   useEffect(() => {
     if (!petId) return;
 
@@ -61,15 +81,31 @@ export default function AnimalScreen() {
   return (
     <View style={styles.mainDiv}>
 
+      <Modal visible={modalSignInVisible} animationType="none">
+        <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} />
+      </Modal>
+      <Modal visible={modalSignUpVisible} animationType="none">
+        <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} />
+      </Modal>
+
+      {/* SignIn / SignUp Button */}
+      <View style={styles.SignInUpButtons}>
+        {!user.token && (<TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>)}
+        {!user.token && (<TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>)}
+      </View>
+
       {/* Header Part */}
-      {animalData?.name && (
-        <View style={styles.header}>
-          <View style={styles.topHeader} >
+      <View style={styles.header}>
+        {animalData?.name && (
+          <View style={styles.topHeader}>
             <View style={styles.topHeaderTitle}>
               <Text style={styles.title}>Mes animaux</Text>
             </View>
           </View>
-          <View style={[styles.bottomHeader, { display: animalTopIsVisible ? 'flex' : 'none' }]}>
+        )}
+
+        {animalTopIsVisible && animalData?.name && (
+          <View style={styles.bottomHeader}>
             <View style={styles.bottomHeaderProfile}>
               <View style={styles.bottomHeaderInformationContainer}>
                 <View style={styles.bottomHeaderPictureProfile}>
@@ -91,16 +127,11 @@ export default function AnimalScreen() {
               </View>
             </View>
           </View>
-        </View>
-      )}
+        )}
+      </View>
+
       {/* Body Part  */}
       <View style={styles.body}>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.btnAddAnimal} onPress={() => addAnimal()}>
-            <Text style={styles.btnAddAnimalTxt}>Ajouter un animal</Text>
-          </TouchableOpacity>
-        </View>
-
 
         {/* Add Animal Part */}
         <View style={[styles.containerNewAnimal, { display: newAnimalInput ? 'flex' : 'none' }]}>
@@ -121,11 +152,15 @@ export default function AnimalScreen() {
             <TextInput placeholder="Poids" placeholderTextColor="white" style={styles.weight} value={newWeight} onChangeText={setNewWeight} />
             <TextInput placeholder="Type" placeholderTextColor="white" style={styles.color} value={newType} onChangeText={setNewType} />
           </View>
-          <View style={styles.sendData}>
-            <TouchableOpacity style={styles.sendDataBtn} onPress={handleSendData}>
-              <Text style={styles.sendDataTxt}>Ajouter</Text>
-            </TouchableOpacity>
-          </View>
+
+          {!user.token && (
+            <View style={styles.btnContainer}>
+              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => addAnimal()}>
+                <Text style={styles.btnAddAnimalTxt}>Ajouter un animal</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
         </View>
       </View>
     </View>
@@ -244,7 +279,7 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     width: "45%",
-    marginTop: 300,
+    marginTop: 30,
   },
   btnAddAnimal: {
     padding: 12,
@@ -373,5 +408,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: "white"
   },
+  SignInUpButtons: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
 
+  },
+  buttonStyle: {
+    borderWidth: 1,
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    backgroundColor: "#0D2C56",
+    borderRadius: 10,
+    marginTop: 300
+  },
 })
