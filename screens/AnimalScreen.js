@@ -1,13 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
@@ -40,6 +31,8 @@ export default function AnimalScreen({ navigation }) {
   const [newIdentification, setNewIdentification] = useState("");
   const [newWeight, setNewWeight] = useState("");
   const [newType, setNewType] = useState("");
+
+  // Used to add an empty array to add documents
   const [newDocument, setNewDocument] = useState([]);
 
   // Animal's ObjectId
@@ -52,7 +45,7 @@ export default function AnimalScreen({ navigation }) {
   // Send the data to DB and display the added animal
   const handleSendData = () => {
     setNewAnimalInput(false);
-    Alert.alert("Animal ajouté !");
+    // Alert.alert("Animal ajouté !");
 
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/", {
       method: "post",
@@ -78,6 +71,7 @@ export default function AnimalScreen({ navigation }) {
           setPetId(data.data._id);
           setAnimalTopIsVisible(true);
         }
+        navigation.navigate("HealthJournal", { petId: data.data._id })
       });
   };
 
@@ -96,7 +90,14 @@ export default function AnimalScreen({ navigation }) {
     fetchData();
   }, [petId]);
 
+  // Navigation to the Journal when press to the Animal
+  const navigationToJournal = () => {
+    navigation.navigate("HealthJournal", { petId })
+  }
+
   return (
+
+    // Connection's modal
     <View style={styles.mainDiv}>
       <Modal visible={modalSignInVisible} animationType="none">
         <SignIn
@@ -144,55 +145,56 @@ export default function AnimalScreen({ navigation }) {
         )}
 
         {animalTopIsVisible && animalData?.name && (
-          <View style={styles.bottomHeader}>
-            <View style={styles.bottomHeaderProfile}>
-              <View style={styles.bottomHeaderInformationContainer}>
-                <View style={styles.bottomHeaderPictureProfile}>
-                  <Image
-                    source={require("../assets/dogImg.png")}
-                    style={styles.animalImg}
-                  />
-                </View>
-                <View style={styles.bottomHeaderInformation}>
-                  <View style={styles.bottomHeaderInformationName}>
-                    <Text style={styles.animalName}>{animalData?.name}</Text>
+          <TouchableOpacity style={styles.bottomHeaderBtn} onPress={() => navigationToJournal()} >
+            <View style={styles.bottomHeader}>
+              <View style={styles.bottomHeaderProfile}>
+                <View style={styles.bottomHeaderInformationContainer}>
+                  <View style={styles.bottomHeaderPictureProfile}>
+                    <Image
+                      source={require("../assets/dogImg.png")}
+                      style={styles.animalImg}
+                    />
                   </View>
-                  <View style={styles.bottomHeaderInformationGeneral}>
-                    <View style={styles.bottomHeaderInformationBirth}>
-                      <Text style={styles.animalBirth}>
-                        {animalData?.age} ans, né le {animalData?.dateOfBirth}
-                      </Text>
+                  <View style={styles.bottomHeaderInformation}>
+                    <View style={styles.bottomHeaderInformationName}>
+                      <Text style={styles.animalName}>{animalData?.name}</Text>
                     </View>
-                    <View style={styles.bottomHeaderInformationRace}>
-                      <Text style={styles.animalRace}>{animalData?.breed}</Text>
+                    <View style={styles.bottomHeaderInformationGeneral}>
+                      <View style={styles.bottomHeaderInformationBirth}>
+                        <Text style={styles.animalBirth}>
+                          {animalData?.age} ans, né le {animalData?.dateOfBirth}
+                        </Text>
+                      </View>
+                      <View style={styles.bottomHeaderInformationRace}>
+                        <Text style={styles.animalRace}>{animalData?.breed}</Text>
+                      </View>
                     </View>
                   </View>
                 </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       </View>
 
       {/* Body Part  */}
       <View style={styles.body}>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity
-            style={styles.btnAddAnimal}
-            onPress={() => addAnimal()}
-          >
-            <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
-          </TouchableOpacity>
-        </View>
+        {user.token && (
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={styles.btnAddAnimal}
+              onPress={() => addAnimal()}
+            >
+              <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Add Animal Part */}
-        <View
-          style={[
-            styles.containerNewAnimal,
-            { display: newAnimalInput ? "flex" : "none" },
-          ]}
-        >
-          <Text style={styles.titleNewAnimal}>🦁 Animal</Text>
+        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container} >
+          <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" > */}
+        <View style={[styles.containerNewAnimal, { display: newAnimalInput ? "flex" : "none" },]}>
+          <Text style={styles.titleNewAnimal}>Animal</Text>
           <View style={styles.nameAndAge}>
             <TextInput
               placeholder="Nom"
@@ -260,15 +262,14 @@ export default function AnimalScreen({ navigation }) {
 
           {user.token && (
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.btnAddAnimal}
-                onPress={() => handleSendData()}
-              >
+              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => handleSendData()} >
                 <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
+        {/* </ScrollView>
+        </KeyboardAvoidingView> */}
       </View>
     </View>
   );
@@ -301,6 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "800",
     color: "#1472AE",
+    marginTop: 17
   },
   topHeaderIcon: {
     height: "40%",
@@ -308,6 +310,9 @@ const styles = StyleSheet.create({
   },
   modifyingIcon: {
     color: "#1472AE",
+  },
+  bottomHeaderBtn: {
+    height: "80%"
   },
   bottomHeader: {
     marginTop: 25,
@@ -338,7 +343,7 @@ const styles = StyleSheet.create({
   },
   animalImg: {
     height: "90%",
-    width: "80%",
+    width: "66%",
     borderRadius: 50,
   },
   bottomHeaderInformation: {
@@ -385,8 +390,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnContainer: {
-    width: "45%",
+    width: "100%",
     marginTop: 30,
+    alignItems: "center",
   },
   btnAddAnimal: {
     padding: 12,

@@ -128,6 +128,7 @@ export default function App() {
           <Stack.Screen name="InfoProScreen" component={InfoProScreen} />
           <Stack.Screen name="TakeRdv" component={TakeRdvScreen} />
           <Stack.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
+          <Stack.Screen name="HealthJournal" component={HealthJournal} />
 
         </Stack.Navigator>
       </NavigationContainer>
