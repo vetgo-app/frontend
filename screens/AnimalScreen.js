@@ -10,8 +10,7 @@ export default function AnimalScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
 
   // Get the user's information
-  const userId = user?.token;
-  
+  const userId = user?._id;
 
 
   // Display modal
@@ -53,7 +52,7 @@ export default function AnimalScreen({ navigation }) {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        "animalInfo": { newName, newAge, newBirth, newType, newRace, newSexe, newIdentification, newWeight, newDocument, user: userId, }
+        "animalInfo": { newName, newAge, newBirth, newType, newRace, newSexe, newIdentification, newWeight, newDocument, owner: userId, }
       })
     })
       .then((res) => res.json())
@@ -132,6 +131,12 @@ export default function AnimalScreen({ navigation }) {
 
       {/* Body Part  */}
       <View style={styles.body}>
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.btnAddAnimal} onPress={() => addAnimal()}>
+            <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
+          </TouchableOpacity>
+        </View>
+
 
         {/* Add Animal Part */}
         <View style={[styles.containerNewAnimal, { display: newAnimalInput ? 'flex' : 'none' }]}>
@@ -150,13 +155,13 @@ export default function AnimalScreen({ navigation }) {
           </View>
           <View style={styles.weightAndColor}>
             <TextInput placeholder="Poids" placeholderTextColor="white" style={styles.weight} value={newWeight} onChangeText={setNewWeight} />
-            <TextInput placeholder="Type" placeholderTextColor="white" style={styles.color} value={newType} onChangeText={setNewType} />
+            <TextInput placeholder="Espèce" placeholderTextColor="white" style={styles.color} value={newType} onChangeText={setNewType} />
           </View>
-
-          {!user.token && (
+          
+          {user.token && (
             <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => addAnimal()}>
-                <Text style={styles.btnAddAnimalTxt}>Ajouter un animal</Text>
+              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => handleSendData()}>
+                <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
               </TouchableOpacity>
             </View>
           )}

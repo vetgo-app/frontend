@@ -19,9 +19,9 @@ import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
 
 export default function HomeScreen({ navigation }) {
-  const user = useSelector((state) => state.user.value);
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
+  const user = useSelector((state) => state.user.value);
 
   // Profession
   const [openProfession, setOpenProfession] = useState(false);

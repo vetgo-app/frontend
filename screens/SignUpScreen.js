@@ -65,9 +65,11 @@ export default function SignUpScreen({ navigation, route, setModalSignUpVisible,
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('ici', data);
+        console.log('je suis dans SIGN UP SCREEN');
         if (data.result) {
-          dispatch(login({ token: data.token, firstname, lastname, email, photo: profilPicture }));
+          dispatch(
+            login({ firstname: data.user.firstname, lastname: data.user.lastname, email: data.user.email, token: data.user.token })
+          )
           setFirstname("");
           setLastname("");
           setEmail("");
