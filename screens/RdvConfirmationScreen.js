@@ -16,8 +16,6 @@ export default function RdvConfirmationScreen({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
   const [confirmed, setConfirmed] = useState(false);
   const appointment = route.params;
-  console.log("Appointement =>", appointment);
-  console.log("user", user);
 
   const onClick = () => {
     setConfirmed(true);
@@ -27,14 +25,21 @@ export default function RdvConfirmationScreen({ navigation, route }) {
       body: JSON.stringify({
         user: user._id, // pour generer la relation de user avec store
         store: appointment.address._id,
-        pet: appointment.petId,
+        pet: appointment.selectedPet,
         date: appointment.time,
         price: appointment.price,
         reason: appointment.selectedReason,
         firstRdv: appointment.isFirstRdv,
         isMyAnimal: appointment.isMyAnimal,
       }),
-    }).then((res) => res.json());
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Réponse du serveur :", data);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l’envoi :", error);
+      });
   };
 
   return (
