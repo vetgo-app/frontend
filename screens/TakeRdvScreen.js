@@ -14,6 +14,7 @@ import RadioGroup from "react-native-radio-buttons-group";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import Checkbox from "expo-checkbox";
 import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
 
@@ -31,12 +32,18 @@ export default function TakeRdvScreen({ navigation, route }) {
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
-  const [pet, setPet] = useState();
-  console.log("test2", pet);
+  const [pet, setPet] = useState([]);
+  const [selectedPet, setSelectedPet] = useState(null);
+
   const myPet = pet?.map((e, i) => {
     return (
       <View key={i}>
-        <Text>{e.name}</Text>
+        <Checkbox
+          value={selectedPet === e._id}
+          onValueChange={() => setSelectedPet(e._id)} // on utilise une fonction pour passer en parametre l'id, sinon onValueChange envoie simplement truee ou false
+          style={styles.checkbox}
+        />
+        <Text style={styles.label}>{e.name}</Text>
       </View>
     );
   });
@@ -44,21 +51,20 @@ export default function TakeRdvScreen({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
   const { firstname, lastname, occupation, price, address, time } =
     route.params;
+  //console.log("test", user);
 
   useEffect(() => {
     if (!user.token) return;
     fetch(
-      process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + user.token
+      process.env.EXPO_PUBLIC_BACKEND_URL +
+        "/petDocuments/byOwner/" +
+        user.token
     ).then((response) => response.json().then((data) => setPet(data.data)));
   }, []);
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
     setIsSelectedReason(!isSelectedReason);
-  };
-
-  const handlePressPet = (value) => {
-    setPet(value);
   };
 
   const RadioButtons = useMemo(
@@ -82,6 +88,7 @@ export default function TakeRdvScreen({ navigation, route }) {
     navigation.navigate("RdvConfirmation", {
       firstname,
       lastname,
+      selectedPet,
       occupation,
       price,
       address,

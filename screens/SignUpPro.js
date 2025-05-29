@@ -54,7 +54,7 @@ export default function SignUpPro({ navigation }) {
   const takePicture = async () => {
     const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 }); // Javascript
     photo && uploadPicture(photo);
-    console.log(photo);
+    //console.log(photo);
     setModalVisible(false);
     setProfilPicture(photo.uri);
   };
@@ -81,7 +81,7 @@ export default function SignUpPro({ navigation }) {
           setEmail("");
           setPassword("");
           setProfilPicture(null);
-          navigation.navigate('ProfilePro')
+          navigation.navigate("ProfilePro");
         }
       });
   };
@@ -283,7 +283,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-
   },
 
   camera: {

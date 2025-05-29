@@ -20,23 +20,23 @@ export default function AgendaScreen({ navigation }) {
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
   const user = useSelector((state) => state.user.value)
 
-  const handleClic = (id) => {
-    console.log("test2");
-    fetch(
-      `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("test3");
-        setAppointment(data);
-        console.log("test");
-      });
-  };
+  // const handleClic = (id) => {
+  //   fetch(
+  //     `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setAppointment(data);
+  //     });
+  // };
 
   useEffect(() => {
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments")
+    fetch(
+      process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/myRdv/" + user.token
+    )
       .then((response) => response.json())
       .then((data) => {
+        //console.log(data);
         setAppointment(data.data);
       });
   }, []);
@@ -48,7 +48,6 @@ export default function AgendaScreen({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               handleClic(e._id);
-              console.log("clic");
             }}
           >
             <FontAwesome name={"close"} size={24} color="red" />

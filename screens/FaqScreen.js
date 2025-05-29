@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -17,10 +10,11 @@ export default function FaqScreen() {
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(escapeRegex(word), "i");
 
-  // Fetch the value of the backend
+  // Container of the data fetched
   const [originalFAQ, setOriginalFAQ] = useState([]);
   const [filteredFAQ, setFilteredFAQ] = useState([]);
 
+  // Fetch the value of the backend
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
@@ -34,7 +28,7 @@ export default function FaqScreen() {
     fetchData();
   }, []);
 
-  // Filter the questions
+  // Filter the search
   const handlePress = () => {
     const filteredDropdownContainer = originalFAQ.filter((element) =>
       regex.test(element.question)
