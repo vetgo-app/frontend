@@ -83,6 +83,30 @@ export default function AnimalScreen({ navigation }) {
     navigation.navigate("HealthJournal", { petId })
   }
 
+  // In the connection, if the user has a pet, it's showned
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchUserAnimals = async () => {
+      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + token);
+      const result = await response.json();
+
+      if (result?.result && result.data.length > 0) {
+        // Display the first animal
+        setAnimalData(result.data[0]);
+        setPetId(result.data[0]._id);
+        setAnimalTopIsVisible(true);
+      } else {
+        // If not pet, display the Add
+        setAnimalTopIsVisible(false);
+        setPetId("");
+      }
+
+    };
+
+    fetchUserAnimals();
+  }, [token]);
+
   return (
     // Connection's modal
     <View style={styles.mainDiv}>
