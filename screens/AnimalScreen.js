@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
@@ -45,7 +45,6 @@ export default function AnimalScreen({ navigation }) {
   // Send the data to DB and display the added animal
   const handleSendData = () => {
     setNewAnimalInput(false);
-    // Alert.alert("Animal ajouté !");
 
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/", {
       method: "post",
@@ -96,39 +95,24 @@ export default function AnimalScreen({ navigation }) {
   }
 
   return (
-
     // Connection's modal
     <View style={styles.mainDiv}>
       <Modal visible={modalSignInVisible} animationType="none">
-        <SignIn
-          setModalSignInVisible={setModalSignInVisible}
-          modalSignInVisible={modalSignInVisible}
-          navigation={navigation}
-        />
+        <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} />
       </Modal>
       <Modal visible={modalSignUpVisible} animationType="none">
-        <SignUp
-          setModalSignUpVisible={setModalSignUpVisible}
-          modalSignUpVisible={modalSignUpVisible}
-          navigation={navigation}
-        />
+        <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} />
       </Modal>
 
       {/* SignIn / SignUp Button */}
       <View style={styles.SignInUpButtons}>
         {!user.token && (
-          <TouchableOpacity
-            onPress={() => setModalSignInVisible(true)}
-            style={styles.buttonStyle}
-          >
+          <TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} >
             <Text style={{ fontWeight: 700, color: "#fff" }}>Se connecter</Text>
           </TouchableOpacity>
         )}
         {!user.token && (
-          <TouchableOpacity
-            onPress={() => setModalSignUpVisible(true)}
-            style={styles.buttonStyle}
-          >
+          <TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} >
             <Text style={{ fontWeight: 700, color: "#fff" }}>S'inscrire</Text>
           </TouchableOpacity>
         )}
@@ -150,10 +134,7 @@ export default function AnimalScreen({ navigation }) {
               <View style={styles.bottomHeaderProfile}>
                 <View style={styles.bottomHeaderInformationContainer}>
                   <View style={styles.bottomHeaderPictureProfile}>
-                    <Image
-                      source={require("../assets/dogImg.png")}
-                      style={styles.animalImg}
-                    />
+                    <Image source={require("../assets/dogImg.png")} style={styles.animalImg} />
                   </View>
                   <View style={styles.bottomHeaderInformation}>
                     <View style={styles.bottomHeaderInformationName}>
@@ -181,95 +162,46 @@ export default function AnimalScreen({ navigation }) {
       <View style={styles.body}>
         {user.token && (
           <View style={styles.btnContainer}>
-            <TouchableOpacity
-              style={styles.btnAddAnimal}
-              onPress={() => addAnimal()}
-            >
+            <TouchableOpacity style={styles.btnAddAnimal} onPress={() => addAnimal()} >
               <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
             </TouchableOpacity>
           </View>
         )}
 
         {/* Add Animal Part */}
-        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container} >
-          <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" > */}
-        <View style={[styles.containerNewAnimal, { display: newAnimalInput ? "flex" : "none" },]}>
-          <Text style={styles.titleNewAnimal}>Animal</Text>
-          <View style={styles.nameAndAge}>
-            <TextInput
-              placeholder="Nom"
-              placeholderTextColor="white"
-              style={styles.name}
-              value={newName}
-              onChangeText={setNewName}
-            />
-            <TextInput
-              placeholder="Age"
-              placeholderTextColor="white"
-              style={styles.age}
-              value={newAge}
-              onChangeText={setNewAge}
-            />
-          </View>
-          <View style={styles.birthAndRace}>
-            <TextInput
-              placeholder="Date de naissance"
-              placeholderTextColor="white"
-              style={styles.birth}
-              value={newBirth}
-              onChangeText={setNewBirth}
-            />
-            <TextInput
-              placeholder="Race"
-              placeholderTextColor="white"
-              style={styles.race}
-              value={newRace}
-              onChangeText={setNewRace}
-            />
-          </View>
-          <View style={styles.sexeAndIdentification}>
-            <TextInput
-              placeholder="Sexe"
-              placeholderTextColor="white"
-              style={styles.sexe}
-              value={newSexe}
-              onChangeText={setNewSexe}
-            />
-            <TextInput
-              placeholder="Identification"
-              placeholderTextColor="white"
-              style={styles.identification}
-              value={newIdentification}
-              onChangeText={setNewIdentification}
-            />
-          </View>
-          <View style={styles.weightAndColor}>
-            <TextInput
-              placeholder="Poids"
-              placeholderTextColor="white"
-              style={styles.weight}
-              value={newWeight}
-              onChangeText={setNewWeight}
-            />
-            <TextInput
-              placeholder="Espèce"
-              placeholderTextColor="white"
-              style={styles.color}
-              value={newType}
-              onChangeText={setNewType}
-            />
-          </View>
+        <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={80} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} enabled >
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 150, alignItems: "center" }} keyboardShouldPersistTaps="handled" >
+            <View style={[styles.containerNewAnimal, { display: newAnimalInput ? "flex" : "none" },]}>
+              <Text style={styles.titleNewAnimal}>Animal</Text>
+              <View style={styles.nameAndAge}>
+                <TextInput placeholder="Nom" placeholderTextColor="white" style={styles.name} value={newName} onChangeText={setNewName} />
+                <TextInput placeholder="Age" placeholderTextColor="white" style={styles.age} value={newAge} onChangeText={setNewAge} />
+              </View>
+              <View style={styles.birthAndRace}>
+                <TextInput placeholder="Date de naissance" placeholderTextColor="white" style={styles.birth} value={newBirth} onChangeText={setNewBirth} />
+                <TextInput placeholder="Race" placeholderTextColor="white" style={styles.race} value={newRace} onChangeText={setNewRace} />
+              </View>
+              <View style={styles.sexeAndIdentification}>
+                <TextInput placeholder="Sexe" placeholderTextColor="white" style={styles.sexe} value={newSexe} onChangeText={setNewSexe} />
+                <TextInput placeholder="Identification" placeholderTextColor="white" style={styles.identification} value={newIdentification} onChangeText={setNewIdentification} />
+              </View>
+              <View style={styles.weightAndColor}>
+                <TextInput placeholder="Poids" placeholderTextColor="white" style={styles.weight} value={newWeight} onChangeText={setNewWeight} />
+                <TextInput placeholder="Espèce" placeholderTextColor="white" style={styles.color} value={newType} onChangeText={setNewType} />
+              </View>
 
-          {user.token && (
-            <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.btnAddAnimal} onPress={() => handleSendData()} >
-                <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
-              </TouchableOpacity>
+              {/* Add animal to mongoDB */}
+              {user.token && (
+                <View style={styles.btnContainer}>
+                  <TouchableOpacity style={styles.btnAddAnimal} onPress={() => handleSendData()} >
+                    <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              
             </View>
-          )}
-        </View>
-        {/* </ScrollView>
-        </KeyboardAvoidingView> */}
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </View>
   );
@@ -278,7 +210,7 @@ export default function AnimalScreen({ navigation }) {
 const styles = StyleSheet.create({
   mainDiv: {
     flex: 1,
-    fontFamily: "Arial, Sans-Serif",
+    fontFamily: "Arial",
     backgroundColor: "white",
   },
   header: {
@@ -533,5 +465,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#0D2C56",
     borderRadius: 10,
     marginTop: 300,
+  },
+  container: {
+    alignItems: 'center',
   },
 });
