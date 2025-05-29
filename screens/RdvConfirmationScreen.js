@@ -26,7 +26,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
         user: user.token, // pour generer la relation de user avec store
         store: appointment.address._id,
         pet: appointment.selectedPet,
-        date: appointment.time,
+        date: appointment.selectedHour,
         price: appointment.price,
         reason: appointment.selectedReason,
         firstRdv: appointment.isFirstRdv,
@@ -90,7 +90,9 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 15 }}
               />
-              <Text style={styles.rdvInfoText}>{appointment?.time}</Text>
+              <Text style={styles.rdvInfoText}>
+                {appointment?.selectedHour}
+              </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
@@ -99,7 +101,10 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 15 }}
               />
-              <Text style={styles.rdvInfoText}>{appointment?.address?.street}, {appointment?.address?.zipCode} {appointment?.address?.city}</Text>
+              <Text style={styles.rdvInfoText}>
+                {appointment?.address?.street}, {appointment?.address?.zipCode}{" "}
+                {appointment?.address?.city}
+              </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
@@ -117,7 +122,9 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 15 }}
               />
-              <Text style={styles.rdvInfoText}>{appointment?.selectedReason}</Text>
+              <Text style={styles.rdvInfoText}>
+                {appointment?.selectedReason}
+              </Text>
             </View>
           </View>
         </View>
@@ -276,7 +283,7 @@ const styles = StyleSheet.create({
 
   rdvInfo: {
     justifyContent: "space-between",
-    width: '85%',
+    width: "85%",
 
     height: 240,
   },

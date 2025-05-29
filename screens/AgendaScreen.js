@@ -11,14 +11,14 @@ import {
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import SignIn from "../screens/SignInScreen"
-import SignUp from "../screens/SignUpScreen"
+import SignIn from "../screens/SignInScreen";
+import SignUp from "../screens/SignUpScreen";
 
 export default function AgendaScreen({ navigation }) {
   const [appointment, setAppointment] = useState([]);
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
-  const user = useSelector((state) => state.user.value)
+  const user = useSelector((state) => state.user.value);
 
   // const handleClic = (id) => {
   //   fetch(
@@ -36,11 +36,11 @@ export default function AgendaScreen({ navigation }) {
     )
       .then((response) => response.json())
       .then((data) => {
-        //console.log(data);
         setAppointment(data.data);
       });
   }, []);
   const appointmentList = appointment?.map((e) => {
+    console.log(appointment);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.first}>
@@ -53,7 +53,7 @@ export default function AgendaScreen({ navigation }) {
             <FontAwesome name={"close"} size={24} color="red" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.date}>{e.appointmentDate}</Text>
+        <Text style={styles.date}>{e.date}</Text>
         <Text style={styles.date}>{e.type}</Text>
         <Text style={styles.date}>{e.reason}</Text>
         <Text style={styles.date}>{e.userName}</Text>
@@ -63,7 +63,6 @@ export default function AgendaScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Mes rendez vous</Text>
       </View>
@@ -71,25 +70,55 @@ export default function AgendaScreen({ navigation }) {
         {!user.token ? (
           <View style={styles.signInUpContainer}>
             <View>
-              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 700, color: 'black', }}>Pour consulter vos rendez-vous, veuillez vous connecter</Text>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "black",
+                }}
+              >
+                Pour consulter vos rendez-vous, veuillez vous connecter
+              </Text>
             </View>
             <View style={styles.SignInUpButtons}>
-              <TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>
-              <TouchableOpacity onPress={() => setModalSignUpVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>S'inscrire</Text></TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalSignInVisible(true)}
+                style={styles.buttonStyle}
+              >
+                <Text style={{ fontWeight: 700, color: "#fff" }}>
+                  Se connecter
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalSignUpVisible(true)}
+                style={styles.buttonStyle}
+              >
+                <Text style={{ fontWeight: 700, color: "#fff" }}>
+                  S'inscrire
+                </Text>
+              </TouchableOpacity>
             </View>
             <Modal visible={modalSignInVisible} animationType="none">
-              <SignIn setModalSignInVisible={setModalSignInVisible} modalSignInVisible={modalSignInVisible} navigation={navigation} />
+              <SignIn
+                setModalSignInVisible={setModalSignInVisible}
+                modalSignInVisible={modalSignInVisible}
+                navigation={navigation}
+              />
             </Modal>
             <Modal visible={modalSignUpVisible} animationType="none">
-              <SignUp setModalSignUpVisible={setModalSignUpVisible} modalSignUpVisible={modalSignUpVisible} navigation={navigation} />
+              <SignUp
+                setModalSignUpVisible={setModalSignUpVisible}
+                modalSignUpVisible={modalSignUpVisible}
+                navigation={navigation}
+              />
             </Modal>
           </View>
-        ) : (<ScrollView style={{width: '80%',}}>
-          {appointmentList}
-        </ScrollView>)
-        }
+        ) : (
+          <ScrollView style={{ width: "80%" }}>{appointmentList}</ScrollView>
+        )}
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }
 
@@ -101,10 +130,10 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: '10%',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: "10%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   pageTitle: {
@@ -114,10 +143,10 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    height: '90%',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    height: "90%",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
 
   card: {
@@ -137,21 +166,21 @@ const styles = StyleSheet.create({
   },
 
   signInUpContainer: {
-    width: '70%',
-    height: '20%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    width: "70%",
+    height: "20%",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   SignInUpButtons: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   buttonStyle: {
     width: 130,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 15,
     backgroundColor: "#0D2C56",
     borderRadius: 10,

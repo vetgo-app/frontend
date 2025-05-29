@@ -25,11 +25,7 @@ export default function RechercherListeScreen({ navigation, route }) {
   // récupération des vétérinaires fictifs autour d'une address
   useEffect(() => {
     if (address) {
-      fetch(
-        `https://api-address.data.gouv.fr/search/?q=${encodeURIComponent(
-          address
-        )}&limit=5`
-      )
+      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {

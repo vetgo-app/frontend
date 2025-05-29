@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }) {
   const [openAnimal, setOpenAnimal] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [animalItems, setAnimalItems] = useState([
-    { label: "Non spécifié", value: null},
+    { label: "Non spécifié", value: null },
     { label: "Chien 🐶", value: "chien" },
     { label: "Chat 🐈", value: "chat" },
     { label: "Lapin 🐰", value: "lapin" },
@@ -52,24 +52,31 @@ export default function HomeScreen({ navigation }) {
   const [selectedLieu, setSelectedLieu] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
+  useEffect(() => {
+    (async () => {
+      if (selectedLieu.length > 3) {
+        try {
+          const response = await fetch(
+            `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+              selectedLieu
+            )}&limit=5`
+          );
+          const data = await response.json();
+          const results = data.features?.map((item) => item.properties.label) || [];
+
+          setSuggestions(results);
+        } catch (error) {
+          console.error("Erreur API adresse :", error);
+        }
+      } else {
+        setSuggestions([]);
+      }
+    })()
+
+  }, [selectedLieu])
+
   const handleLieuChange = async (text) => {
     setSelectedLieu(text);
-    if (text.length > 2) {
-      try {
-        const response = await fetch(
-          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
-            text
-          )}&limit=5`
-        );
-        const data = await response.json();
-        const results = data.features.map((item) => item.properties.label);
-        setSuggestions(results);
-      } catch (error) {
-        console.error("Erreur API adresse :", error);
-      }
-    } else {
-      setSuggestions([]);
-    }
   };
 
   return (

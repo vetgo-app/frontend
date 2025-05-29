@@ -39,11 +39,12 @@ export default function TakeRdvScreen({ navigation, route }) {
   const [selectedPet, setSelectedPet] = useState(null);
   const [isSelectedAnimal, setIsSelectedAnimal] = useState(false)
   const user = useSelector((state) => state.user.value);
-  const { firstname, lastname, occupation, price, address, time } =
+  const { firstname, lastname, occupation, price, address, selectedHour } =
     route.params;
-  console.log("test", myPet);
 
 
+
+  console.log(selectedHour);
 
   const myPet = pet?.map((e, i) => {
     return (
@@ -57,6 +58,7 @@ export default function TakeRdvScreen({ navigation, route }) {
       </View>
     );
   });
+
 
 
   useEffect(() => {
@@ -110,7 +112,7 @@ export default function TakeRdvScreen({ navigation, route }) {
       occupation,
       price,
       address,
-      time,
+      selectedHour,
       selectedReason,
       isFirstRdv,
       isMyAnimal,
@@ -130,7 +132,7 @@ export default function TakeRdvScreen({ navigation, route }) {
             occupation,
             price,
             address,
-            time,
+            selectedHour,
             selectedReason,
             isFirstRdv,
             isMyAnimal,
@@ -148,7 +150,7 @@ export default function TakeRdvScreen({ navigation, route }) {
             occupation,
             price,
             address,
-            time,
+            selectedHour,
             selectedReason,
             isFirstRdv,
             isMyAnimal,
@@ -184,10 +186,15 @@ export default function TakeRdvScreen({ navigation, route }) {
           />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {firstname} {lastname}
+              {firstname}
+              {lastname}
             </Text>
-            <Text style={styles.text}>{occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}</Text>
-            <Text style={styles.text}>{address.street}, {address.zipCode} {address.city}</Text>
+            <Text style={styles.text}>
+              {occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}
+            </Text>
+            <Text style={styles.text}>
+              {address.street}, {address.zipCode} {address.city}
+            </Text>
           </View>
         </View>
         <View style={styles.reasons}>
@@ -392,8 +399,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0D2C56",
     padding: 10,
-    width: '90%',
-    justifyContent: 'space-around',
+    width: "90%",
+    justifyContent: "space-around",
     borderRadius: 10,
   },
 
@@ -404,7 +411,7 @@ const styles = StyleSheet.create({
   },
 
   coordonneesText: {
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     height: 80,
     width: 200,
   },

@@ -6,13 +6,20 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function InfoProScreen({ navigation, route }) {
-  const { storeId, firstname, lastname, address, occupation, price, time } =
-    route.params;
+  const {
+    storeId,
+    firstname,
+    lastname,
+    address,
+    occupation,
+    price,
+    selectedHour,
+  } = route.params;
 
   // useEffect(() => {
   //   // use Effect permet d'afficher les elements a chaque re render
@@ -37,92 +44,94 @@ export default function InfoProScreen({ navigation, route }) {
 
       {/* Carte identité */}
       <View style={styles.body}>
-          <View style={styles.coordonnees}>
-            <Image
-              style={styles.image}
-              source={require("../assets/doctorPicture.jpg")}
-            />
-            <View style={styles.coordonneesText}>
-              <Text style={styles.h2}>
-                {firstname}
-                {lastname}
-              </Text>
-              <Text style={styles.text}>{occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}</Text>
-              <Text style={styles.text}>{address.street}, {address.zipCode} {address.city}</Text>
-            </View>
+        <View style={styles.coordonnees}>
+          <Image
+            style={styles.image}
+            source={require("../assets/doctorPicture.jpg")}
+          />
+          <View style={styles.coordonneesText}>
+            <Text style={styles.h2}>
+              {firstname}
+              {lastname}
+            </Text>
+            <Text style={styles.text}>
+              {occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}
+            </Text>
+            <Text style={styles.text}>
+              {address.street}, {address.zipCode} {address.city}
+            </Text>
           </View>
+        </View>
 
-          {/* Photo enseigne */}
-          <View>
-            <Text style={styles.sectionTitle}>Photo de l'enseigne</Text>
-            {/* <Image
+        {/* Photo enseigne */}
+        <View>
+          <Text style={styles.sectionTitle}>Photo de l'enseigne</Text>
+          {/* <Image
         source={{ uri: photoClinique }}
         style={styles.cliniqueImage}
         resizeMode="cover"
       /> */}
-            <Image
-              source={require("../assets/cliniqueveterinaire.jpg")}
-              style={styles.cliniqueImage}
-              resizeMode="cover"
-            />
-          </View>
-          {/* Informations */}
-          <View style={{width: '80%'}}>
-            <Text style={styles.sectionTitle}>Informations</Text>
-            <View style={styles.infoBox}>
-              <View>
-                <Text style={styles.titleBox}>Jours d'ouverture</Text>
-                <Text style={styles.time}>{time} h </Text>
-              </View>
-              <View>
-                <Text style={styles.titleBox}>Prix de la consultation</Text>
-                <Text style={styles.price}>{price} € </Text>
-
-              </View>
+          <Image
+            source={require("../assets/cliniqueveterinaire.jpg")}
+            style={styles.cliniqueImage}
+            resizeMode="cover"
+          />
+        </View>
+        {/* Informations */}
+        <View style={{ width: "80%" }}>
+          <Text style={styles.sectionTitle}>Informations</Text>
+          <View style={styles.infoBox}>
+            <View>
+              <Text style={styles.titleBox}>Jours d'ouverture</Text>
+              <Text style={styles.time}>{selectedHour}</Text>
+            </View>
+            <View>
+              <Text style={styles.titleBox}>Prix de la consultation</Text>
+              <Text style={styles.price}>{price} € </Text>
             </View>
           </View>
-
-          <TouchableOpacity
-            style={styles.nextButton}
-            onPress={() => {
-              navigation.navigate("TakeRdv", {
-                firstname,
-                lastname,
-                occupation,
-                address,
-                price,
-                time,
-
-                // isSelectedUrgence,
-                // isSelectedVisio,
-                // isSelectedDom,
-                // appointmentDate,
-                // appointmentHour
-              });
-            }}
-          >
-            <Text style={styles.textNextButton}>Suivant</Text>
-          </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          style={styles.nextButton}
+          onPress={() => {
+            navigation.navigate("TakeRdv", {
+              firstname,
+              lastname,
+              occupation,
+              address,
+              price,
+              selectedHour,
+
+              // isSelectedUrgence,
+              // isSelectedVisio,
+              // isSelectedDom,
+              // appointmentDate,
+              // appointmentHour
+            });
+          }}
+        >
+          <Text style={styles.textNextButton}>Suivant</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffff",
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   //Place du titre FIche de profil
   headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: '7%',
+    flexDirection: "row",
+    alignItems: "center",
+    height: "7%",
     gap: 10,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff",
   },
 
   //Fiche de profil
@@ -136,9 +145,9 @@ const styles = StyleSheet.create({
   body: {
     height: "93%",
     width: "100%",
-  
+
     justifyContent: "space-evenly",
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   // proCard:{
@@ -186,8 +195,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0D2C56",
     padding: 10,
-    width: '90%',
-    justifyContent: 'space-around',
+    width: "90%",
+    justifyContent: "space-around",
     borderRadius: 10,
   },
 
@@ -198,10 +207,9 @@ const styles = StyleSheet.create({
   },
 
   coordonneesText: {
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     height: 80,
     width: 200,
-
   },
 
   h2: {
@@ -264,5 +272,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
   },
-
 });

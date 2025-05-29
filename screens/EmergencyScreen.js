@@ -103,7 +103,7 @@ export default function EmergencyScreen() {
           items={animalItems}
           setOpen={() => {
             setOpenAnimal(!openAnimal);
-            setOpenLieu(false);
+            // setOpenLieu(false);
           }}
           setValue={setSelectedAnimal}
           setItems={setAnimalItems}
@@ -156,7 +156,11 @@ export default function EmergencyScreen() {
       <TouchableOpacity
         style={styles.searchButton}
         onPress={() =>
-          navigation.navigate("RechercherUrgence", { adresse: selectedLieu })
+          navigation.navigate("RechercherUrgence", { 
+            adresse: selectedLieu,
+            animal: selectedAnimal,
+            urgence: true,
+           })
         }
       >
         <Text style={styles.searchText}>Rechercher</Text>
