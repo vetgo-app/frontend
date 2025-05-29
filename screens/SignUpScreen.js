@@ -71,7 +71,7 @@ export default function SignUpScreen({
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("je suis dans SIGN UP SCREEN");
+        //console.log("je suis dans SIGN UP SCREEN");
         if (data.result) {
           dispatch(
             login({
@@ -87,7 +87,7 @@ export default function SignUpScreen({
           setPassword("");
           setProfilPicture(null);
           if (modalSignUpVisible) {
-            console.log("je suis entré");
+            //console.log("je suis entré");
             if (route?.params?.origin === "TakeRdv") {
               navigation.navigate("RdvConfirmation");
             } else {
@@ -101,7 +101,7 @@ export default function SignUpScreen({
   const takePicture = async () => {
     const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 }); // Javascript
     photo && uploadPicture(photo);
-    console.log(photo);
+    //console.log(photo);
     setModalVisible(false);
     setProfilPicture(photo.uri);
   };
@@ -142,7 +142,10 @@ export default function SignUpScreen({
       </Modal>
 
       <View style={styles.headerContainer}>
-        <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
+        <Image
+          source={require("../assets/vetgologo.png")}
+          style={styles.logoImage}
+        />
         <Text style={styles.pageTitle}>S'inscrire</Text>
       </View>
       <View
@@ -213,14 +216,16 @@ export default function SignUpScreen({
         {modalSignUpVisible ? (
           <>
             <TouchableOpacity onPress={() => setModalSignUpVisible(false)}>
-              <Text style={{ fontWeight: "bold",padding:25 }}>Fermer</Text>
+              <Text style={{ fontWeight: "bold", padding: 25 }}>Fermer</Text>
             </TouchableOpacity>
           </>
         ) : (
           <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
             <Text style={{ fontSize: 16, color: "#1472AE" }}>
               Vous avez déjà un compte ?
-              <Text style={{ fontWeight: "bold", borderWidth:1 }}>Se connecter</Text>
+              <Text style={{ fontWeight: "bold", borderWidth: 1 }}>
+                Se connecter
+              </Text>
             </Text>
           </TouchableOpacity>
         )}
