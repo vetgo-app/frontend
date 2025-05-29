@@ -24,7 +24,7 @@ export default function SignInScreen({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log(navigation, route, modalSignInVisible, setModalSignInVisible);
+  //console.log(navigation, route, modalSignInVisible, setModalSignInVisible);
 
   const handleSignIn = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signin", {
@@ -50,7 +50,7 @@ export default function SignInScreen({
           setEmail("");
           setPassword("");
           if (modalSignInVisible) {
-            console.log("je suis entré");
+            //console.log("je suis entré");
             if (route?.params?.origin === "TakeRdv") {
               navigation.navigate("RdvConfirmation");
             } else {

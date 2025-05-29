@@ -42,7 +42,7 @@ export default function RechercherListeScreen({ navigation, route }) {
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             });
- 
+
             //professionnels qui se filtrent en fonction de l'adresse
             setVeterinaires([
               {
@@ -61,7 +61,7 @@ export default function RechercherListeScreen({ navigation, route }) {
       const latitude = 48.866667;
       const longitude = 2.333333;
 
-      //on centre la carte 
+      //on centre la carte
       setRegion({
         latitude,
         longitude,
@@ -69,7 +69,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         longitudeDelta: 0.01,
       });
 
-       //tous les professionnels s'affichent
+      //tous les professionnels s'affichent
       setVeterinaires([
         {
           nom: "Isabelle Veto",
@@ -108,7 +108,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           );
         }
         setStore(filteredStores);
-        console.log('store est ici :', store)
+        //console.log('store est ici :', store)
       });
   }, [profession, address, animal]);
 
@@ -124,7 +124,6 @@ export default function RechercherListeScreen({ navigation, route }) {
     });
   };
 
-
   //permet de déselectionner un filtre actif en cliquant à nouveau dessus:
   const handleFilterPress = (filter) => {
     setActiveFilter((prev) => (prev === filter ? null : filter));
@@ -132,7 +131,7 @@ export default function RechercherListeScreen({ navigation, route }) {
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store?.map((e, i) => {
-    console.log("test firstname", card);
+    //console.log("test firstname", card);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
@@ -167,14 +166,17 @@ export default function RechercherListeScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
-        <View style={styles.dispoLink}>
-          <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-        </View>
-      </TouchableOpacity>
+          <View style={styles.dispoLink}>
+            <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
+          </View>
+        </TouchableOpacity>
 
-      <View style={styles.dispo}>
-        <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
-      </View>
+        <View style={styles.dispo}>
+          <Text>
+            Prochaine disponibilité :{" "}
+            <Text style={styles.span}>mercredi 7 mai</Text>
+          </Text>
+        </View>
       </View>
     );
   });
@@ -185,7 +187,9 @@ export default function RechercherListeScreen({ navigation, route }) {
         <ScrollView>
           {/* Header avec bouton retour */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.navigate("RetourHomeScreen")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("RetourHomeScreen")}
+            >
               <FontAwesome name="arrow-left" size={24} color="#1472AE" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Trouver un professionnel</Text>
@@ -210,19 +214,21 @@ export default function RechercherListeScreen({ navigation, route }) {
           {/* Filtres */}
           <View style={styles.filtre}>
             <Text style={styles.filtreLabel}>Filtres :</Text>
-            {['Au + tôt', 'À domicile', 'Visio'].map((filter) => (
+            {["Au + tôt", "À domicile", "Visio"].map((filter) => (
               <TouchableOpacity
                 key={filter}
                 onPress={() => handleFilterPress(filter)}
                 style={[
                   styles.filtreButton,
-                  activeFilter === filter && styles.filtreButtonActive
+                  activeFilter === filter && styles.filtreButtonActive,
                 ]}
               >
-                <Text style={[
-                  styles.filtreText,
-                  activeFilter === filter && styles.filtreTextActive
-                ]}>
+                <Text
+                  style={[
+                    styles.filtreText,
+                    activeFilter === filter && styles.filtreTextActive,
+                  ]}
+                >
                   {filter}
                 </Text>
               </TouchableOpacity>
@@ -239,7 +245,7 @@ export default function RechercherListeScreen({ navigation, route }) {
   );
 }
 
-// console.log(card?.length);
+// //console.log(card?.length);
 
 const styles = StyleSheet.create({
   container: {
@@ -269,11 +275,11 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   filtreLabel: {
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
     fontSize: 16,
     marginRight: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 
   filtreButton: {

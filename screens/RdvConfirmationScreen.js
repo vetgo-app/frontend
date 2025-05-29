@@ -23,7 +23,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({
-        user: user._id, // pour generer la relation de user avec store
+        user: user.token, // pour generer la relation de user avec store
         store: appointment.address._id,
         pet: appointment.selectedPet,
         date: appointment.time,
@@ -35,7 +35,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Réponse du serveur :", data);
+        //console.log("Réponse du serveur :", data);
       })
       .catch((error) => {
         console.error("Erreur lors de l’envoi :", error);

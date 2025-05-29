@@ -9,27 +9,30 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 export default function AgendaScreen() {
+  const user = useSelector((state) => state.user.value);
   const [appointment, setAppointment] = useState([]);
+  //console.log(appointment);
 
-  const handleClic = (id) => {
-    console.log("test2");
-    fetch(
-      `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("test3");
-        setAppointment(data);
-        console.log("test");
-      });
-  };
+  // const handleClic = (id) => {
+  //   fetch(
+  //     `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setAppointment(data);
+  //     });
+  // };
 
   useEffect(() => {
-    fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments")
+    fetch(
+      process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/myRdv/" + user.token
+    )
       .then((response) => response.json())
       .then((data) => {
+        //console.log(data);
         setAppointment(data.data);
       });
   }, []);
@@ -41,7 +44,6 @@ export default function AgendaScreen() {
           <TouchableOpacity
             onPress={() => {
               handleClic(e._id);
-              console.log("clic");
             }}
           >
             <FontAwesome name={"close"} size={24} color="red" />
