@@ -51,6 +51,7 @@ export default function TakeRdvScreen({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
   const { firstname, lastname, occupation, price, address, time } =
     route.params;
+  console.log("test", user);
 
   useEffect(() => {
     if (!user.token) return;
