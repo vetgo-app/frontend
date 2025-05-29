@@ -134,8 +134,8 @@ export default function TakeRdvScreen({ navigation, route }) {
         <FontAwesome
           name="arrow-left"
           size={15}
-          color="#1472AE"
           style={{ color: "#1472AE", marginLeft: 30 }}
+          onPress={() => navigation.goBack()}
         />
         {/* //-------------------------------------------------TITRE DE LA PAGE */}
         <Text style={styles.pageTitle}>Votre rendez-vous</Text>
@@ -152,21 +152,20 @@ export default function TakeRdvScreen({ navigation, route }) {
       </View>
       {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
       <View style={styles.bodyContainer}>
-        <View style={styles.proContainer}>
-          <Image
-            source={require("../assets/doctorPicture.jpg")}
-            style={styles.image}
-          />
-          <View style={styles.proInfo}>
-            <Text style={styles.name}>
-              {firstname} {lastname}
-            </Text>
-            <Text style={styles.occupation}>{occupation}</Text>
-            <Text style={styles.address}>
-              {address.street} {address.zipCode} {address.city}
-            </Text>
+<View style={styles.coordonnees}>
+            <Image
+              style={styles.image}
+              source={require("../assets/doctorPicture.jpg")}
+            />
+            <View style={styles.coordonneesText}>
+              <Text style={styles.h2}>
+                {firstname}
+                {lastname}
+              </Text>
+              <Text style={styles.text}>{occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}</Text>
+              <Text style={styles.text}>{address.street}, {address.zipCode} {address.city}</Text>
+            </View>
           </View>
-        </View>
         <View style={styles.reasons}>
           <Text style={{ fontWeight: 700, marginBottom: 20 }}>
             Selectionner un motif
@@ -260,8 +259,8 @@ export default function TakeRdvScreen({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <Text>
-              Pour valider votre rendez-vous, veuillez vous connecter :
+            <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
+              Vous ne semblez pas connecté.e !
             </Text>
             <View style={styles.SignInUpButtons}>
               {!user.token && (
@@ -331,34 +330,43 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 
-  proContainer: {
-    padding: 5,
-    width: "80%",
-    height: 125,
-    backgroundColor: "#0D2C56",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "space-evenly",
+  coordonnees: {
     flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0D2C56",
+    padding: 10,
+    width: '90%',
+    justifyContent: 'space-around',
+    borderRadius: 10,
   },
 
   image: {
-    width: "30%",
-    height: "80%",
-    borderRadius: 50,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
 
-  proInfo: {
-    width: "60%",
-    height: "90%",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderRadius: 10,
+  coordonneesText: {
+    justifyContent: 'space-around',
+    height: 80,
+    width: 200,
+  },
+
+  h2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+  },
+
+  text: {
+    color: "white",
+    fontSize: 14,
   },
 
   name: {
     color: "#ffff",
     fontSize: 20,
+    fontWeight: 700,
   },
 
   occupation: {

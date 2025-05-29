@@ -56,14 +56,6 @@ function MainTabs() {
             iconName = "paw";
           } else if (route.name === "Faq") {
             iconName = "info-circle";
-          } else if (route.name === "SignUp") {
-            iconName = "user";
-          } else if (route.name === "SignIn") {
-            iconName = "user";
-          } else if (route.name === "TakeRdv") {
-            iconName = "plus-circle";
-          } else if (route.name === "RdvConfirmation") {
-            iconName = "check-circle";
           } else if (route.name === "Animal") {
             iconName = "paw";
           } else if (route.name === "HealthCard") {

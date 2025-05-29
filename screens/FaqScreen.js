@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     fontFamily: "Arial, Sans-Serif",
   },
   header: {
-    height: "75%",
+    height: "80%",
     width: "90%",
   },
   headerTitle: {
@@ -116,8 +116,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   questionsContainer: {
-    height: "70%",
+    height: "80%",
   },
+  
   scroll: {},
   cardContainerTxt: {
     fontSize: 16,
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
 
   // BODY PART
   body: {
-    height: "25%",
+    height: "20%",
     width: "90%",
     alignItems: "center",
   },

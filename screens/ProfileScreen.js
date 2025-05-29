@@ -41,7 +41,7 @@ export default function ProfilScreen({ navigation }) {
           (
             <View style={styles.signInUpContainer}>
               <View>
-                <Text style={{ fontSize: 15, fontWeight: 700, color: '#1472AE', }}>Veuillez vous connecter :</Text>
+                <Text style={{ fontSize: 20, fontWeight: 700, color: 'black', }}>Connectez-vous !</Text>
               </View>
               <View style={styles.SignInUpButtons}>
                 <TouchableOpacity onPress={() => setModalSignInVisible(true)} style={styles.buttonStyle} ><Text style={{ fontWeight: 700, color: '#fff' }}>Se connecter</Text></TouchableOpacity>

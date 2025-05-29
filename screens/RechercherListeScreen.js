@@ -42,7 +42,7 @@ export default function RechercherListeScreen({ navigation, route }) {
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             });
- 
+
             //professionnels qui se filtrent en fonction de l'adresse
             setVeterinaires([
               {
@@ -69,7 +69,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         longitudeDelta: 0.01,
       });
 
-       //tous les professionnels s'affichent
+      //tous les professionnels s'affichent
       setVeterinaires([
         {
           nom: "Isabelle Veto",
@@ -136,20 +136,17 @@ export default function RechercherListeScreen({ navigation, route }) {
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
-          <View>
-            <Image
-              style={styles.image}
-              source={require("../assets/doctorPicture.jpg")}
-            />
-          </View>
+          <Image
+            style={styles.image}
+            source={require("../assets/doctorPicture.jpg")}
+          />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
               {e?.user?.firstname}
               {e?.user?.lastname}
             </Text>
-            <Text style={styles.text}>{e.occupation}</Text>
-            <Text style={styles.text}>{e.address.street}</Text>
-            <Text style={styles.text}>{e.address.city}</Text>
+            <Text style={styles.text}>{e.occupation.charAt(0).toUpperCase() + String(e.occupation).slice(1)}</Text>
+            <Text style={styles.text}>{e.address.street}, {e.address.zipCode} {e.address.city}</Text>
           </View>
         </View>
         <View style={styles.dispo}>
@@ -167,14 +164,14 @@ export default function RechercherListeScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
-        <View style={styles.dispoLink}>
-          <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-        </View>
-      </TouchableOpacity>
+          <View style={styles.dispoLink}>
+            <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
+          </View>
+        </TouchableOpacity>
 
-      <View style={styles.dispo}>
-        <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
-      </View>
+        <View style={styles.dispo}>
+          <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
+        </View>
       </View>
     );
   });
@@ -308,24 +305,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0D2C56",
     padding: 10,
+    width: '100%',
+    justifyContent: 'space-around',
   },
   image: {
     width: 80,
     height: 80,
     borderRadius: 40,
   },
+
   coordonneesText: {
-    marginLeft: 10,
+    justifyContent: 'space-around',
+    height: 80,
+    width: 200,
+
   },
+
   h2: {
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
   },
+  
   text: {
     color: "white",
     fontSize: 14,
   },
+  
   dispo: {
     borderTopWidth: 1,
     borderColor: "#1472AE",
