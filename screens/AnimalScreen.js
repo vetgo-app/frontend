@@ -50,18 +50,7 @@ export default function AnimalScreen({ navigation }) {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        animalInfo: {
-          newName,
-          newAge,
-          newBirth,
-          newType,
-          newRace,
-          newSexe,
-          newIdentification,
-          newWeight,
-          newDocument,
-          token,
-        },
+        animalInfo: { newName, newAge, newBirth, newType, newRace, newSexe, newIdentification, newWeight, newDocument, token },
       }),
     })
       .then((res) => res.json())
@@ -79,10 +68,10 @@ export default function AnimalScreen({ navigation }) {
     if (!petId) return;
 
     const fetchData = async () => {
-      const response = await fetch(
-        process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byPet/" + petId
-      );
+      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byPet/" + petId);
+
       const data = await response.json();
+
       setAnimalData(data.petInfo);
     };
 
@@ -198,7 +187,7 @@ export default function AnimalScreen({ navigation }) {
                   </TouchableOpacity>
                 </View>
               )}
-              
+
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
