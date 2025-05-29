@@ -23,11 +23,7 @@ export default function RechercherListeScreen({ navigation, route }) {
   // récupération des vétérinaires fictifs autour d'une address
   useEffect(() => {
     if (address) {
-      fetch(
-        `https://api-address.data.gouv.fr/search/?q=${encodeURIComponent(
-          address
-        )}&limit=5`
-      )
+      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {
@@ -42,7 +38,7 @@ export default function RechercherListeScreen({ navigation, route }) {
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             });
- 
+
             //professionnels qui se filtrent en fonction de l'adresse
             setVeterinaires([
               {
@@ -69,7 +65,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         longitudeDelta: 0.01,
       });
 
-       //tous les professionnels s'affichent
+      //tous les professionnels s'affichent
       setVeterinaires([
         {
           nom: "Isabelle Veto",
@@ -102,9 +98,17 @@ export default function RechercherListeScreen({ navigation, route }) {
               store.specialization.toLowerCase() === animal.toLowerCase()
           );
         }
+        // if (address) {
+        //   filteredStores = filteredStores.filter((store) =>
+        //     store.address.city.toLowerCase().includes(address.toLowerCase())
+        //   );
+        // }
+
         if (address) {
+          // Extraire le nom de ville de l'adresse si possible
+          const cityFromAddress = address.split(",").pop().trim().toLowerCase(); // ex: "Paris"
           filteredStores = filteredStores.filter((store) =>
-            store.address.city.toLowerCase().includes(address.toLowerCase())
+            store.address.city.toLowerCase().includes(cityFromAddress)
           );
         }
         setStore(filteredStores);
@@ -167,14 +171,14 @@ export default function RechercherListeScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
-        <View style={styles.dispoLink}>
-          <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
-        </View>
-      </TouchableOpacity>
+          <View style={styles.dispoLink}>
+            <Text style={styles.dispoLinkText}>Voir plus de disponiblité</Text>
+          </View>
+        </TouchableOpacity>
 
-      <View style={styles.dispo}>
-        <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
-      </View>
+        <View style={styles.dispo}>
+          <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
+        </View>
       </View>
     );
   });

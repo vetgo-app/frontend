@@ -25,11 +25,7 @@ export default function RechercherListeScreen({ navigation, route }) {
   // récupération des vétérinaires fictifs autour d'une address
   useEffect(() => {
     if (address) {
-      fetch(
-        `https://api-address.data.gouv.fr/search/?q=${encodeURIComponent(
-          address
-        )}&limit=5`
-      )
+      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
         .then((res) => res.json())
         .then((data) => {
           if (data.features.length > 0) {
@@ -161,7 +157,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         </TouchableOpacity>
 
         <View style={styles.dispo}>
-          <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
+          <Text>Prochaine disponibilité : <Text style={styles.span}>mardi 7 mai</Text></Text>
         </View>
       </View>
     );
@@ -216,7 +212,7 @@ export default function RechercherListeScreen({ navigation, route }) {
               </TouchableOpacity>
             ))}
           </View>
-          backgroundColor: "#FA3034",
+          
 
           {/* Affichage des cartes professionnelles */}
           <View style={{ alignItems: "center", paddingBottom: 40 }}>
