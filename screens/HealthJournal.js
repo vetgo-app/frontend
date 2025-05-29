@@ -1,19 +1,24 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 import { useState, useEffect } from "react";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from 'expo-document-picker';
 
 export default function HealthJournal({ route }) {
+    // Geting the petID from the AnimalScreen
     const { petId } = route.params;
-    const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
+
+    // Container of the pet's information
     const [petInfo, setPetInfo] = useState(null);
 
+    // Container of the futur document's name
     const [documentName, setDocumentName] = useState("")
+
+    // Making the components visible / hidden
     const [modalVisible, setModalVisible] = useState(false)
     const [previsualisationModalVisible, setPrevisualisationModalVisible] = useState(false)
     const [selectedDoc, setSelectedDoc] = useState(null)
 
+    // Getting the data of the pet from mongoDB
     const fetchData = async () => {
         const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byPet/" + petId);
         const data = await response.json();
@@ -33,13 +38,15 @@ export default function HealthJournal({ route }) {
     const dataInformation = [
         { label: `Sexe : ${petInfo?.sexe}`, value: `${petInfo?.sexe}` },
         { label: `Identification: ${petInfo?.identification}`, value: `${petInfo?.identification}` },
-        { label: `Poids : ${petInfo?.weight}`, value: `${petInfo?.weight}` },
+        { label: `Poids : ${petInfo?.weight} kg`, value: `${petInfo?.weight}` },
     ];
 
+    // Initialize an empty array if there is no document for the pet
     const dataDocuments = petInfo?.documents.map((e) => {
         return { label: `Nom : ${e.docName}`, value: `${e.file}` }
     }) || []
 
+    // Getting the document from the phone and send it to BE
     const handleAddDocuments = async (docName) => {
         const doc = await DocumentPicker.getDocumentAsync({ type: ["application/pdf"] });
 
@@ -116,9 +123,6 @@ export default function HealthJournal({ route }) {
                 <View style={styles.topHeader}>
                     <View style={styles.topHeaderTitle}>
                         <Text style={styles.title}>Carnet de Santé de</Text>
-                    </View>
-                    <View style={styles.topHeaderIcon}>
-                        {modifyIcon}
                     </View>
                 </View>
                 <View style={styles.bottomHeader}>

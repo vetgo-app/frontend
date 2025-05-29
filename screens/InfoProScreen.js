@@ -6,12 +6,20 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function InfoProScreen({ navigation, route }) {
-  const { storeId, firstname, lastname, address, occupation, price, time } =
-    route.params;
+  const {
+    storeId,
+    firstname,
+    lastname,
+    address,
+    occupation,
+    price,
+    selectedHour,
+  } = route.params;
 
   // useEffect(() => {
   //   // use Effect permet d'afficher les elements a chaque re render
@@ -25,7 +33,7 @@ export default function InfoProScreen({ navigation, route }) {
   // })
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Flèche retour */}
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -35,92 +43,95 @@ export default function InfoProScreen({ navigation, route }) {
       </View>
 
       {/* Carte identité */}
-      <View style={styles.card}>
-        <Image style={styles.profileImage}
-          source={require("../assets/doctorPicture.jpg")}
-        />
-        <View>
-          <Text style={styles.name}>
-            {firstname} {lastname}
-          </Text>
-          <Text style={styles.specialite}>{occupation}</Text>
-          <Text style={styles.adresse}>
-            {address.street}, {address.zipCode} {address.city}
-          </Text>
+      <View style={styles.body}>
+        <View style={styles.coordonnees}>
+          <Image
+            style={styles.image}
+            source={require("../assets/doctorPicture.jpg")}
+          />
+          <View style={styles.coordonneesText}>
+            <Text style={styles.h2}>
+              {firstname}
+              {lastname}
+            </Text>
+            <Text style={styles.text}>
+              {occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}
+            </Text>
+            <Text style={styles.text}>
+              {address.street}, {address.zipCode} {address.city}
+            </Text>
+          </View>
         </View>
-      </View>
 
-
-      {/* Photo enseigne */}
-      <Text style={styles.sectionTitle}>Photos de l'enseigne</Text>
-      {/* <Image
+        {/* Photo enseigne */}
+        <View>
+          <Text style={styles.sectionTitle}>Photo de l'enseigne</Text>
+          {/* <Image
         source={{ uri: photoClinique }}
         style={styles.cliniqueImage}
         resizeMode="cover"
       /> */}
-      <Image
-        source={require("../assets/cliniqueveterinaire.jpg")}
-        style={styles.cliniqueImage}
-        resizeMode="cover"
-      />
-
-      {/* Informations */}
-      <Text style={styles.sectionTitle}>Informations</Text>
-      <View style={styles.infoBox}>
-        <View>
-          <Text style={styles.titleBox}>Jours d'ouverture</Text>
-          <Text style={styles.time}>{time} h </Text>
+          <Image
+            source={require("../assets/cliniqueveterinaire.jpg")}
+            style={styles.cliniqueImage}
+            resizeMode="cover"
+          />
         </View>
-        <View>
-          <Text style={styles.titleBox}>Prix de la consultation</Text>
-          <Text style={styles.price}>{price} € </Text>
-
+        {/* Informations */}
+        <View style={{ width: "80%" }}>
+          <Text style={styles.sectionTitle}>Informations</Text>
+          <View style={styles.infoBox}>
+            <View>
+              <Text style={styles.titleBox}>Jours d'ouverture</Text>
+              <Text style={styles.time}>{selectedHour}</Text>
+            </View>
+            <View>
+              <Text style={styles.titleBox}>Prix de la consultation</Text>
+              <Text style={styles.price}>{price} € </Text>
+            </View>
+          </View>
         </View>
-        {/* <View>
-          <Text style={styles.titleBox}>Spécialisation</Text>
-          <Text style={styles.specialization}>{specialization} </Text>
-        </View> */}
 
+        <TouchableOpacity
+          style={styles.nextButton}
+          onPress={() => {
+            navigation.navigate("TakeRdv", {
+              firstname,
+              lastname,
+              occupation,
+              address,
+              price,
+              selectedHour,
+
+              // isSelectedUrgence,
+              // isSelectedVisio,
+              // isSelectedDom,
+              // appointmentDate,
+              // appointmentHour
+            });
+          }}
+        >
+          <Text style={styles.textNextButton}>Suivant</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={() => {
-          navigation.navigate("TakeRdv", {
-            firstname,
-            lastname,
-            occupation,
-            address,
-            price,
-            time,
-
-            // isSelectedUrgence,
-            // isSelectedVisio,
-            // isSelectedDom,
-            // appointmentDate,
-            // appointmentHour
-          });
-        }}
-
-      >
-        <Text style={styles.textNextButton}>Suivant</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: "#FFFFFF",
+    flex: 1,
+    backgroundColor: "#ffff",
+    alignItems: "center",
   },
 
   //Place du titre FIche de profil
   headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    height: "7%",
     gap: 10,
+    backgroundColor: "#fff",
   },
 
   //Fiche de profil
@@ -129,12 +140,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1472AE",
     alignItems: "right",
-
   },
+
+  body: {
+    height: "93%",
+    width: "100%",
+
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+
+  // proCard:{
+  //   width: '80%',
+  //   height: '100%',
+  //   alignItems: 'center',
+  //   justifyContent: 'space-around',
+  // },
 
   //Encart Professionnel
   card: {
-    backgroundColor: "#0D2C56",
     flexDirection: "row",
     padding: 15,
     borderRadius: 12,
@@ -166,21 +190,53 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
+  coordonnees: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0D2C56",
+    padding: 10,
+    width: "90%",
+    justifyContent: "space-around",
+    borderRadius: 10,
+  },
+
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+
+  coordonneesText: {
+    justifyContent: "space-around",
+    height: 80,
+    width: 200,
+  },
+
+  h2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+  },
+
+  text: {
+    color: "white",
+    fontSize: 14,
+  },
+
   //Police et emplacement des titres Photos de l'enseigne + Informations
   sectionTitle: {
     fontWeight: "bold",
     color: "#1472AE",
     fontSize: 20,
     marginBottom: 10,
-
   },
 
   //Photo enseigne
   cliniqueImage: {
-    width: "100%",
+    width: 300,
     height: 160,
     borderRadius: 10,
-    marginBottom: 25,
+    marginTop: 10,
   },
 
   //Encart des Informations
@@ -216,5 +272,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
   },
-
 });

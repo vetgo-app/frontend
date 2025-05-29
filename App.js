@@ -42,6 +42,17 @@ const store = configureStore({
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Letting the Tabnavigator when using navigation
+const AnimalStack = createNativeStackNavigator();
+function AnimalStackScreen() {
+  return (
+    <AnimalStack.Navigator screenOptions={{ headerShown: false }}>
+      <AnimalStack.Screen name="AnimalMain" component={AnimalScreen} />
+      <AnimalStack.Screen name="HealthJournal" component={HealthJournal} />
+    </AnimalStack.Navigator>
+  );
+}
+
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -56,14 +67,6 @@ function MainTabs() {
             iconName = "paw";
           } else if (route.name === "Faq") {
             iconName = "info-circle";
-          } else if (route.name === "SignUp") {
-            iconName = "user";
-          } else if (route.name === "SignIn") {
-            iconName = "user";
-          } else if (route.name === "TakeRdv") {
-            iconName = "plus-circle";
-          } else if (route.name === "RdvConfirmation") {
-            iconName = "check-circle";
           } else if (route.name === "Animal") {
             iconName = "paw";
           } else if (route.name === "HealthCard") {
@@ -93,7 +96,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Agenda" component={AgendaScreen} />
-      <Tab.Screen name="Animal" component={AnimalScreen} />
+      <Tab.Screen name="Animal" component={AnimalStackScreen} />
       <Tab.Screen name="Faq" component={FaqScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       {/* <Tab.Screen name="SignIn" component={SignInScreen} />
@@ -131,8 +134,7 @@ export default function App() {
           <Stack.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
           <Stack.Screen name="RetourHomeScreen" component={HomeScreen} />
           <Stack.Screen name="Urgences" component={EmergencyScreen} />
-
-          <Stack.Screen name="HealthJournal" component={HealthJournal} />
+          {/* <Stack.Screen name="HealthJournal" component={HealthJournal} options={{ headerShown: false }}/> */}
 
         </Stack.Navigator>
       </NavigationContainer>

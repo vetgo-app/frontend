@@ -13,6 +13,7 @@ export default function AgendaPro() {
   // Using today's date 
   const [currentDate, setCurrentDate] = useState(moment().locale('fr'));
 
+  // Previous - Next day button
   const previousDayClick = () => {
     setCurrentDate(moment(currentDate).subtract(1, "days"));
   };
@@ -21,13 +22,13 @@ export default function AgendaPro() {
     setCurrentDate(moment(currentDate).add(1, "days"));
   };
 
-
+  // Get the data from the DB
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments");
       const data = await response.json();
 
-      // Same Date format
+      // Making the date into same format
       const currentDateFormatted = currentDate.format("YYYY-MM-DD");
 
       // Filter on good date
