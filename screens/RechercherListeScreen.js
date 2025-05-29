@@ -144,8 +144,14 @@ export default function RechercherListeScreen({ navigation, route }) {
               {e?.user?.firstname}
               {e?.user?.lastname}
             </Text>
-            <Text style={styles.text}>{e.occupation.charAt(0).toUpperCase() + String(e.occupation).slice(1)}</Text>
-            <Text style={styles.text}>{e.address.street}, {e.address.zipCode} {e.address.city}</Text>
+            {/* methode charAt .... => pour gerer la majuscule de la profession */}
+            <Text style={styles.text}>
+              {e.occupation.charAt(0).toUpperCase() +
+                String(e.occupation).slice(1)}
+            </Text>
+            <Text style={styles.text}>
+              {e.address.street}, {e.address.zipCode} {e.address.city}
+            </Text>
           </View>
         </View>
         <View style={styles.dispo}>
@@ -311,8 +317,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0D2C56",
     padding: 10,
-    width: '100%',
-    justifyContent: 'space-around',
+    width: "100%",
+    justifyContent: "space-around",
   },
   image: {
     width: 80,
@@ -321,10 +327,9 @@ const styles = StyleSheet.create({
   },
 
   coordonneesText: {
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     height: 80,
     width: 200,
-
   },
 
   h2: {
@@ -332,12 +337,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  
+
   text: {
     color: "white",
     fontSize: 14,
   },
-  
+
   dispo: {
     borderTopWidth: 1,
     borderColor: "#1472AE",
