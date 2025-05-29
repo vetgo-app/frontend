@@ -354,7 +354,8 @@ const styles = StyleSheet.create({
 
   searchText: {
     color: "white",
-    fontWeight: "bold",
+    fontWeight: 600,
+    fontSize: 16,
   },
   proLink: {
     textAlign: "center",

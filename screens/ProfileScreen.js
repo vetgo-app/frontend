@@ -10,6 +10,7 @@ export default function ProfilScreen({ navigation }) {
   const user = useSelector((state) => state.user.value)
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
+  const [profilPicture, setProfilPicture] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -30,16 +31,27 @@ export default function ProfilScreen({ navigation }) {
         <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
       </View>
       <View style={styles.body}>
-        <Text style={{ fontSize: 32, fontWeight: 800, textAlign: 'center', color: '#0D2C56' }}>Bienvenue</Text>
+        <Text style={{ fontSize: 32, fontWeight: 800, textAlign: 'center', color: '#0D2C56' }}>Bienvenue !</Text>
         {user.token ?
           (
-            <View style={styles.signInUpContainer}>
+            <View style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: (user.photo ? 300 : 100)
+            }}>
+              {user.photo && <Image
+                source={{ uri: user.photo }}
+                style={{ height: 130, width: 130, borderRadius: 100, borderWidth: 3, boxSizing:'content-box', borderColor: '#1472AE'
+ }}
+              />}
               <Text style={{ fontSize: 24, fontWeight: 700, textAlign: 'center', color: '#1472AE', marginBottom: 30 }}>{user.firstname} {user.lastname}</Text>
-              <TouchableOpacity style={styles.buttonStyle} onPress={() => handleDisconnectClick()}><Text style={{ fontWeight: 700, color: '#fff' }}>Se déconnecter</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonStyle} onPress={() => handleDisconnectClick()}>
+                <Text style={{ fontWeight: 600, fontSize: 16, color: '#fff' }}>Se déconnecter</Text></TouchableOpacity>
             </View>)
           :
           (
-            <View style={styles.signInUpContainer}>
+            <View style={[styles.signInUpContainer, { height: 100 }]}>
               <View>
                 <Text style={{ fontSize: 20, fontWeight: 700, color: 'black', }}>Connectez-vous !</Text>
               </View>
@@ -50,7 +62,7 @@ export default function ProfilScreen({ navigation }) {
             </View>)}
       </View>
 
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 
@@ -82,20 +94,19 @@ const styles = StyleSheet.create({
   },
 
   signInUpContainer: {
-    width: '70%',
-    height: 90,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
 
   SignInUpButtons: {
-    width: '100%',
+    width: '80%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
 
   buttonStyle: {
-    width: 130,
+    width: 150,
     alignItems: 'center',
     paddingVertical: 15,
     backgroundColor: "#0D2C56",

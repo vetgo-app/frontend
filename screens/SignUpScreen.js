@@ -79,6 +79,7 @@ export default function SignUpScreen({
               lastname: data.user.lastname,
               email: data.user.email,
               token: data.user.token,
+              photo: profilPicture || null,
             })
           );
           setFirstname("");
