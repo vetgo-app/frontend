@@ -16,9 +16,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
   const [confirmed, setConfirmed] = useState(false);
   const appointment = route.params;
-  console.log("Appointement =>", appointment);
-  console.log("user", user);
-
+  console.log(appointment.pet);
   const onClick = () => {
     setConfirmed(true);
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/add", {
