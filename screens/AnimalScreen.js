@@ -91,10 +91,13 @@ export default function AnimalScreen({ navigation }) {
       const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + token);
       const result = await response.json();
 
-      if (result?.result && result.data.length > 0) {
+      console.log(result?.result, result.pets.length);
+
+      if (result?.result && result.pets.length > 0) {
+        console.log('here');
         // Display the first animal
-        setAnimalData(result.data[0]);
-        setPetId(result.data[0]._id);
+        setAnimalData(result.pets[0]);
+        setPetId(result.pets[0]._id);
         setAnimalTopIsVisible(true);
       } else {
         // If not pet, display the Add
@@ -141,7 +144,7 @@ export default function AnimalScreen({ navigation }) {
           </View>
         )}
 
-        {animalTopIsVisible && animalData?.name && (
+        {(animalTopIsVisible && animalData?.name) && (
           <TouchableOpacity style={styles.bottomHeaderBtn} onPress={() => navigationToJournal()} >
             <View style={styles.bottomHeader}>
               <View style={styles.bottomHeaderProfile}>

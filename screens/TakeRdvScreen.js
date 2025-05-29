@@ -248,14 +248,14 @@ export default function TakeRdvScreen({ navigation, route }) {
             renderItem={({ item }) => (
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => handlePressAnimal(item.name)}
+                onPress={() => handlePressAnimal(item._id)}
                 style={{
                   marginLeft: 20,
                   alignItems: "center",
                   justifyContent: "center",
                   width: 180,
                   backgroundColor:
-                    selectedPet === item.name ? "#C2E7F7" : "#F0F0F0",
+                    selectedPet === item._id ? "#C2E7F7" : "#F0F0F0",
                   borderRadius: 10,
                 }}
               >

@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
@@ -30,15 +31,17 @@ export default function AgendaScreen({ navigation }) {
   //     });
   // };
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     fetch(
       process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/myRdv/" + user.token
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log('data =>', data)
         setAppointment(data.data);
       });
-  }, []);
+  }, [user]));
+
   const appointmentList = appointment?.map((e) => {
     console.log(appointment);
     return (
