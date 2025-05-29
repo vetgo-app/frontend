@@ -10,9 +10,10 @@ import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-const time = ["10h00", "11h00", "12h00", "14h00", "15h00"];
+const time = ["10h00", "11h00", "12h00", "14h00", "15h00", "17h00"];
 
 function HourComponent(props) {
+  // faire un composant pour fonction des heures
   return (
     <>
       {time.map((e, i) => {
@@ -21,9 +22,9 @@ function HourComponent(props) {
           <TouchableOpacity
             key={i}
             onPress={() => props.handleSelect(e)} //à l'appuie je capte uniquement l'heure selectionnée.
-            style={styles.hourBox}
+            style={styles.hour}
           >
-            <Text style={styles.hour}>{e}</Text>
+            <Text style={styles.hourDate}>{e}</Text>
           </TouchableOpacity>
         );
       })}
@@ -160,8 +161,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {e?.user?.firstname}
-              {e?.user?.lastname}
+              {e?.user?.firstname} {e?.user?.lastname}
             </Text>
             {/* methode charAt .... => pour gerer la majuscule de la profession */}
             <Text style={styles.text}>
@@ -373,17 +373,35 @@ const styles = StyleSheet.create({
   span: {
     fontWeight: "bold",
   },
+
+  viewDate: {
+    backgroundColor: "red",
+  },
+
   date: {
-    padding: 30,
+    width: "100%",
+    alignItems: "center",
+  },
+
+  btnDate: {
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "center",
-    backgroundColor: "blue",
+    gap: 10,
   },
 
   hour: {
     backgroundColor: "lightgrey",
-    borderWidth: 2,
+    borderWidth: 1,
+    borderColor: "#0D2C56",
     borderRadius: 10,
     padding: 10,
+    width: 100,
+  },
+
+  hourDate: {
+    textAlign: "center",
   },
 
   dispoLink: {
