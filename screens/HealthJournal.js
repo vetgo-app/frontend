@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 import { useState, useEffect } from "react";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from 'expo-document-picker';
 
 export default function HealthJournal({ route }) {
-    const modifyIcon = <FontAwesome name={"pencil-square-o"} size={32} style={styles.modifyingIcon} />;
     // Geting the petID from the AnimalScreen
     const { petId } = route.params;
 
@@ -40,7 +38,7 @@ export default function HealthJournal({ route }) {
     const dataInformation = [
         { label: `Sexe : ${petInfo?.sexe}`, value: `${petInfo?.sexe}` },
         { label: `Identification: ${petInfo?.identification}`, value: `${petInfo?.identification}` },
-        { label: `Poids : ${petInfo?.weight}`, value: `${petInfo?.weight}` },
+        { label: `Poids : ${petInfo?.weight} kg`, value: `${petInfo?.weight}` },
     ];
 
     // Initialize an empty array if there is no document for the pet
@@ -125,9 +123,6 @@ export default function HealthJournal({ route }) {
                 <View style={styles.topHeader}>
                     <View style={styles.topHeaderTitle}>
                         <Text style={styles.title}>Carnet de Santé de</Text>
-                    </View>
-                    <View style={styles.topHeaderIcon}>
-                        {modifyIcon}
                     </View>
                 </View>
                 <View style={styles.bottomHeader}>
