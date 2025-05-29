@@ -7,18 +7,37 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { useRoute, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+const time = ["10h00", "11h00", "12h00", "14h00", "15h00"];
+
+function HourComponent(props) {
+  return (
+    <>
+      {time.map((e, i) => {
+        //afficher toutes les heures du tableau time
+        return (
+          <TouchableOpacity
+            key={i}
+            onPress={() => props.handleSelect(e)} //à l'appuie je capte uniquement l'heure selectionnée.
+            style={styles.hourBox}
+          >
+            <Text style={styles.hour}>{e}</Text>
+          </TouchableOpacity>
+        );
+      })}
+    </>
+  );
+}
 
 export default function RechercherListeScreen({ navigation, route }) {
   const { profession, animal, address } = route.params;
   const [store, setStore] = useState([]);
-  const time = "10h00";
   const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
+  const [selectedHour, setSelectedHour] = useState(""); // stock l'heure de rdv selectionnée
 
   // récupération des vétérinaires fictifs autour d'une address
   useEffect(() => {
@@ -113,14 +132,14 @@ export default function RechercherListeScreen({ navigation, route }) {
   }, [profession, address, animal]);
 
   //envoie vers la page 3 pour la recherche de pro rdv
-  const handleNavigation = (elem) => {
+  const handleNavigation = (elem, hour) => {
     navigation.navigate("InfoProScreen", {
       firstname: elem.user?.firstname,
       lastname: elem.user?.lastname,
       occupation: elem.occupation,
       address: elem.address,
       price: elem.price,
-      time,
+      selectedHour: hour,
     });
   };
 
@@ -161,11 +180,12 @@ export default function RechercherListeScreen({ navigation, route }) {
           </Text>
         </View>
         <View style={styles.date}>
-          <TouchableOpacity
-            style={styles.btnDate}
-            onPress={() => handleNavigation(e)}
-          >
-            <Text>{time}</Text>
+          <TouchableOpacity style={styles.btnDate}>
+            <HourComponent
+              handleSelect={(hour) => {
+                handleNavigation(e, hour);
+              }}
+            />
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
@@ -354,19 +374,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   date: {
-    flexDirection: "row",
+    padding: 30,
     justifyContent: "center",
-    padding: 10,
-    gap: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "blue",
   },
-  btnDate: {
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 8,
-    paddingHorizontal: 14,
+
+  hour: {
     backgroundColor: "lightgrey",
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 10,
   },
+
   dispoLink: {
     padding: 10,
     alignItems: "center",
