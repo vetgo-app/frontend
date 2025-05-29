@@ -7,49 +7,41 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import vetgologo from '../assets/vetgologo.png';
+import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 
 export default function RechercherListeScreen({ navigation, route }) {
+  const isFocused = useIsFocused()
   const { profession, animal, address } = route.params;
+
   const [store, setStore] = useState([]);
-  const time = "10h00";
+  // console.log("store", store);
+
+  const time = "10:00";
   const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
+  // console.log("veterinaires", veterinaires);
+
   const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
 
-  // récupération des vétérinaires fictifs autour d'une address
-  useEffect(() => {
+  const initializeMap = async () => {
     if (address) {
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
+      // Si on a une addresse, on centre la carte sur l'adresse
+      const fetchUrl = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`
+      fetch(fetchUrl)
         .then((res) => res.json())
         .then((data) => {
-          if (data.features.length > 0) {
+          if (data?.features?.length > 0) {
             const coords = data.features[0].geometry.coordinates;
             const longitude = coords[0];
             const latitude = coords[1];
 
-            //on centre la carte sur cette adresse, avec un certain zoom delta
-            setRegion({
-              latitude,
-              longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            });
-
-            //professionnels qui se filtrent en fonction de l'adresse
-            setVeterinaires([
-              {
-                nom: "Isabelle Veto",
-                specialite: "Vétérinaire",
-                distance: "100 m",
-                image: "photo",
-                lat: latitude + 0.002,
-                lon: longitude + 0.001,
-              },
-            ]);
+            // on centre la carte sur cette adresse, avec un certain zoom delta
+            setRegion({ latitude, longitude, latitudeDelta: 0.01, longitudeDelta: 0.01 });
           }
         });
     } else {
@@ -58,33 +50,15 @@ export default function RechercherListeScreen({ navigation, route }) {
       const longitude = 2.333333;
 
       //on centre la carte 
-      setRegion({
-        latitude,
-        longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-
-      //tous les professionnels s'affichent
-      setVeterinaires([
-        {
-          nom: "Isabelle Veto",
-          specialite: "Vétérinaire",
-          distance: "100 m",
-          image: "photo",
-          lat: latitude + 0.002,
-          lon: longitude + 0.001,
-        },
-      ]);
+      setRegion({ latitude, longitude, latitudeDelta: 0.01, longitudeDelta: 0.01 });
     }
-  }, [address]);
+  }
 
-  // récupération des praticiens depuis la BDD
-  useEffect(() => {
+  const filterStores = async () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
-        let filteredStores = data.data;
+        let filteredStores = [...data.data];
 
         if (profession) {
           filteredStores = filteredStores.filter(
@@ -92,29 +66,53 @@ export default function RechercherListeScreen({ navigation, route }) {
               store.occupation.toLowerCase() === profession.toLowerCase()
           );
         }
+
         if (animal) {
           filteredStores = filteredStores.filter(
             (store) =>
               store.specialization.toLowerCase() === animal.toLowerCase()
           );
         }
-        // if (address) {
-        //   filteredStores = filteredStores.filter((store) =>
-        //     store.address.city.toLowerCase().includes(address.toLowerCase())
-        //   );
-        // }
 
-        if (address) {
-          // Extraire le nom de ville de l'adresse si possible
-          const cityFromAddress = address.split(",").pop().trim().toLowerCase(); // ex: "Paris"
-          filteredStores = filteredStores.filter((store) =>
-            store.address.city.toLowerCase().includes(cityFromAddress)
-          );
-        }
+        //professionnels qui se filtrent en fonction de l'adresse
+        const markers = filteredStores.filter((store) => store.address.geo?.lat && store.address.geo?.lon)
+          .map((store) => ({
+            nom: store.user?.firstname + ' ' + store.user?.lastname,
+            specialite: store.occupation,
+            lat: store.address.geo.lat,
+            lon: store.address.geo.lon,
+          }));
+
+        // console.log(filteredStores.filter((store) => store));
+
+
+        //tous les professionnels s'affichent
         setStore(filteredStores);
-        console.log('store est ici :', store)
+        setVeterinaires(markers);
+
+        // on recentre la carte sur le premier praticien si pas déjà centrée
+        if (markers.length > 0 && !region) {
+          const first = markers[0];
+          setRegion({
+            latitude: first.lat,
+            longitude: first.lon,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          });
+        }
       });
-  }, [profession, address, animal]);
+  }
+
+  //récupération des vétérinaires fictifs autour d'une adresse
+  useEffect(() => {
+    (async () => {
+      // Step 1 : Centrer la carte
+      !region && await initializeMap()
+
+      // Step 2 : On récupère les filtres pour la map
+      await filterStores()
+    })();
+  }, [isFocused, region]);
 
   //envoie vers la page 3 pour la recherche de pro rdv
   const handleNavigation = (elem) => {
@@ -128,7 +126,6 @@ export default function RechercherListeScreen({ navigation, route }) {
     });
   };
 
-
   //permet de déselectionner un filtre actif en cliquant à nouveau dessus:
   const handleFilterPress = (filter) => {
     setActiveFilter((prev) => (prev === filter ? null : filter));
@@ -136,7 +133,6 @@ export default function RechercherListeScreen({ navigation, route }) {
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
   const card = store?.map((e, i) => {
-    console.log("test firstname", card);
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
@@ -148,8 +144,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           </View>
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {e?.user?.firstname}
-              {e?.user?.lastname}
+              {e?.user?.firstname} {e?.user?.lastname}
             </Text>
             <Text style={styles.text}>{e.occupation}</Text>
             <Text style={styles.text}>{e.address.street}</Text>
@@ -196,20 +191,28 @@ export default function RechercherListeScreen({ navigation, route }) {
           </View>
 
           {/* Carte */}
-          {region && (
-            <MapView style={styles.map} region={region}>
-              {veterinaires.map((vet, index) => (
-                <Marker
-                  key={index}
-                  coordinate={{ latitude: vet.lat, longitude: vet.lon }}
-                  title={vet.nom}
-                  description={vet.specialite}
-                >
-                  <FontAwesome name="paw" size={30} color="#1472AE" />
-                </Marker>
-              ))}
-            </MapView>
-          )}
+
+          <MapView style={styles.map} region={region}>
+            {veterinaires?.map((vet, index) => (
+              <Marker
+                key={index}
+                coordinate={{ latitude: vet.lat, longitude: vet.lon }}
+                title={vet.nom}
+                description={vet.specialite}
+              >
+                {/*
+                  <Image
+                    source={require("../assets/iconPaw.png")}
+                    style={{ width: 40, height: 40 }}
+                    resizeMode="contain"
+                  /> */}
+              </Marker>
+            ))}
+          </MapView>
+
+
+
+
 
           {/* Filtres */}
           <View style={styles.filtre}>
@@ -243,7 +246,6 @@ export default function RechercherListeScreen({ navigation, route }) {
   );
 }
 
-// console.log(card?.length);
 
 const styles = StyleSheet.create({
   container: {
@@ -279,7 +281,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     alignSelf: 'center',
   },
-
   filtreButton: {
     paddingVertical: 6,
     paddingHorizontal: 14,
@@ -364,5 +365,3 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
-
-//timestemp
