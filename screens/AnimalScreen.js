@@ -14,8 +14,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function AnimalScreen({ navigation }) {
+
+  // Making the Refetch when navigate through screens
+  const isFocused = useIsFocused()
+  
   // Initialize the useSelector
   const user = useSelector((state) => state.user.value);
 
@@ -32,7 +37,7 @@ export default function AnimalScreen({ navigation }) {
 
   // Fetch's information
   const [animalData, setAnimalData] = useState([]);
-
+  
   // Hooks used in the POST
   const [newName, setNewName] = useState("");
   const [newAge, setNewAge] = useState("");
@@ -100,7 +105,7 @@ export default function AnimalScreen({ navigation }) {
     };
 
     fetchData();
-  }, [petId]);
+  }, [petId, isFocused]);
 
   // Navigation to the Journal when press to the Animal
   const navigationToJournal = () => {
@@ -109,7 +114,11 @@ export default function AnimalScreen({ navigation }) {
 
   // In the connection, if the user has a pet, it's showned
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setAnimalData([]);
+      setPetId("");
+      return 
+    }
 
     const fetchUserAnimals = async () => {
       const response = await fetch(
@@ -130,7 +139,7 @@ export default function AnimalScreen({ navigation }) {
     };
 
     fetchUserAnimals();
-  }, [token]);
+  }, [token, isFocused]);
 
   return (
     // Connection's modal
