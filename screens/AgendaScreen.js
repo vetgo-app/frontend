@@ -9,7 +9,7 @@ import {
   Modal,
 } from "react-native";
 import { useEffect, useState, useCallback } from "react";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
@@ -21,26 +21,34 @@ export default function AgendaScreen({ navigation }) {
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
   const user = useSelector((state) => state.user.value);
 
-  // const handleClic = (id) => {
-  //   fetch(
-  //     `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setAppointment(data);
-  //     });
-  // };
-
-  useFocusEffect(useCallback(() => {
+  const handleClic = (id) => {
+    console.log("clic");
     fetch(
-      process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/myRdv/" + user.token
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/appointments/deleteRDV/${id}/${user.token}`,
+      { method: "DELETE" }
     )
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        console.log('data =>', data)
-        setAppointment(data.data);
+        console.log("data in fetch =>", data);
+        setAppointment(data.rdv);
       });
-  }, [user]));
+    // console.log("test2=>", appointment);
+  };
+
+  useFocusEffect(
+    //focus sur la page, se relance des qu'on retourne sur le screen,
+    useCallback(() => {
+      fetch(
+        process.env.EXPO_PUBLIC_BACKEND_URL +
+          "/appointments/myRdv/" +
+          user.token
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setAppointment(data.data);
+        });
+    }, [user])
+  );
 
   const appointmentList = appointment?.map((e) => {
     console.log(appointment);
@@ -48,18 +56,20 @@ export default function AgendaScreen({ navigation }) {
       <View key={e._id} style={styles.card}>
         <View style={styles.first}>
           <FontAwesome name={"calendar"} size={30} color="white" />
-          <TouchableOpacity
-            onPress={() => {
-              handleClic(e._id);
-            }}
-          >
-            <FontAwesome name={"close"} size={24} color="red" />
-          </TouchableOpacity>
         </View>
-        <Text style={styles.date}>{e.date}</Text>
-        <Text style={styles.date}>{e.type}</Text>
-        <Text style={styles.date}>{e.reason}</Text>
-        <Text style={styles.date}>{e.userName}</Text>
+        <View style={styles.second}>
+          <Text style={styles.date}>Heure du rdv = {e.date}</Text>
+          <Text style={styles.date}>Pour {e.pet.name}</Text>
+          <Text style={styles.date}>Motif = {e.reason}</Text>
+          <Text style={styles.date}>Prix de la consultation = {e.price}€</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            handleClic(e._id);
+          }}
+        >
+          <FontAwesome name={"close"} size={24} color="red" />
+        </TouchableOpacity>
       </View>
     );
   });
@@ -68,6 +78,9 @@ export default function AgendaScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Mes rendez vous</Text>
+      </View>
+      <View>
+        <Text style={styles.rdvText}>Prochains rendez-vous</Text>
       </View>
       <View style={styles.body}>
         {!user.token ? (
@@ -133,7 +146,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: "10%",
+    height: "20%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -145,14 +158,22 @@ const styles = StyleSheet.create({
     color: "#1472AE",
   },
 
+  rdvText: {
+    fontSize: 16,
+    color: "#1472AE",
+  },
+
   body: {
-    height: "90%",
+    height: "80%",
     width: "100%",
     alignItems: "center",
     justifyContent: "space-around",
   },
 
   card: {
+    flexDirection: "row",
+    height: 200,
+    gap: 20,
     marginTop: 20,
     borderWidth: 1,
     width: "100%",
@@ -160,10 +181,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#0D2C56",
     borderRadius: 10,
   },
-  first: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+
+  second: {
+    justifyContent: "space-between",
   },
+
   date: {
     color: "white",
   },

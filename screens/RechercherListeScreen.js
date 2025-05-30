@@ -93,6 +93,20 @@ export default function RechercherListeScreen({ navigation, route }) {
           );
         }
 
+        if (activeFilter) {
+          filteredStores = filteredStores.filter(
+            (store) => {
+              if (activeFilter === "À domicile") {
+                return store.isSelectedDom
+              } else {
+                if (activeFilter === "Visio") {
+                  return store.isSelectedVisio
+                }
+              }
+            }
+          );
+        }
+
         //professionnels qui se filtrent en fonction de l'adresse
         const markers = filteredStores.filter((store) => store.address.geo?.lat && store.address.geo?.lon)
           .map((store) => ({
@@ -131,7 +145,7 @@ export default function RechercherListeScreen({ navigation, route }) {
       // Step 2 : On récupère les filtres pour la map
       await filterStores()
     })();
-  }, [isFocused, region]);
+  }, [isFocused, region, activeFilter]);
 
   //envoie vers la page 3 pour la recherche de pro rdv
   const handleNavigation = (elem, hour) => {
@@ -211,7 +225,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           {/* Header avec bouton retour */}
           <View style={styles.header}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("RetourHomeScreen")}
+              onPress={() => navigation.goBack()}
             >
               <FontAwesome name="arrow-left" size={24} color="#1472AE" />
             </TouchableOpacity>
@@ -228,12 +242,12 @@ export default function RechercherListeScreen({ navigation, route }) {
                 title={vet.nom}
                 description={vet.specialite}
               >
-                {/*
-                  <Image
-                    source={require("../assets/iconPaw.png")}
-                    style={{ width: 40, height: 40 }}
-                    resizeMode="contain"
-                  /> */}
+
+                <Image
+                  source={require("../assets/iconPaw.png")}
+                  style={{ width: 40, height: 40 }}
+                  resizeMode="contain"
+                />
               </Marker>
             ))}
           </MapView>
@@ -245,7 +259,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           {/* Filtres */}
           <View style={styles.filtre}>
             <Text style={styles.filtreLabel}>Filtres :</Text>
-            {["Au + tôt", "À domicile", "Visio"].map((filter) => (
+            {["À domicile", "Visio"].map((filter) => (
               <TouchableOpacity
                 key={filter}
                 onPress={() => handleFilterPress(filter)}
@@ -275,6 +289,7 @@ export default function RechercherListeScreen({ navigation, route }) {
     </SafeAreaProvider>
   );
 }
+
 
 
 const styles = StyleSheet.create({
