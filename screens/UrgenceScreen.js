@@ -7,81 +7,73 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import vetgologo from "../assets/vetgologo.png";
-import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
+const time = ["10h00", "11h00", "12h00", "14h00", "15h00", "17h00"];
+
+function HourComponent(props) {
+  // faire un composant pour fonction des heures
+  return (
+    <>
+      {time.map((e, i) => {
+        //afficher toutes les heures du tableau time
+        return (
+          <TouchableOpacity
+            key={i}
+            onPress={() => props.handleSelect(e)} //à l'appuie je capte uniquement l'heure selectionnée.
+            style={styles.hour}
+          >
+            <Text style={styles.hourDate}>{e}</Text>
+          </TouchableOpacity>
+        );
+      })}
+    </>
+  );
+}
 
 export default function RechercherListeScreen({ navigation, route }) {
-  const { profession, animal, address } = route.params;
+  const isFocused = useIsFocused()
+  const { animal, address } = route.params;
+
   const [store, setStore] = useState([]);
-  const time = "10:00";
   const [region, setRegion] = useState(null); //Stocke la zone à afficher sur la carte (latitude, longitude)
   const [veterinaires, setVeterinaires] = useState([]); // Stocke la liste des vétérinaires à afficher.
-  const [activeFilter, setActiveFilter] = useState(null); //Stocke le filtre sélectionné ("Au + tôt", "À Domicile", etc.)
 
-  // récupération des vétérinaires fictifs autour d'une address
-  useEffect(() => {
+  const initializeMap = async () => {
     if (address) {
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`)
+      // Si on a une addresse, on centre la carte sur l'adresse
+      const fetchUrl = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`
+      fetch(fetchUrl)
         .then((res) => res.json())
         .then((data) => {
-          if (data.features.length > 0) {
+          if (data?.features?.length > 0) {
             const coords = data.features[0].geometry.coordinates;
             const longitude = coords[0];
             const latitude = coords[1];
 
-            setRegion({
-              latitude,
-              longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            });
-
-            setVeterinaires([
-              {
-                nom: "Isabelle Veto",
-                specialite: "Vétérinaire",
-                distance: "100 m",
-                image: "photo",
-                lat: latitude + 0.002,
-                lon: longitude + 0.001,
-              },
-            ]);
+            // on centre la carte sur cette adresse, avec un certain zoom delta
+            setRegion({ latitude, longitude, latitudeDelta: 0.01, longitudeDelta: 0.01 });
           }
         });
     } else {
+      // Sinon affiche Paris par défaut:
       const latitude = 48.866667;
       const longitude = 2.333333;
 
-      setRegion({
-        latitude,
-        longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-
-      setVeterinaires([
-        {
-          nom: "Isabelle Veto",
-          specialite: "Vétérinaire",
-          distance: "100 m",
-          image: "photo",
-          lat: latitude + 0.002,
-          lon: longitude + 0.001,
-        },
-      ]);
+      //on centre la carte 
+      setRegion({ latitude, longitude, latitudeDelta: 0.01, longitudeDelta: 0.01 });
     }
-  }, [address]);
+  }
 
-  // récupération des praticiens depuis la BDD
-  useEffect(() => {
+  const filterStores = async () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
       .then((response) => response.json())
       .then((data) => {
-        let filteredStores = data.data;
+        let filteredStores = [...data.data];
+
+        filteredStores = filteredStores.filter((store) => store.isSelectedUrgence);
 
         if (animal) {
           filteredStores = filteredStores.filter(
@@ -89,30 +81,57 @@ export default function RechercherListeScreen({ navigation, route }) {
               store.specialization.toLowerCase() === animal.toLowerCase()
           );
         }
-        if (address) {
-          filteredStores = filteredStores.filter((store) =>
-            store.address.city.toLowerCase().includes(address.toLowerCase())
-          );
-        }
+
+        //professionnels qui se filtrent en fonction de l'adresse
+        const markers = filteredStores.filter((store) => store.address.geo?.lat && store.address.geo?.lon)
+          .map((store) => ({
+            nom: store.user?.firstname + ' ' + store.user?.lastname,
+            specialite: store.occupation,
+            lat: store.address.geo.lat,
+            lon: store.address.geo.lon,
+          }));
+
+        // console.log(filteredStores.filter((store) => store));
+
+
+        //tous les professionnels s'affichent
         setStore(filteredStores);
+        setVeterinaires(markers);
+
+        // on recentre la carte sur le premier praticien si pas déjà centrée
+        if (markers.length > 0 && !region) {
+          const first = markers[0];
+          setRegion({
+            latitude: first.lat,
+            longitude: first.lon,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          });
+        }
       });
-  }, [address, animal]);
+  }
+
+  //récupération des vétérinaires fictifs autour d'une adresse
+  useEffect(() => {
+    (async () => {
+      // Step 1 : Centrer la carte
+      !region && await initializeMap()
+
+      // Step 2 : On récupère les filtres pour la map
+      await filterStores()
+    })();
+  }, [isFocused, region]);
 
   //envoie vers la page 3 pour la recherche de pro rdv
-  const handleNavigation = (elem) => {
+  const handleNavigation = (elem, hour) => {
     navigation.navigate("InfoProScreen", {
       firstname: elem.user?.firstname,
       lastname: elem.user?.lastname,
       occupation: elem.occupation,
       address: elem.address,
       price: elem.price,
-      time,
+      selectedHour: hour,
     });
-  };
-
-  //permet de déselectionner un filtre actif en cliquant à nouveau dessus:
-  const handleFilterPress = (filter) => {
-    setActiveFilter((prev) => (prev === filter ? null : filter));
   };
 
   //le '?' permet d'attendre des données asynchrone (venant du fetch)
@@ -120,19 +139,22 @@ export default function RechercherListeScreen({ navigation, route }) {
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
-          <View>
-            <Image
-              style={styles.image}
-              source={require("../assets/doctorPicture.jpg")}
-            />
-          </View>
+          <Image
+            style={styles.image}
+            source={require("../assets/doctorPicture.jpg")}
+          />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
               {e?.user?.firstname} {e?.user?.lastname}
             </Text>
-            <Text style={styles.text}>{e.occupation}</Text>
-            <Text style={styles.text}>{e.address.street}</Text>
-            <Text style={styles.text}>{e.address.city}</Text>
+            {/* methode charAt .... => pour gerer la majuscule de la profession */}
+            <Text style={styles.text}>
+              {e.occupation.charAt(0).toUpperCase() +
+                String(e.occupation).slice(1)}
+            </Text>
+            <Text style={styles.text}>
+              {e.address.street}, {e.address.zipCode} {e.address.city}
+            </Text>
           </View>
         </View>
         <View style={styles.dispo}>
@@ -142,11 +164,12 @@ export default function RechercherListeScreen({ navigation, route }) {
           </Text>
         </View>
         <View style={styles.date}>
-          <TouchableOpacity
-            style={styles.btnDate}
-            onPress={() => handleNavigation(e)}
-          >
-            <Text>{time}</Text>
+          <TouchableOpacity style={styles.btnDate}>
+            <HourComponent
+              handleSelect={(hour) => {
+                handleNavigation(e, hour);
+              }}
+            />
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
@@ -176,47 +199,29 @@ export default function RechercherListeScreen({ navigation, route }) {
             >
               <FontAwesome name="arrow-left" size={24} color="#1472AE" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Trouver un professionnel</Text>
+            <Text style={styles.headerTitle}>URGENCES</Text>
           </View>
+
           {/* Carte */}
-          {region && (
-            <MapView style={styles.map} region={region}>
-              {veterinaires.map((vet, index) => (
-                <Marker
-                  key={index}
-                  coordinate={{ latitude: vet.lat, longitude: vet.lon }}
-                  title={vet.nom}
-                  description={vet.specialite}
-                >
-                  <FontAwesome name="paw" size={30} color="#1472AE" />
-                </Marker>
-              ))}
-            </MapView>
-          )}
-          {/* Filtres */}
-          <View style={styles.filtre}>
-            <Text style={styles.filtreLabel}>Filtres :</Text>
-            {["Urgences"].map((filter) => (
-              <TouchableOpacity
-                key={filter}
-                onPress={() => handleFilterPress(filter)}
-                style={[
-                  styles.filtreButton,
-                  activeFilter === filter && styles.filtreButtonActive,
-                ]}
+
+          <MapView style={styles.map} region={region}>
+            {veterinaires?.map((vet, index) => (
+              <Marker
+                key={index}
+                coordinate={{ latitude: vet.lat, longitude: vet.lon }}
+                title={vet.nom}
+                description={vet.specialite}
               >
-                <Text
-                  style={[
-                    styles.filtreText,
-                    activeFilter === filter && styles.filtreTextActive,
-                  ]}
-                >
-                  {filter}
-                </Text>
-              </TouchableOpacity>
+
+                <Image
+                  source={require("../assets/iconPaw.png")}
+                  style={{ width: 40, height: 40 }}
+                  resizeMode="contain"
+                />
+              </Marker>
             ))}
-          </View>
-          backgroundColor: "#FA3034",
+          </MapView>
+
           {/* Affichage des cartes professionnelles */}
           <View style={{ alignItems: "center", paddingBottom: 40 }}>
             {card}
@@ -227,7 +232,6 @@ export default function RechercherListeScreen({ navigation, route }) {
   );
 }
 
-// //console.log(card?.length);
 
 const styles = StyleSheet.create({
   container: {
@@ -243,48 +247,14 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#1472AE",
+    color: "#FA3034",
     alignItems: "right",
   },
   map: {
     width: "100%",
     height: 260,
   },
-  filtre: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 15,
-    marginVertical: 15,
-  },
-  filtreLabel: {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: 16,
-    marginRight: 10,
-    marginHorizontal: 10,
-  },
 
-  filtreButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    marginHorizontal: 0,
-    borderRadius: 10,
-    backgroundColor: "#FA3034",
-  },
-  filtreButtonActive: {
-    backgroundColor: "#FA3034",
-  },
-  filtreText: {
-    color: "#0D2C56",
-    fontSize: 16,
-    fontWeight: "regular",
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-  filtreTextActive: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
   card: {
     borderWidth: 1,
     borderColor: "#1472AE",
@@ -299,24 +269,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0D2C56",
     padding: 10,
+    width: "100%",
+    justifyContent: "space-around",
   },
   image: {
     width: 80,
     height: 80,
     borderRadius: 40,
   },
+
   coordonneesText: {
-    marginLeft: 10,
+    justifyContent: "space-around",
+    height: 80,
+    width: 200,
   },
+
   h2: {
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
   },
+
   text: {
     color: "white",
     fontSize: 14,
   },
+
   dispo: {
     borderTopWidth: 1,
     borderColor: "#1472AE",
@@ -327,20 +305,37 @@ const styles = StyleSheet.create({
   span: {
     fontWeight: "bold",
   },
+
+  viewDate: {
+    backgroundColor: "red",
+  },
+
   date: {
-    flexDirection: "row",
-    justifyContent: "center",
-    padding: 10,
-    gap: 10,
-    backgroundColor: "#fff",
+    width: "100%",
+    alignItems: "center",
   },
+
   btnDate: {
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 8,
-    paddingHorizontal: 14,
-    backgroundColor: "lightgrey",
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 10,
   },
+
+  hour: {
+    backgroundColor: "lightgrey",
+    borderWidth: 1,
+    borderColor: "#0D2C56",
+    borderRadius: 10,
+    padding: 10,
+    width: 100,
+  },
+
+  hourDate: {
+    textAlign: "center",
+  },
+
   dispoLink: {
     padding: 10,
     alignItems: "center",
@@ -351,5 +346,3 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
-
-//timestemp
