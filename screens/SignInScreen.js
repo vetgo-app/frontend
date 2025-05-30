@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  Image
+  Image,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
@@ -18,14 +18,13 @@ export default function SignInScreen({
   route,
   setModalSignInVisible,
   modalSignInVisible,
-  formData,
 }) {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log(navigation, route, modalSignInVisible, setModalSignInVisible);
+  //console.log(navigation, route, modalSignInVisible, setModalSignInVisible);
 
   const handleSignIn = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signin", {
@@ -41,6 +40,7 @@ export default function SignInScreen({
         if (data.result) {
           dispatch(
             login({
+              _id: data.user._id,
               firstname: data.user.firstname,
               lastname: data.user.lastname,
               email: data.user.email,
@@ -50,7 +50,7 @@ export default function SignInScreen({
           setEmail("");
           setPassword("");
           if (modalSignInVisible) {
-            console.log("je suis entré");
+            //console.log("je suis entré");
             if (route?.params?.origin === "TakeRdv") {
               navigation.navigate("RdvConfirmation");
             } else {
@@ -64,7 +64,10 @@ export default function SignInScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Image source={require('../assets/vetgologo.png')} style={styles.logoImage} />
+        <Image
+          source={require("../assets/vetgologo.png")}
+          style={styles.logoImage}
+        />
         <Text style={styles.pageTitle}>Se connecter</Text>
       </View>
       <View style={styles.bodyContainer}>

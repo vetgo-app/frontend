@@ -11,7 +11,7 @@ import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native"
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState, } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import vetgologo from '../assets/vetgologo.png';
+import vetgologo from "../assets/vetgologo.png";
 import { faAddressBook } from "@fortawesome/free-regular-svg-icons";
 
 export default function RechercherListeScreen({ navigation, route }) {
@@ -172,7 +172,10 @@ export default function RechercherListeScreen({ navigation, route }) {
         </TouchableOpacity>
 
         <View style={styles.dispo}>
-          <Text>Prochaine disponibilité : <Text style={styles.span}>mercredi 7 mai</Text></Text>
+          <Text>
+            Prochaine disponibilité :{" "}
+            <Text style={styles.span}>mercredi 7 mai</Text>
+          </Text>
         </View>
       </View>
     );
@@ -184,58 +187,52 @@ export default function RechercherListeScreen({ navigation, route }) {
         <ScrollView>
           {/* Header avec bouton retour */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.navigate("RetourHomeScreen")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("RetourHomeScreen")}
+            >
               <FontAwesome name="arrow-left" size={24} color="#1472AE" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Trouver un professionnel</Text>
           </View>
-
           {/* Carte */}
-
-          <MapView style={styles.map} region={region}>
-            {veterinaires?.map((vet, index) => (
-              <Marker
-                key={index}
-                coordinate={{ latitude: vet.lat, longitude: vet.lon }}
-                title={vet.nom}
-                description={vet.specialite}
-              >
-                {/*
-                  <Image
-                    source={require("../assets/iconPaw.png")}
-                    style={{ width: 40, height: 40 }}
-                    resizeMode="contain"
-                  /> */}
-              </Marker>
-            ))}
-          </MapView>
-
-
-
-
-
+          {region && (
+            <MapView style={styles.map} region={region}>
+              {veterinaires.map((vet, index) => (
+                <Marker
+                  key={index}
+                  coordinate={{ latitude: vet.lat, longitude: vet.lon }}
+                  title={vet.nom}
+                  description={vet.specialite}
+                >
+                  <FontAwesome name="paw" size={30} color="#1472AE" />
+                </Marker>
+              ))}
+            </MapView>
+          )}
           {/* Filtres */}
           <View style={styles.filtre}>
             <Text style={styles.filtreLabel}>Filtres :</Text>
-            {['Au + tôt', 'À domicile', 'Visio'].map((filter) => (
+            {["Urgences"].map((filter) => (
               <TouchableOpacity
                 key={filter}
                 onPress={() => handleFilterPress(filter)}
                 style={[
                   styles.filtreButton,
-                  activeFilter === filter && styles.filtreButtonActive
+                  activeFilter === filter && styles.filtreButtonActive,
                 ]}
               >
-                <Text style={[
-                  styles.filtreText,
-                  activeFilter === filter && styles.filtreTextActive
-                ]}>
+                <Text
+                  style={[
+                    styles.filtreText,
+                    activeFilter === filter && styles.filtreTextActive,
+                  ]}
+                >
                   {filter}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
-
+          backgroundColor: "#FA3034",
           {/* Affichage des cartes professionnelles */}
           <View style={{ alignItems: "center", paddingBottom: 40 }}>
             {card}
@@ -246,6 +243,7 @@ export default function RechercherListeScreen({ navigation, route }) {
   );
 }
 
+// //console.log(card?.length);
 
 const styles = StyleSheet.create({
   container: {
@@ -270,22 +268,23 @@ const styles = StyleSheet.create({
   },
   filtre: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 15,
     marginVertical: 15,
   },
   filtreLabel: {
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
     fontSize: 16,
     marginRight: 10,
-    alignSelf: 'center',
+    marginHorizontal: 10,
   },
   filtreButton: {
     paddingVertical: 6,
     paddingHorizontal: 14,
+    marginHorizontal: 0,
     borderRadius: 10,
-    backgroundColor: "#C2E7F7",
+    backgroundColor: "#FA3034",
   },
   filtreButtonActive: {
     backgroundColor: "#0D2C56",

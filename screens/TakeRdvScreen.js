@@ -14,8 +14,10 @@ import RadioGroup from "react-native-radio-buttons-group";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import Checkbox from "expo-checkbox";
 import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
+import { faSliders } from "@fortawesome/free-solid-svg-icons";
 
 const data = [
   { value: "Soins préventifs", label: "Soins préventifs" },
@@ -25,31 +27,47 @@ const data = [
 
 export default function TakeRdvScreen({ navigation, route }) {
   const [selectedReason, setSelectedReason] = useState(null);
+  const [errorReason, setErrorReason] = useState(null)
   const [isSelectedReason, setIsSelectedReason] = useState(false);
-  const [isFirstRdv, setIsFirstRdv] = useState();
-  const [isMyAnimal, setIsMyAnimal] = useState();
+
+  const [isFirstRdv, setIsFirstRdv] = useState(true);
+  const [isMyAnimal, setIsMyAnimal] = useState(true);
   const [modalSignInVisible, setModalSignInVisible] = useState(false);
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
 
-  const [pet, setPet] = useState();
-  console.log("test2", pet);
+  const [pet, setPet] = useState([]);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [isSelectedAnimal, setIsSelectedAnimal] = useState(false)
+  const user = useSelector((state) => state.user.value);
+  const { firstname, lastname, occupation, price, address, selectedHour } =
+    route.params;
+
+
+
+  console.log(selectedHour);
+
   const myPet = pet?.map((e, i) => {
     return (
-      <View key={i}>
-        <Text>{e.name}</Text>
+      <View>
+        <Checkbox
+          value={selectedPet === e._id}
+          onValueChange={() => setSelectedPet(e._id)} // on utilise une fonction pour passer en parametre l'id, sinon onValueChange envoie simplement truee ou false
+          style={styles.checkbox}
+        />
+        <Text style={styles.label}>{e.name}</Text>
       </View>
     );
   });
 
-  const user = useSelector((state) => state.user.value);
-  const { firstname, lastname, occupation, price, address, time } =
-    route.params;
+
 
   useEffect(() => {
     if (!user.token) return;
     fetch(
-      process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + user.token
-    ).then((response) => response.json().then((data) => setPet(data.data)));
+      process.env.EXPO_PUBLIC_BACKEND_URL +
+      "/petDocuments/byOwner/" +
+      user.token
+    ).then((response) => response.json().then((data) => setPet(data.pets)));
   }, []);
 
   const handlePressReason = (value) => {
@@ -57,8 +75,9 @@ export default function TakeRdvScreen({ navigation, route }) {
     setIsSelectedReason(!isSelectedReason);
   };
 
-  const handlePressPet = (value) => {
-    setPet(value);
+  const handlePressAnimal = (value) => {
+    setSelectedPet(value)
+    setIsSelectedAnimal(!isSelectedAnimal)
   };
 
   const RadioButtons = useMemo(
@@ -79,13 +98,21 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
   const handleBookRdvkClick = () => {
+    setErrorReason('');
+
+    if (!selectedReason) {
+      setErrorReason("Vous n'avez pas selectionné de motif !");
+      return;
+    }
+
     navigation.navigate("RdvConfirmation", {
       firstname,
       lastname,
+      selectedPet,
       occupation,
       price,
       address,
-      time,
+      selectedHour,
       selectedReason,
       isFirstRdv,
       isMyAnimal,
@@ -105,7 +132,7 @@ export default function TakeRdvScreen({ navigation, route }) {
             occupation,
             price,
             address,
-            time,
+            selectedHour,
             selectedReason,
             isFirstRdv,
             isMyAnimal,
@@ -123,7 +150,7 @@ export default function TakeRdvScreen({ navigation, route }) {
             occupation,
             price,
             address,
-            time,
+            selectedHour,
             selectedReason,
             isFirstRdv,
             isMyAnimal,
@@ -134,8 +161,8 @@ export default function TakeRdvScreen({ navigation, route }) {
         <FontAwesome
           name="arrow-left"
           size={15}
-          color="#1472AE"
           style={{ color: "#1472AE", marginLeft: 30 }}
+          onPress={() => navigation.goBack()}
         />
         {/* //-------------------------------------------------TITRE DE LA PAGE */}
         <Text style={styles.pageTitle}>Votre rendez-vous</Text>
@@ -152,24 +179,27 @@ export default function TakeRdvScreen({ navigation, route }) {
       </View>
       {/* -------------------------------------------------ENCART DU PROFESSIONNEL */}
       <View style={styles.bodyContainer}>
-        <View style={styles.proContainer}>
+        <View style={styles.coordonnees}>
           <Image
-            source={require("../assets/doctorPicture.jpg")}
             style={styles.image}
+            source={require("../assets/doctorPicture.jpg")}
           />
-          <View style={styles.proInfo}>
-            <Text style={styles.name}>
-              {firstname} {lastname}
+          <View style={styles.coordonneesText}>
+            <Text style={styles.h2}>
+              {firstname}
+              {lastname}
             </Text>
-            <Text style={styles.occupation}>{occupation}</Text>
-            <Text style={styles.address}>
-              {address.street} {address.zipCode} {address.city}
+            <Text style={styles.text}>
+              {occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}
+            </Text>
+            <Text style={styles.text}>
+              {address.street}, {address.zipCode} {address.city}
             </Text>
           </View>
         </View>
         <View style={styles.reasons}>
           <Text style={{ fontWeight: 700, marginBottom: 20 }}>
-            Selectionner un motif
+            Selectionner un motif :
           </Text>
           <FlatList
             horizontal={true}
@@ -178,6 +208,7 @@ export default function TakeRdvScreen({ navigation, route }) {
               borderColor: "lightgray",
               padding: (5, 15),
               borderRadius: 15,
+
             }}
             keyExtractor={(item) => item.value}
             data={data}
@@ -193,17 +224,45 @@ export default function TakeRdvScreen({ navigation, route }) {
                   backgroundColor:
                     selectedReason === item.value ? "#C2E7F7" : "#F0F0F0",
                   borderRadius: 10,
+
                 }}
               >
                 <Text>{item.label}</Text>
               </TouchableOpacity>
             )}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
 
-        <View>
-          <Text>Animal : {myPet}</Text>
+        <View style={styles.reasons}>
+          <Text style={{ fontWeight: 700, marginBottom: 20 }}>Animal :</Text>
+          <FlatList
+            horizontal={true}
+            style={{
+              borderWidth: 1,
+              borderColor: "lightgray",
+              padding: (5, 15),
+              borderRadius: 15,
+            }}
+            keyExtractor={(item) => item._id}
+            data={pet}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => handlePressAnimal(item._id)}
+                style={{
+                  marginLeft: 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 180,
+                  backgroundColor:
+                    selectedPet === item._id ? "#C2E7F7" : "#F0F0F0",
+                  borderRadius: 10,
+                }}
+              >
+                <Text>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+          />
         </View>
 
         <View style={{ width: "70%", alignItems: "center" }}>
@@ -245,13 +304,17 @@ export default function TakeRdvScreen({ navigation, route }) {
           </View>
         </View>
 
+
         {user.token ? (
-          <TouchableOpacity
-            onPress={() => handleBookRdvkClick()}
-            style={styles.takeRdvButton}
-          >
-            <Text style={{ fontWeight: 700, color: "white" }}>Prendre RDV</Text>
-          </TouchableOpacity>
+          <View style={{ alignItems: 'center', width: '100%' }}>
+            {errorReason && <Text style={{ color: 'red' }}>{errorReason}</Text>}
+            <TouchableOpacity
+              onPress={() => handleBookRdvkClick()}
+              style={styles.takeRdvButton}
+            >
+              <Text style={{ fontWeight: 700, color: "white" }}>Prendre RDV</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <View
             style={{
@@ -260,8 +323,8 @@ export default function TakeRdvScreen({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <Text>
-              Pour valider votre rendez-vous, veuillez vous connecter :
+            <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
+              Vous ne semblez pas connecté.e !
             </Text>
             <View style={styles.SignInUpButtons}>
               {!user.token && (
@@ -331,34 +394,43 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 
-  proContainer: {
-    padding: 5,
-    width: "80%",
-    height: 125,
-    backgroundColor: "#0D2C56",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "space-evenly",
+  coordonnees: {
     flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0D2C56",
+    padding: 10,
+    width: "90%",
+    justifyContent: "space-around",
+    borderRadius: 10,
   },
 
   image: {
-    width: "30%",
-    height: "80%",
-    borderRadius: 50,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
 
-  proInfo: {
-    width: "60%",
-    height: "90%",
+  coordonneesText: {
     justifyContent: "space-around",
-    alignItems: "center",
-    borderRadius: 10,
+    height: 80,
+    width: 200,
+  },
+
+  h2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+  },
+
+  text: {
+    color: "white",
+    fontSize: 14,
   },
 
   name: {
     color: "#ffff",
     fontSize: 20,
+    fontWeight: 700,
   },
 
   occupation: {
@@ -376,7 +448,7 @@ const styles = StyleSheet.create({
 
   reasons: {
     // padding: 10,
-    height: 100,
+    height: 120,
     // marginTop: 20,
     width: "70%",
     alignItems: "center",
@@ -389,6 +461,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 10
   },
 
   SignInUpButtons: {
