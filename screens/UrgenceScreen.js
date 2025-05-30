@@ -195,7 +195,7 @@ export default function RechercherListeScreen({ navigation, route }) {
           {/* Header avec bouton retour */}
           <View style={styles.header}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("RetourHomeScreen")}
+              onPress={() => navigation.goBack()}
             >
               <FontAwesome name="arrow-left" size={24} color="#1472AE" />
             </TouchableOpacity>
