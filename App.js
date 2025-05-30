@@ -118,11 +118,13 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={({ route, navigation }) => ({
+          headerShown: false
+        })}>
           <Stack.Screen
             name="MainTabs"
             component={MainTabs}
-            options={{ headerShown: false }}
+            screenOptions={{ headerShown: false }}
           />
           <Stack.Screen name="Recherche" component={RechercherListeScreen} />
           <Stack.Screen name="RechercherUrgence" component={UrgenceScreen} />
@@ -132,7 +134,7 @@ export default function App() {
           <Stack.Screen name="LienFaqEmergency" component={FaqScreen} />
           <Stack.Screen name="TakeRdv" component={TakeRdvScreen} />
           <Stack.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
-          <Stack.Screen name="RetourHomeScreen" component={HomeScreen} />
+
           <Stack.Screen name="Urgences" component={EmergencyScreen} />
           {/* <Stack.Screen name="HealthJournal" component={HealthJournal} options={{ headerShown: false }}/> */}
 
