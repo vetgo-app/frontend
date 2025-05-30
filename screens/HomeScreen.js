@@ -62,7 +62,8 @@ export default function HomeScreen({ navigation }) {
             )}&limit=5`
           );
           const data = await response.json();
-          const results = data.features?.map((item) => item.properties.label) || [];
+          const results =
+            data.features?.map((item) => item.properties.label) || [];
 
           setSuggestions(results);
         } catch (error) {
@@ -71,9 +72,8 @@ export default function HomeScreen({ navigation }) {
       } else {
         setSuggestions([]);
       }
-    })()
-
-  }, [selectedLieu])
+    })();
+  }, [selectedLieu]);
 
   const handleLieuChange = async (text) => {
     setSelectedLieu(text);
@@ -189,7 +189,6 @@ export default function HomeScreen({ navigation }) {
           </View>
 
           {/* Rechercher */}
-
         </View>
         <TouchableOpacity
           style={styles.searchButton}
@@ -202,7 +201,7 @@ export default function HomeScreen({ navigation }) {
             })
           }
         >
-          <Text style={styles.searchText}>Rechercher</Text>
+          <Text style={styles.searchText}>Rechercher test</Text>
         </TouchableOpacity>
         {!user.token && (
           <View style={styles.signInUpContainer}>
@@ -271,17 +270,17 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    width: '100%',
-    height: '20%',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    width: "100%",
+    height: "20%",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 
   body: {
-    width: '100%',
-    height: '80%',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    width: "100%",
+    height: "80%",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
 
   logo: {
@@ -289,9 +288,9 @@ const styles = StyleSheet.create({
   },
 
   searchSettings: {
-    width: '80%',
+    width: "80%",
     height: 200,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   logoImage: {

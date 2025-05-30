@@ -64,7 +64,7 @@ export default function TakeRdvScreen({ navigation, route }) {
         "/petDocuments/byOwner/" +
         user.token
     ).then((response) => response.json().then((data) => setPet(data.pets)));
-  }, []);
+  }, [user.token]);
 
   const handlePressReason = (value) => {
     setSelectedReason(value);
