@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
     height: "7%",
     gap: 10,
     backgroundColor: "#FFFFFF",
-    borderWidth: 5,
     width : "100%",
     marginLeft : 30,
 
