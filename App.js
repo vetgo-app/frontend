@@ -99,15 +99,7 @@ function MainTabs() {
       <Tab.Screen name="Animal" component={AnimalStackScreen} />
       <Tab.Screen name="Faq" component={FaqScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
-      {/* <Tab.Screen name="SignIn" component={SignInScreen} />
-      <Tab.Screen name="SignUp" component={SignUpScreen} />
-      <Tab.Screen name="SignInPro" component={SignInPro} />
-      <Tab.Screen name="SignUpPro" component={SignUpPro} />
-      <Tab.Screen name="TakeRdv" component={TakeRdvScreen} />
-      <Tab.Screen name="RdvConfirmation" component={RdvConfirmationScreen} />
-      {/* <Tab.Screen name="HealthCard" component={HealthJournal} />
-      <Tab.Screen name="ProfilePro" component={ProfileProScreen} />
-      <Tab.Screen name="AgendaPro" component={AgendaProScreen} /> */}
+ 
     </Tab.Navigator>
   );
 }
