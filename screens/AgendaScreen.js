@@ -53,9 +53,9 @@ export default function AgendaScreen({ navigation }) {
         <View style={styles.first}>
           <FontAwesome name={"calendar"} size={30} color="white" />
         </View>
-        <View>
+        <View style={styles.second}>
           <Text style={styles.date}>Heure du rdv = {e.date}</Text>
-          <Text style={styles.date}>{e.type}</Text>
+          <Text style={styles.date}>Pour {e.pet.name}</Text>
           <Text style={styles.date}>Motif = {e.reason}</Text>
           <Text style={styles.date}>Prix de la consultation = {e.price}€</Text>
         </View>
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
 
   card: {
     flexDirection: "row",
+    height: 200,
     gap: 20,
     marginTop: 20,
     borderWidth: 1,
@@ -175,6 +176,10 @@ const styles = StyleSheet.create({
     padding: 50,
     backgroundColor: "#0D2C56",
     borderRadius: 10,
+  },
+
+  second: {
+    justifyContent: "space-between",
   },
 
   date: {
