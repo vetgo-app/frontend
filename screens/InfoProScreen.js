@@ -121,17 +121,21 @@ export default function InfoProScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffff",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
   },
 
   //Place du titre FIche de profil
   headerRow: {
     flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
     height: "7%",
     gap: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
+    width : "100%",
+    marginLeft : 30,
+
   },
 
   //Fiche de profil
@@ -140,6 +144,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1472AE",
     alignItems: "right",
+    marginLeft: 10,
+    
   },
 
   body: {
@@ -150,12 +156,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // proCard:{
-  //   width: '80%',
-  //   height: '100%',
-  //   alignItems: 'center',
-  //   justifyContent: 'space-around',
-  // },
 
   //Encart Professionnel
   card: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
 
   //Police de l'encart professionnel
   name: {
-    color: "white",
+    color: "#FFFFFF",
     fontWeight: "bold",
     fontSize: 16,
   },
