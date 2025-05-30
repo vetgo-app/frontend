@@ -6,7 +6,10 @@ import SignUp from "../screens/SignUpScreen";
 import { useIsFocused } from "@react-navigation/native";
 
 export default function AnimalScreen({ navigation }) {
+
+  // Making the Refetch when navigate through screens
   const isFocused = useIsFocused()
+  
   // Initialize the useSelector
   const user = useSelector((state) => state.user.value);
 
@@ -96,8 +99,6 @@ export default function AnimalScreen({ navigation }) {
     const fetchUserAnimals = async () => {
       const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + token);
       const result = await response.json();
-
-      // console.log(result?.result, result.pets.length);
 
       if (result?.result && result.pets.length > 0) {
         // Display the first animal
