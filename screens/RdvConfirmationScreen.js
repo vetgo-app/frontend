@@ -54,7 +54,11 @@ export default function RdvConfirmationScreen({ navigation, route }) {
         />
         {/* //-------------------------------------------------TITRE DE LA PAGE */}
 
-        {confirmed ? (<Text style={styles.pageTitle}>Merci !</Text>) : (<Text style={styles.pageTitle}>Récapitulatif</Text>)}
+        {confirmed ? (
+          <Text style={styles.pageTitle}>Merci !</Text>
+        ) : (
+          <Text style={styles.pageTitle}>Récapitulatif</Text>
+        )}
         <Text
           style={{
             fontSize: 20,
@@ -78,7 +82,10 @@ export default function RdvConfirmationScreen({ navigation, route }) {
               <Text style={styles.proInfoText}>
                 {appointment?.firstname} {appointment?.lastname}
               </Text>
-              <Text style={styles.proInfoText}>{appointment?.occupation.charAt(0).toUpperCase() + String(appointment?.occupation).slice(1)}</Text>
+              <Text style={styles.proInfoText}>
+                {appointment?.occupation.charAt(0).toUpperCase() +
+                  String(appointment?.occupation).slice(1)}
+              </Text>
             </View>
             {/* ------------------------------------------------- DONNEES DU RDV */}
           </View>
@@ -113,7 +120,9 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 color="#1472AE"
                 style={{ marginRight: 15 }}
               />
-              <Text style={styles.rdvInfoText}>{appointment?.price} € (prix minimum)</Text>
+              <Text style={styles.rdvInfoText}>
+                {appointment?.price} € (prix minimum)
+              </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
@@ -129,50 +138,77 @@ export default function RdvConfirmationScreen({ navigation, route }) {
           </View>
         </View>
         {confirmed ? (
-          <View style={{
-            flexDirection: 'row',
-            width: "80%",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}>
-            <Pressable style={{
-              backgroundColor: "green",
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 10,
+          <View
+            style={{
               flexDirection: "row",
+              width: "80%",
+              justifyContent: "space-between",
               alignItems: "center",
-              width: "47%",
-              justifyContent: 'space-around',
-            }} onPress={() => navigation.navigate('Home')}>
+            }}
+          >
+            <Pressable
+              style={{
+                backgroundColor: "green",
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                width: "47%",
+                justifyContent: "space-around",
+              }}
+              onPress={() => navigation.navigate("Home")}
+            >
               <MaterialCommunityIcons
                 name="home"
                 size={20}
                 color="white"
                 style={{}}
               />
-              <Text style={{ textAlign: 'center', color: "white", fontWeight: "bold", fontSize: 16 }}>Accueil</Text></Pressable>
-            <Pressable style={{
-              backgroundColor: "#1472AE",
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: 'space-around',
-              width: "47%",
-            }} onPress={() => navigation.navigate('Agenda')}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                Accueil
+              </Text>
+            </Pressable>
+            <Pressable
+              style={{
+                backgroundColor: "#1472AE",
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-around",
+                width: "47%",
+              }}
+              onPress={() => navigation.navigate("Agenda")}
+            >
               <MaterialCommunityIcons
                 name="calendar"
                 size={20}
                 color="white"
                 style={{}}
               />
-              <Text style={{ textAlign: 'center', color: "white", fontWeight: "bold", fontSize: 16 }}>Mes RDV</Text></Pressable>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                Mes RDV
+              </Text>
+            </Pressable>
           </View>
-        )
-          :
-          (<View
+        ) : (
+          <View
             style={{
               width: "100%",
               justifyContent: "center",
@@ -202,7 +238,8 @@ export default function RdvConfirmationScreen({ navigation, route }) {
                 Confirmer le rendez-vous
               </Text>
             </Pressable>
-          </View>)}
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -217,7 +254,7 @@ const styles = StyleSheet.create({
 
   headerContainer: {
     width: "100%",
-    height: "10%",
+    height: "7%",
     backgroundColor: "#ffff",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",

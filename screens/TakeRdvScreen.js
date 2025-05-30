@@ -27,7 +27,7 @@ const data = [
 
 export default function TakeRdvScreen({ navigation, route }) {
   const [selectedReason, setSelectedReason] = useState(null);
-  const [errorReason, setErrorReason] = useState(null)
+  const [errorReason, setErrorReason] = useState(null);
   const [isSelectedReason, setIsSelectedReason] = useState(false);
 
   const [isFirstRdv, setIsFirstRdv] = useState(true);
@@ -37,12 +37,10 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   const [pet, setPet] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
-  const [isSelectedAnimal, setIsSelectedAnimal] = useState(false)
+  const [isSelectedAnimal, setIsSelectedAnimal] = useState(false);
   const user = useSelector((state) => state.user.value);
   const { firstname, lastname, occupation, price, address, selectedHour } =
     route.params;
-
-
 
   console.log(selectedHour);
 
@@ -59,14 +57,12 @@ export default function TakeRdvScreen({ navigation, route }) {
     );
   });
 
-
-
   useEffect(() => {
     if (!user.token) return;
     fetch(
       process.env.EXPO_PUBLIC_BACKEND_URL +
-      "/petDocuments/byOwner/" +
-      user.token
+        "/petDocuments/byOwner/" +
+        user.token
     ).then((response) => response.json().then((data) => setPet(data.pets)));
   }, []);
 
@@ -76,8 +72,8 @@ export default function TakeRdvScreen({ navigation, route }) {
   };
 
   const handlePressAnimal = (value) => {
-    setSelectedPet(value)
-    setIsSelectedAnimal(!isSelectedAnimal)
+    setSelectedPet(value);
+    setIsSelectedAnimal(!isSelectedAnimal);
   };
 
   const RadioButtons = useMemo(
@@ -98,7 +94,7 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
   const handleBookRdvkClick = () => {
-    setErrorReason('');
+    setErrorReason("");
 
     if (!selectedReason) {
       setErrorReason("Vous n'avez pas selectionné de motif !");
@@ -186,8 +182,7 @@ export default function TakeRdvScreen({ navigation, route }) {
           />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {firstname}
-              {lastname}
+              {firstname} {lastname}
             </Text>
             <Text style={styles.text}>
               {occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}
@@ -208,7 +203,6 @@ export default function TakeRdvScreen({ navigation, route }) {
               borderColor: "lightgray",
               padding: (5, 15),
               borderRadius: 15,
-
             }}
             keyExtractor={(item) => item.value}
             data={data}
@@ -224,7 +218,6 @@ export default function TakeRdvScreen({ navigation, route }) {
                   backgroundColor:
                     selectedReason === item.value ? "#C2E7F7" : "#F0F0F0",
                   borderRadius: 10,
-
                 }}
               >
                 <Text>{item.label}</Text>
@@ -304,15 +297,16 @@ export default function TakeRdvScreen({ navigation, route }) {
           </View>
         </View>
 
-
         {user.token ? (
-          <View style={{ alignItems: 'center', width: '100%' }}>
-            {errorReason && <Text style={{ color: 'red' }}>{errorReason}</Text>}
+          <View style={{ alignItems: "center", width: "100%" }}>
+            {errorReason && <Text style={{ color: "red" }}>{errorReason}</Text>}
             <TouchableOpacity
               onPress={() => handleBookRdvkClick()}
               style={styles.takeRdvButton}
             >
-              <Text style={{ fontWeight: 700, color: "white" }}>Prendre RDV</Text>
+              <Text style={{ fontWeight: 700, color: "white" }}>
+                Prendre RDV
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -365,7 +359,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     width: "100%",
     height: "7%",
-    backgroundColor: "#ffff",
+    backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",
     flexDirection: "row",
@@ -389,7 +383,7 @@ const styles = StyleSheet.create({
   bodyContainer: {
     height: "93%",
     width: "100%",
-    backgroundColor: "#ffff",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "space-around",
   },
@@ -461,7 +455,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10
+    marginTop: 10,
   },
 
   SignInUpButtons: {
