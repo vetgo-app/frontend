@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignIn from "../screens/SignInScreen";
 import SignUp from "../screens/SignUpScreen";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function AnimalScreen({ navigation }) {
+  const isFocused = useIsFocused()
   // Initialize the useSelector
   const user = useSelector((state) => state.user.value);
 
@@ -21,7 +23,7 @@ export default function AnimalScreen({ navigation }) {
 
   // Fetch's information
   const [animalData, setAnimalData] = useState([]);
-
+  
   // Hooks used in the POST
   const [newName, setNewName] = useState("");
   const [newAge, setNewAge] = useState("");
@@ -76,7 +78,7 @@ export default function AnimalScreen({ navigation }) {
     };
 
     fetchData();
-  }, [petId]);
+  }, [petId, isFocused]);
 
   // Navigation to the Journal when press to the Animal
   const navigationToJournal = () => {
@@ -85,16 +87,19 @@ export default function AnimalScreen({ navigation }) {
 
   // In the connection, if the user has a pet, it's showned
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setAnimalData([]);
+      setPetId("");
+      return 
+    }
 
     const fetchUserAnimals = async () => {
       const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/petDocuments/byOwner/" + token);
       const result = await response.json();
 
-      console.log(result?.result, result.pets.length);
+      // console.log(result?.result, result.pets.length);
 
       if (result?.result && result.pets.length > 0) {
-        console.log('here');
         // Display the first animal
         setAnimalData(result.pets[0]);
         setPetId(result.pets[0]._id);
@@ -104,11 +109,10 @@ export default function AnimalScreen({ navigation }) {
         setAnimalTopIsVisible(false);
         setPetId("");
       }
-
     };
 
     fetchUserAnimals();
-  }, [token]);
+  }, [token, isFocused]);
 
   return (
     // Connection's modal
