@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
 
   headerContainer: {
     width: "100%",
-    height: "7%",
+    height: "10%",
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#1472AE",

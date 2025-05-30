@@ -51,8 +51,7 @@ export default function InfoProScreen({ navigation, route }) {
           />
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
-              {firstname}
-              {lastname}
+              {firstname} {lastname}
             </Text>
             <Text style={styles.text}>
               {occupation.charAt(0).toUpperCase() + String(occupation).slice(1)}
@@ -130,12 +129,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    height: "7%",
+    height: "10%",
     gap: 10,
     backgroundColor: "#FFFFFF",
-    width : "100%",
-    marginLeft : 30,
-
+    width: "100%",
+    marginLeft: 30,
   },
 
   //Fiche de profil
@@ -145,7 +143,6 @@ const styles = StyleSheet.create({
     color: "#1472AE",
     alignItems: "right",
     marginLeft: 10,
-    
   },
 
   body: {
@@ -155,7 +152,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-
 
   //Encart Professionnel
   card: {
