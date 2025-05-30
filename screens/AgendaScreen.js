@@ -21,17 +21,22 @@ export default function AgendaScreen({ navigation }) {
   const [modalSignUpVisible, setModalSignUpVisible] = useState(false);
   const user = useSelector((state) => state.user.value);
 
-  // const handleClic = (id) => {
-  //   fetch(
-  //     `process.env.EXPO_PUBLIC_BACKEND_URL + /appointments/deleteRDV/:${id}`
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setAppointment(data);
-  //     });
-  // };
+  const handleClic = (id) => {
+    console.log("clic");
+    fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/appointments/deleteRDV/${id}/${user.token}`,
+      { method: "DELETE" }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data in fetch =>", data);
+        setAppointment(data.rdv);
+      });
+    // console.log("test2=>", appointment);
+  };
 
   useFocusEffect(
+    //focus sur la page, se relance des qu'on retourne sur le screen,
     useCallback(() => {
       fetch(
         process.env.EXPO_PUBLIC_BACKEND_URL +
@@ -40,7 +45,6 @@ export default function AgendaScreen({ navigation }) {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log("data =>", data);
           setAppointment(data.data);
         });
     }, [user])
