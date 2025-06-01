@@ -40,8 +40,8 @@ export default function AgendaScreen({ navigation }) {
     useCallback(() => {
       fetch(
         process.env.EXPO_PUBLIC_BACKEND_URL +
-          "/appointments/myRdv/" +
-          user.token
+        "/appointments/myRdv/" +
+        user.token
       )
         .then((response) => response.json())
         .then((data) => {
@@ -58,10 +58,10 @@ export default function AgendaScreen({ navigation }) {
           <FontAwesome name={"calendar"} size={30} color="white" />
         </View>
         <View style={styles.second}>
-          <Text style={styles.date}>Heure du rdv = {e.date}</Text>
+          <Text style={styles.date}>Heure du rdv : {e.date}</Text>
           <Text style={styles.date}>Pour {e.pet.name}</Text>
-          <Text style={styles.date}>Motif = {e.reason}</Text>
-          <Text style={styles.date}>Prix de la consultation = {e.price}€</Text>
+          <Text style={styles.date}>Motif : {e.reason}</Text>
+          <Text style={styles.date}>Prix de la consultation : {e.price}€</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -79,9 +79,7 @@ export default function AgendaScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Mes rendez vous</Text>
       </View>
-      <View>
-        <Text style={styles.rdvText}>Prochains rendez-vous</Text>
-      </View>
+
       <View style={styles.body}>
         {!user.token ? (
           <View style={styles.signInUpContainer}>
@@ -131,7 +129,12 @@ export default function AgendaScreen({ navigation }) {
             </Modal>
           </View>
         ) : (
-          <ScrollView style={{ width: "80%" }}>{appointmentList}</ScrollView>
+          <View>
+            <View>
+              <Text style={styles.rdvText}>Prochains rendez-vous :</Text>
+            </View>
+            <ScrollView style={{ width: "80%" }}>{appointmentList}</ScrollView>
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: "20%",
+    height: "10%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -159,12 +162,13 @@ const styles = StyleSheet.create({
   },
 
   rdvText: {
-    fontSize: 16,
+    fontSize: 20,
     color: "#1472AE",
+    fontWeight: 600,
   },
 
   body: {
-    height: "80%",
+    height: "90%",
     width: "100%",
     alignItems: "center",
     justifyContent: "space-around",

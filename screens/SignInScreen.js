@@ -26,6 +26,7 @@ export default function SignInScreen({
 
   //console.log(navigation, route, modalSignInVisible, setModalSignInVisible);
 
+  // Procédure de connexion vu en cours:
   const handleSignIn = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signin", {
       method: "POST",
@@ -38,6 +39,7 @@ export default function SignInScreen({
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          // Chargement des informations dans le store redux local
           dispatch(
             login({
               _id: data.user._id,
@@ -47,6 +49,7 @@ export default function SignInScreen({
               token: data.user.token,
             })
           );
+          // remise à zero des champs de saisi
           setEmail("");
           setPassword("");
           if (modalSignInVisible) {

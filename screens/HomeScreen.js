@@ -204,6 +204,7 @@ export default function HomeScreen({ navigation }) {
         >
           <Text style={styles.searchText}>Rechercher</Text>
         </TouchableOpacity>
+        {/* Conditions pour afficher ou nn les boutons de connexion selon l'identification d'un token utilisateur ds store redux */}
         {!user.token && (
           <View style={styles.signInUpContainer}>
             <Text style={{ fontSize: 15, fontWeight: 700, color: "#1472AE" }}>
@@ -233,6 +234,7 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
         )}
+        {/* Modal permettant d'afficher les pages de connexion/d'inscription : */}
         <Modal visible={modalSignInVisible} animationType="none">
           <SignIn
             setModalSignInVisible={setModalSignInVisible}

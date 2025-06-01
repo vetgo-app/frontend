@@ -43,24 +43,8 @@ export default function TakeRdvScreen({ navigation, route }) {
     route.params;
 
 
-
-  console.log(selectedHour);
-
-  const myPet = pet?.map((e, i) => {
-    return (
-      <View>
-        <Checkbox
-          value={selectedPet === e._id}
-          onValueChange={() => setSelectedPet(e._id)} // on utilise une fonction pour passer en parametre l'id, sinon onValueChange envoie simplement truee ou false
-          style={styles.checkbox}
-        />
-        <Text style={styles.label}>{e.name}</Text>
-      </View>
-    );
-  });
-
-
-
+  // Initialisation de l'état au lancement du screen et re-render si modification de ce dernier
+  //  pour les animaux rattachés à un utilisateur :
   useEffect(() => {
     if (!user.token) return;
     fetch(
@@ -70,16 +54,19 @@ export default function TakeRdvScreen({ navigation, route }) {
     ).then((response) => response.json().then((data) => setPet(data.pets)));
   }, []);
 
+  // fonction enregistrant le motif du rdv au click
   const handlePressReason = (value) => {
     setSelectedReason(value);
     setIsSelectedReason(!isSelectedReason);
   };
 
+  // Fonction enregistrant l'animal concerné par le rdv
   const handlePressAnimal = (value) => {
     setSelectedPet(value)
     setIsSelectedAnimal(!isSelectedAnimal)
   };
 
+  // Module pour les boutons oui ou non
   const RadioButtons = useMemo(
     () => [
       {
@@ -98,13 +85,17 @@ export default function TakeRdvScreen({ navigation, route }) {
 
   // -------------------------------------------------FONCTION POUR NAVIGUER VERS LA PAGE DE CONFIRMATION DU RDV
   const handleBookRdvkClick = () => {
-    setErrorReason('');
+    setErrorReason(''); // motif pour
 
     if (!selectedReason) {
-      setErrorReason("Vous n'avez pas selectionné de motif !");
-      return;
+      setErrorReason("Veuillez selectionner un motif !");
+      ;
+    } else if (!selectedPet) {
+      setErrorReason("Veuillez selectionner unanimal !");
+      return
     }
 
+    // Navigation vers le Screen RdvConf. avec transmission des données en deuxième argument
     navigation.navigate("RdvConfirmation", {
       firstname,
       lastname,

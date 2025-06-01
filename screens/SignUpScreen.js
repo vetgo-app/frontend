@@ -35,6 +35,7 @@ export default function SignUpScreen({
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
+  // Procédure d'instanciation pour utiliser la camera de l'appareil :
   useEffect(() => {
     (async () => {
       const result = await Camera.requestCameraPermissionsAsync();
@@ -46,6 +47,8 @@ export default function SignUpScreen({
     return <View />;
   }
 
+  // FormData pour envoyer vers la db les informations relatives à la photo prise
+  // (gestion de l'envoi vers Cloudinary via l'uri coté backend)
   const uploadPicture = (photo) => {
     const formData = new FormData();
 
@@ -56,6 +59,7 @@ export default function SignUpScreen({
     });
   };
 
+  //Procédure d'inscription d'un utilisateur 
   const handleSignUp = () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/users/signUp", {
       method: "POST",
@@ -74,6 +78,7 @@ export default function SignUpScreen({
         //console.log("je suis dans SIGN UP SCREEN");
         if (data.result) {
           dispatch(
+          // Envoi des informations vers le store redux via method login définit dans le reducer
             login({
               firstname: data.user.firstname,
               lastname: data.user.lastname,
@@ -99,6 +104,7 @@ export default function SignUpScreen({
       });
   };
 
+  // Fonction pour prise de la photo : 
   const takePicture = async () => {
     const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 }); // Javascript
     photo && uploadPicture(photo);
@@ -107,10 +113,12 @@ export default function SignUpScreen({
     setProfilPicture(photo.uri);
   };
 
+    // Fonction pour prise de le sens de la camera : 
   const toggleCameraFacing = () => {
     setFacing((current) => (current === "front" ? "back" : "front"));
   };
 
+      // Fonction pour ouverture de la camera : 
   const handlePressProfilPhoto = (e) => {
     setModalVisible(true);
   };

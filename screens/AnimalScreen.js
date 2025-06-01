@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   KeyboardAvoidingView,
+  SafeAreaView,
   Platform,
   ScrollView,
 } from "react-native";
@@ -20,7 +21,7 @@ export default function AnimalScreen({ navigation }) {
 
   // Making the Refetch when navigate through screens
   const isFocused = useIsFocused()
-  
+
   // Initialize the useSelector
   const user = useSelector((state) => state.user.value);
 
@@ -37,7 +38,7 @@ export default function AnimalScreen({ navigation }) {
 
   // Fetch's information
   const [animalData, setAnimalData] = useState([]);
-  
+
   // Hooks used in the POST
   const [newName, setNewName] = useState("");
   const [newAge, setNewAge] = useState("");
@@ -117,7 +118,7 @@ export default function AnimalScreen({ navigation }) {
     if (!token) {
       setAnimalData([]);
       setPetId("");
-      return 
+      return
     }
 
     const fetchUserAnimals = async () => {
@@ -142,204 +143,204 @@ export default function AnimalScreen({ navigation }) {
   }, [token, isFocused]);
 
   return (
+    <SafeAreaView style={styles.mainDiv}>
     // Connection's modal
-    <View style={styles.mainDiv}>
-      <Modal visible={modalSignInVisible} animationType="none">
-        <SignIn
-          setModalSignInVisible={setModalSignInVisible}
-          modalSignInVisible={modalSignInVisible}
-          navigation={navigation}
-        />
-      </Modal>
-      <Modal visible={modalSignUpVisible} animationType="none">
-        <SignUp
-          setModalSignUpVisible={setModalSignUpVisible}
-          modalSignUpVisible={modalSignUpVisible}
-          navigation={navigation}
-        />
-      </Modal>
+        <Modal visible={modalSignInVisible} animationType="none">
+          <SignIn
+            setModalSignInVisible={setModalSignInVisible}
+            modalSignInVisible={modalSignInVisible}
+            navigation={navigation}
+          />
+        </Modal>
+        <Modal visible={modalSignUpVisible} animationType="none">
+          <SignUp
+            setModalSignUpVisible={setModalSignUpVisible}
+            modalSignUpVisible={modalSignUpVisible}
+            navigation={navigation}
+          />
+        </Modal>
 
-      {/* SignIn / SignUp Button */}
-      <View style={styles.SignInUpButtons}>
-        {!user.token && (
-          <TouchableOpacity
-            onPress={() => setModalSignInVisible(true)}
-            style={styles.buttonStyle}
-          >
-            <Text style={{ fontWeight: 700, color: "#fff" }}>Se connecter</Text>
-          </TouchableOpacity>
-        )}
-        {!user.token && (
-          <TouchableOpacity
-            onPress={() => setModalSignUpVisible(true)}
-            style={styles.buttonStyle}
-          >
-            <Text style={{ fontWeight: 700, color: "#fff" }}>S'inscrire</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Header Part */}
-      <View style={styles.header}>
-        {animalData?.name && (
-          <View style={styles.topHeader}>
-            <View style={styles.topHeaderTitle}>
-              <Text style={styles.title}>Mes animaux</Text>
-            </View>
-          </View>
-        )}
-
-        {animalTopIsVisible && animalData?.name && (
-          <TouchableOpacity
-            style={styles.bottomHeaderBtn}
-            onPress={() => navigationToJournal()}
-          >
-            <View style={styles.bottomHeader}>
-              <View style={styles.bottomHeaderProfile}>
-                <View style={styles.bottomHeaderInformationContainer}>
-                  <View style={styles.bottomHeaderPictureProfile}>
-                    <Image
-                      source={require("../assets/dogImg.png")}
-                      style={styles.animalImg}
-                    />
-                  </View>
-                  <View style={styles.bottomHeaderInformation}>
-                    <View style={styles.bottomHeaderInformationName}>
-                      <Text style={styles.animalName}>{animalData?.name}</Text>
-                    </View>
-                    <View style={styles.bottomHeaderInformationGeneral}>
-                      <View style={styles.bottomHeaderInformationBirth}>
-                        <Text style={styles.animalBirth}>
-                          {animalData?.age} ans, né le {animalData?.dateOfBirth}
-                        </Text>
-                      </View>
-                      <View style={styles.bottomHeaderInformationRace}>
-                        <Text style={styles.animalRace}>
-                          {animalData?.breed}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Body Part  */}
-      <View style={styles.body}>
-        {user.token && (
-          <View style={styles.btnContainer}>
+        {/* SignIn / SignUp Button */}
+        <View style={styles.SignInUpButtons}>
+          {!user.token && (
             <TouchableOpacity
-              style={styles.btnAddAnimal}
-              onPress={() => addAnimal()}
+              onPress={() => setModalSignInVisible(true)}
+              style={styles.buttonStyle}
             >
-              <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
+              <Text style={{ fontWeight: 700, color: "#fff" }}>Se connecter</Text>
             </TouchableOpacity>
-          </View>
-        )}
-
-        {/* Add Animal Part */}
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={80}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          enabled
-        >
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{ paddingBottom: 150, alignItems: "center" }}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View
-              style={[
-                styles.containerNewAnimal,
-                { display: newAnimalInput ? "flex" : "none" },
-              ]}
+          )}
+          {!user.token && (
+            <TouchableOpacity
+              onPress={() => setModalSignUpVisible(true)}
+              style={styles.buttonStyle}
             >
-              <Text style={styles.titleNewAnimal}>Animal</Text>
-              <View style={styles.nameAndAge}>
-                <TextInput
-                  placeholder="Nom"
-                  placeholderTextColor="white"
-                  style={styles.name}
-                  value={newName}
-                  onChangeText={setNewName}
-                />
-                <TextInput
-                  placeholder="Age"
-                  placeholderTextColor="white"
-                  style={styles.age}
-                  value={newAge}
-                  onChangeText={setNewAge}
-                />
-              </View>
-              <View style={styles.birthAndRace}>
-                <TextInput
-                  placeholder="Date de naissance"
-                  placeholderTextColor="white"
-                  style={styles.birth}
-                  value={newBirth}
-                  onChangeText={setNewBirth}
-                />
-                <TextInput
-                  placeholder="Race"
-                  placeholderTextColor="white"
-                  style={styles.race}
-                  value={newRace}
-                  onChangeText={setNewRace}
-                />
-              </View>
-              <View style={styles.sexeAndIdentification}>
-                <TextInput
-                  placeholder="Sexe"
-                  placeholderTextColor="white"
-                  style={styles.sexe}
-                  value={newSexe}
-                  onChangeText={setNewSexe}
-                />
-                <TextInput
-                  placeholder="Identification"
-                  placeholderTextColor="white"
-                  style={styles.identification}
-                  value={newIdentification}
-                  onChangeText={setNewIdentification}
-                />
-              </View>
-              <View style={styles.weightAndColor}>
-                <TextInput
-                  placeholder="Poids"
-                  placeholderTextColor="white"
-                  style={styles.weight}
-                  value={newWeight}
-                  onChangeText={setNewWeight}
-                />
-                <TextInput
-                  placeholder="Espèce"
-                  placeholderTextColor="white"
-                  style={styles.color}
-                  value={newType}
-                  onChangeText={setNewType}
-                />
-              </View>
+              <Text style={{ fontWeight: 700, color: "#fff" }}>S'inscrire</Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
-              {/* Add animal to mongoDB */}
-              {user.token && (
-                <View style={styles.btnContainer}>
-                  <TouchableOpacity
-                    style={styles.btnAddAnimal}
-                    onPress={() => handleSendData()}
-                  >
-                    <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
+        {/* Header Part */}
+        <View style={styles.header}>
+          {animalData?.name && (
+            <View style={styles.topHeader}>
+              <View style={styles.topHeaderTitle}>
+                <Text style={styles.title}>Mes animaux</Text>
+              </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
-    </View>
+          )}
+
+          {animalTopIsVisible && animalData?.name && (
+            <TouchableOpacity
+              style={styles.bottomHeaderBtn}
+              onPress={() => navigationToJournal()}
+            >
+              <View style={styles.bottomHeader}>
+                <View style={styles.bottomHeaderProfile}>
+                  <View style={styles.bottomHeaderInformationContainer}>
+                    <View style={styles.bottomHeaderPictureProfile}>
+                      <Image
+                        source={require("../assets/dogImg.png")}
+                        style={styles.animalImg}
+                      />
+                    </View>
+                    <View style={styles.bottomHeaderInformation}>
+                      <View style={styles.bottomHeaderInformationName}>
+                        <Text style={styles.animalName}>{animalData?.name}</Text>
+                      </View>
+                      <View style={styles.bottomHeaderInformationGeneral}>
+                        <View style={styles.bottomHeaderInformationBirth}>
+                          <Text style={styles.animalBirth}>
+                            {animalData?.age} ans, né le {animalData?.dateOfBirth}
+                          </Text>
+                        </View>
+                        <View style={styles.bottomHeaderInformationRace}>
+                          <Text style={styles.animalRace}>
+                            {animalData?.breed}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Body Part  */}
+        <View style={styles.body}>
+          {user.token && (
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={styles.btnAddAnimal}
+                onPress={() => addAnimal()}
+              >
+                <Text style={styles.btnAddAnimalTxt}>Nouvel animal</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Add Animal Part */}
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            keyboardVerticalOffset={80}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            enabled
+          >
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ paddingBottom: 150, alignItems: "center" }}
+              keyboardShouldPersistTaps="handled"
+            >
+              <View
+                style={[
+                  styles.containerNewAnimal,
+                  { display: newAnimalInput ? "flex" : "none" },
+                ]}
+              >
+                <Text style={styles.titleNewAnimal}>Animal</Text>
+                <View style={styles.nameAndAge}>
+                  <TextInput
+                    placeholder="Nom"
+                    placeholderTextColor="white"
+                    style={styles.name}
+                    value={newName}
+                    onChangeText={setNewName}
+                  />
+                  <TextInput
+                    placeholder="Age"
+                    placeholderTextColor="white"
+                    style={styles.age}
+                    value={newAge}
+                    onChangeText={setNewAge}
+                  />
+                </View>
+                <View style={styles.birthAndRace}>
+                  <TextInput
+                    placeholder="Date de naissance"
+                    placeholderTextColor="white"
+                    style={styles.birth}
+                    value={newBirth}
+                    onChangeText={setNewBirth}
+                  />
+                  <TextInput
+                    placeholder="Race"
+                    placeholderTextColor="white"
+                    style={styles.race}
+                    value={newRace}
+                    onChangeText={setNewRace}
+                  />
+                </View>
+                <View style={styles.sexeAndIdentification}>
+                  <TextInput
+                    placeholder="Sexe"
+                    placeholderTextColor="white"
+                    style={styles.sexe}
+                    value={newSexe}
+                    onChangeText={setNewSexe}
+                  />
+                  <TextInput
+                    placeholder="Identification"
+                    placeholderTextColor="white"
+                    style={styles.identification}
+                    value={newIdentification}
+                    onChangeText={setNewIdentification}
+                  />
+                </View>
+                <View style={styles.weightAndColor}>
+                  <TextInput
+                    placeholder="Poids"
+                    placeholderTextColor="white"
+                    style={styles.weight}
+                    value={newWeight}
+                    onChangeText={setNewWeight}
+                  />
+                  <TextInput
+                    placeholder="Espèce"
+                    placeholderTextColor="white"
+                    style={styles.color}
+                    value={newType}
+                    onChangeText={setNewType}
+                  />
+                </View>
+
+                {/* Add animal to mongoDB */}
+                {user.token && (
+                  <View style={styles.btnContainer}>
+                    <TouchableOpacity
+                      style={styles.btnAddAnimal}
+                      onPress={() => handleSendData()}
+                    >
+                      <Text style={styles.btnAddAnimalTxt}>Ajouter</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+    </SafeAreaView>
   );
 }
 

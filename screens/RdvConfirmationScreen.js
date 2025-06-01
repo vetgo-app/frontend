@@ -17,6 +17,7 @@ export default function RdvConfirmationScreen({ navigation, route }) {
   const [confirmed, setConfirmed] = useState(false);
   const appointment = route.params;
 
+// Fonction pour l'envoi des informations du rdv en BD "appointments" via fetch method 'POST' :
   const onClick = () => {
     setConfirmed(true);
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/appointments/add", {
