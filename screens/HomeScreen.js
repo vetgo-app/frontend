@@ -201,7 +201,7 @@ export default function HomeScreen({ navigation }) {
             })
           }
         >
-          <Text style={styles.searchText}>Rechercher test</Text>
+          <Text style={styles.searchText}>Rechercher</Text>
         </TouchableOpacity>
         {!user.token && (
           <View style={styles.signInUpContainer}>
