@@ -9,7 +9,7 @@ import {
 import MapView, { Marker } from "react-native-maps";
 import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState, } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 const time = ["10h00", "11h00", "12h00", "14h00", "15h00", "17h00"];
 
@@ -34,7 +34,7 @@ function HourComponent(props) {
 }
 
 export default function RechercherListeScreen({ navigation, route }) {
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
   const { animal, address } = route.params;
 
   const [store, setStore] = useState([]);
@@ -44,7 +44,9 @@ export default function RechercherListeScreen({ navigation, route }) {
   const initializeMap = async () => {
     if (address) {
       // Si on a une addresse, on centre la carte sur l'adresse
-      const fetchUrl = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=5`
+      const fetchUrl = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+        address
+      )}&limit=5`;
       fetch(fetchUrl)
         .then((res) => res.json())
         .then((data) => {
@@ -54,7 +56,12 @@ export default function RechercherListeScreen({ navigation, route }) {
             const latitude = coords[1];
 
             // on centre la carte sur cette adresse, avec un certain zoom delta
-            setRegion({ latitude, longitude, latitudeDelta: 0.01, longitudeDelta: 0.01 });
+            setRegion({
+              latitude,
+              longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
           }
         });
     } else {
@@ -62,10 +69,15 @@ export default function RechercherListeScreen({ navigation, route }) {
       const latitude = 48.866667;
       const longitude = 2.333333;
 
-      //on centre la carte 
-      setRegion({ latitude, longitude, latitudeDelta: 0.01, longitudeDelta: 0.01 });
+      //on centre la carte
+      setRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
     }
-  }
+  };
 
   const filterStores = async () => {
     fetch(process.env.EXPO_PUBLIC_BACKEND_URL + "/store")
@@ -73,7 +85,9 @@ export default function RechercherListeScreen({ navigation, route }) {
       .then((data) => {
         let filteredStores = [...data.data];
 
-        filteredStores = filteredStores.filter((store) => store.isSelectedUrgence);
+        filteredStores = filteredStores.filter(
+          (store) => store.isSelectedUrgence
+        );
 
         if (animal) {
           filteredStores = filteredStores.filter(
@@ -83,16 +97,16 @@ export default function RechercherListeScreen({ navigation, route }) {
         }
 
         //professionnels qui se filtrent en fonction de l'adresse
-        const markers = filteredStores.filter((store) => store.address.geo?.lat && store.address.geo?.lon)
+        const markers = filteredStores
+          .filter((store) => store.address.geo?.lat && store.address.geo?.lon)
           .map((store) => ({
-            nom: store.user?.firstname + ' ' + store.user?.lastname,
+            nom: store.user?.firstname + " " + store.user?.lastname,
             specialite: store.occupation,
             lat: store.address.geo.lat,
             lon: store.address.geo.lon,
           }));
 
         // console.log(filteredStores.filter((store) => store));
-
 
         //tous les professionnels s'affichent
         setStore(filteredStores);
@@ -109,16 +123,16 @@ export default function RechercherListeScreen({ navigation, route }) {
           });
         }
       });
-  }
+  };
 
   //récupération des vétérinaires fictifs autour d'une adresse
   useEffect(() => {
     (async () => {
       // Step 1 : Centrer la carte
-      !region && await initializeMap()
+      !region && (await initializeMap());
 
       // Step 2 : On récupère les filtres pour la map
-      await filterStores()
+      await filterStores();
     })();
   }, [isFocused, region]);
 
@@ -139,10 +153,8 @@ export default function RechercherListeScreen({ navigation, route }) {
     return (
       <View key={e._id} style={styles.card}>
         <View style={styles.coordonnees}>
-          <Image
-            style={styles.image}
-            source={require("../assets/doctorPicture.jpg")}
-          />
+          <Image style={styles.image} source={{ uri: e.user.photo }} />
+
           <View style={styles.coordonneesText}>
             <Text style={styles.h2}>
               {e?.user?.firstname} {e?.user?.lastname}
@@ -194,9 +206,7 @@ export default function RechercherListeScreen({ navigation, route }) {
         <ScrollView>
           {/* Header avec bouton retour */}
           <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-            >
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <FontAwesome name="arrow-left" size={24} color="#1472AE" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>URGENCES</Text>
@@ -212,7 +222,6 @@ export default function RechercherListeScreen({ navigation, route }) {
                 title={vet.nom}
                 description={vet.specialite}
               >
-
                 <Image
                   source={require("../assets/iconPaw.png")}
                   style={{ width: 40, height: 40 }}
@@ -231,7 +240,6 @@ export default function RechercherListeScreen({ navigation, route }) {
     </SafeAreaProvider>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
